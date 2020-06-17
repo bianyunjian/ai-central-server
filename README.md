@@ -16,7 +16,9 @@
   * ROM: 500GB+
   * Network: 100Mbps+
 * Java: 1.8.121+
-* MySQL: 5.7
+* MySQL: 5.7    
+  172.16.114.72:3306    
+  root  / Mysql-2019
 
 
 ## 开发说明
