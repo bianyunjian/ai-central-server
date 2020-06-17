@@ -5,7 +5,7 @@
 ### 技术架构
 
 * Spring Boot - 2.3.0-RELEASE+
-* MySQL - 8.0+
+* MySQL - 5.7
 * Netty - 4.1+
 
 ### 开发/生产环境
@@ -16,4 +16,4 @@
   * ROM: 500GB+
   * Network: 100Mbps+
 * Java: 1.8.121+
-* MySQL: 8.0+
+* MySQL: 5.7
