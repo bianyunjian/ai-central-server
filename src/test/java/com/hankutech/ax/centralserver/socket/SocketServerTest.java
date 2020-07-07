@@ -20,9 +20,6 @@ class SocketServerTest {
         Assertions.assertTrue(NettyTool.isLocalPortUsing(20001));
         TimeUnit.SECONDS.sleep(500);
         server.shutdown();
+
     }
-
-
-
-
 }
