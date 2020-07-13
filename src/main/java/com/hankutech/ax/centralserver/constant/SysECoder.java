@@ -12,6 +12,7 @@ public enum SysECoder implements ErrorCoder {
     /**
      * 系统错误码
      */
+    DEFAULT_NO_ERROR(0, "默认无错误"),
     INNER_ERROR(100001, "系统内部错误"),
     PARAM_INVALID(100002, "参数校验无效");
 
@@ -25,7 +26,7 @@ public enum SysECoder implements ErrorCoder {
 
     @Override
     public Integer get() {
-        return null;
+        return this.enumValue;
     }
 
     public String getEnumDesc() {

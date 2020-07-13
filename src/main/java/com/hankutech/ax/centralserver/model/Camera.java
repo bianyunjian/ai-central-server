@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 public class Camera {
 
+    public static final String COL_CAMERA_NAME = "camera_name";
+
     @TableId(type = IdType.AUTO)
     private Integer cameraId;
 

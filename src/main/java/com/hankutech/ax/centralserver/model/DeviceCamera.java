@@ -12,6 +12,9 @@ import lombok.Data;
 @Data
 public class DeviceCamera {
 
+    public static final String COL_CAMERA_ID = "camera_id";
+    public static final String COL_DEVICE_ID = "device_id";
+
     @TableId(type = IdType.UUID)
     private String id;
 
