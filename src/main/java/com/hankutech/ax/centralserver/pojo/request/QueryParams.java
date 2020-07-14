@@ -1,4 +1,4 @@
-package com.hankutech.ax.centralserver.pojo.vo.request;
+package com.hankutech.ax.centralserver.pojo.request;
 
 /**
  * 查询参数

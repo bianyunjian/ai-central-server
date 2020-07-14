@@ -1,4 +1,4 @@
-package com.hankutech.ax.centralserver.pojo.vo.request;
+package com.hankutech.ax.centralserver.pojo.request;
 
 import com.hankutech.ax.centralserver.exception.InvalidParamException;
 

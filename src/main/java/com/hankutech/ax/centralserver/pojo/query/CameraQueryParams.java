@@ -1,6 +1,6 @@
-package com.hankutech.ax.centralserver.pojo.vo.query;
+package com.hankutech.ax.centralserver.pojo.query;
 
-import com.hankutech.ax.centralserver.pojo.vo.request.QueryParams;
+import com.hankutech.ax.centralserver.pojo.request.QueryParams;
 
 /**
  *
