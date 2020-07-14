@@ -1,8 +1,9 @@
-package com.hankutech.ax.centralserver.biz;
+package com.hankutech.ax.centralserver.biz.protocol;
 
 import com.hankutech.ax.centralserver.biz.code.AITaskType;
 import com.hankutech.ax.centralserver.biz.code.ScenarioFlag;
 import com.hankutech.ax.centralserver.biz.code.SysRunFlag;
+
 
 public class AXDataConverter {
     /**
@@ -61,7 +62,7 @@ public class AXDataConverter {
         resultArray[8] = resp.getTaskType().getValue();
 
         // 字节X10标示检测结果
-        resultArray[9] = resp.getAiResult().getValue();
+        resultArray[9] = resp.getAiResult().getAiResult().getValue();
 
         return resultArray;
     }

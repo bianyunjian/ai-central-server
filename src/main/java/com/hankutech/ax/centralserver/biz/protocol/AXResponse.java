@@ -1,6 +1,9 @@
-package com.hankutech.ax.centralserver.biz;
+package com.hankutech.ax.centralserver.biz.protocol;
 
-import com.hankutech.ax.centralserver.biz.code.*;
+import com.hankutech.ax.centralserver.biz.data.AIResultWrapper;
+import com.hankutech.ax.centralserver.biz.code.AITaskType;
+import com.hankutech.ax.centralserver.biz.code.ScenarioFlag;
+import com.hankutech.ax.centralserver.biz.code.SysRunFlag;
 import lombok.Data;
 import lombok.ToString;
 
@@ -32,7 +35,7 @@ public class AXResponse {
     /**
      * 字节X10标示检测结果
      */
-    AIResult aiResult;
+    AIResultWrapper aiResult;
 
     /**
      * get a empty response as default
@@ -45,7 +48,7 @@ public class AXResponse {
         resp.setCameraNumber(0);
         resp.setScenarioFlag(ScenarioFlag.EMPTY);
         resp.setTaskType(AITaskType.EMPTY);
-        resp.setAiResult(AIBoxResultType.EMPTY);
+        resp.setAiResult(new AIResultWrapper());
         return resp;
     }
 

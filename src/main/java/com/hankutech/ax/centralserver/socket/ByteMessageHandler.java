@@ -1,9 +1,9 @@
 package com.hankutech.ax.centralserver.socket;
 
-import com.hankutech.ax.centralserver.biz.AXDataConverter;
-import com.hankutech.ax.centralserver.biz.AXDataManager;
-import com.hankutech.ax.centralserver.biz.AXRequest;
-import com.hankutech.ax.centralserver.biz.AXResponse;
+import com.hankutech.ax.centralserver.biz.protocol.AXDataConverter;
+import com.hankutech.ax.centralserver.biz.data.AXDataManager;
+import com.hankutech.ax.centralserver.biz.protocol.AXRequest;
+import com.hankutech.ax.centralserver.biz.protocol.AXResponse;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;

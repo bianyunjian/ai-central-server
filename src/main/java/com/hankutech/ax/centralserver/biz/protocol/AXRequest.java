@@ -1,4 +1,4 @@
-package com.hankutech.ax.centralserver.biz;
+package com.hankutech.ax.centralserver.biz.protocol;
 
 import com.hankutech.ax.centralserver.biz.code.AITaskType;
 import com.hankutech.ax.centralserver.biz.code.ScenarioFlag;
