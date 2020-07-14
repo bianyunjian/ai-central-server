@@ -5,6 +5,11 @@ import com.hankutech.ax.centralserver.biz.code.ScenarioFlag;
 import com.hankutech.ax.centralserver.biz.code.SysRunFlag;
 
 public class AXDataConverter {
+    /**
+     * 解析字节数据为AXRequest
+     * @param convertedData
+     * @return
+     */
     public static AXRequest parseRequest(int[] convertedData) {
 
         if (convertedData == null || convertedData.length != 10) {
@@ -28,6 +33,11 @@ public class AXDataConverter {
         return axRequest;
     }
 
+    /**
+     * 转换AXResponse为字节形式
+     * @param resp
+     * @return
+     */
     public static int[] convertResponse(AXResponse resp) {
 
         int[] resultArray = new int[10];

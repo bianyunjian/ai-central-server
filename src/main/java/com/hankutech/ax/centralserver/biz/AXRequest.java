@@ -32,4 +32,20 @@ public class AXRequest {
     AITaskType taskType;
 
 
+    /**
+     * 验证是否有效的数据结构
+     *
+     * @return
+     */
+    public boolean isValid() {
+        if (this.getSysRunFlag().equals(SysRunFlag.EMPTY)
+                || this.getCameraNumber() <= 0
+                || this.getScenarioFlag().equals(ScenarioFlag.EMPTY)
+                || this.getTaskType().equals(AITaskType.EMPTY)
+        ) {
+            return false;
+        }
+
+        return true;
+    }
 }

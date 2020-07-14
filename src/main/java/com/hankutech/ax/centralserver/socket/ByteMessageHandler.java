@@ -4,7 +4,6 @@ import com.hankutech.ax.centralserver.biz.AXDataConverter;
 import com.hankutech.ax.centralserver.biz.AXDataManager;
 import com.hankutech.ax.centralserver.biz.AXRequest;
 import com.hankutech.ax.centralserver.biz.AXResponse;
-import com.hankutech.ax.centralserver.biz.code.SysRunFlag;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -54,14 +53,17 @@ public class ByteMessageHandler extends ChannelInboundHandlerAdapter {
 
             AXResponse response = AXResponse.DefaultEmpty();
             AXRequest request = AXDataConverter.parseRequest(convertedData);
-            if (request != null) {
+            if (request != null && request.isValid()) {
                 log.info("解析后的请求数据：{}", request.toString());
                 response = AXDataManager.query(request);
                 if (response != null) {
                     log.info("查询到的响应数据：{}", response.toString());
                 }
             }
-            if (response.getSysRunFlag().getValue() == SysRunFlag.EMPTY.getValue()) {
+            if (response == null) {
+                response = AXResponse.DefaultEmpty();
+            }
+            if (response.isValid() == false) {
                 log.error("未能正确处理请求数据，request={},response={}", request, response);
             }
             int[] respData = AXDataConverter.convertResponse(response);
