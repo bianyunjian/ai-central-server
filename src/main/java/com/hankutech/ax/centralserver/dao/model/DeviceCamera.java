@@ -22,4 +22,5 @@ public class DeviceCamera {
 
     private Integer cameraId;
 
+    private String aiTypeArray;
 }

@@ -3,7 +3,7 @@ package com.hankutech.ax.centralserver.config;
 import com.hankutech.ax.centralserver.constant.SysECoder;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.exception.InvalidParamException;
-import com.hankutech.ax.centralserver.pojo.vo.response.BaseResponse;
+import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;

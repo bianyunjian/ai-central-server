@@ -13,7 +13,7 @@ import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.service.CameraService;
 import com.hankutech.ax.centralserver.pojo.query.CameraQueryParams;
 import com.hankutech.ax.centralserver.pojo.request.PagedParams;
-import com.hankutech.ax.centralserver.pojo.vo.response.PagedData;
+import com.hankutech.ax.centralserver.pojo.response.PagedData;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

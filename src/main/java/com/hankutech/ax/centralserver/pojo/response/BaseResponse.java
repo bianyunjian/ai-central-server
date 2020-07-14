@@ -1,4 +1,4 @@
-package com.hankutech.ax.centralserver.pojo.vo.response;
+package com.hankutech.ax.centralserver.pojo.response;
 
 import com.hankutech.ax.centralserver.constant.ResponseStatus;
 import com.hankutech.ax.centralserver.constant.SysECoder;

@@ -1,16 +1,16 @@
 package com.hankutech.ax.centralserver.controller;
 
+import com.hankutech.ax.centralserver.dao.model.Camera;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.exception.InvalidParamException;
-import com.hankutech.ax.centralserver.dao.model.Camera;
-import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
-import com.hankutech.ax.centralserver.service.CameraService;
 import com.hankutech.ax.centralserver.pojo.query.CameraQueryParams;
 import com.hankutech.ax.centralserver.pojo.request.AbstractObjectRequest;
 import com.hankutech.ax.centralserver.pojo.request.IntIdRequest;
 import com.hankutech.ax.centralserver.pojo.request.QueryRequest;
-import com.hankutech.ax.centralserver.pojo.vo.response.BaseResponse;
-import com.hankutech.ax.centralserver.pojo.vo.response.PagedData;
+import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
+import com.hankutech.ax.centralserver.pojo.response.PagedData;
+import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
+import com.hankutech.ax.centralserver.service.CameraService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -68,7 +68,6 @@ public class CameraController {
     }
 
 
-
     @Operation(summary = "新增相机")
     @PostMapping(path = "/add")
     public CameraResponse addCamera(@RequestBody @Validated CameraAddRequest request)
@@ -103,20 +102,19 @@ public class CameraController {
     }
 
 
-
-
-
-
     //==================================================================================================================
 
     @Schema(description = "相机响应数据")
-    private static class CameraResponse extends BaseResponse<CameraVO> {}
+    private static class CameraResponse extends BaseResponse<CameraVO> {
+    }
 
     @Schema(description = "相机列表响应数据")
-    private static class CameraListResponse extends BaseResponse<List<CameraVO>> {}
+    private static class CameraListResponse extends BaseResponse<List<CameraVO>> {
+    }
 
     @Schema(description = "相机分页列表响应数据")
-    private static class CameraPagedResponse extends BaseResponse<PagedData<CameraVO>> {}
+    private static class CameraPagedResponse extends BaseResponse<PagedData<CameraVO>> {
+    }
 
     @Schema(description = "新增相机请求数据")
     @EqualsAndHashCode(callSuper = true)
@@ -131,13 +129,9 @@ public class CameraController {
         @Schema(description = "rtsp连接地址", example = "rtsp://192.168.1.234", required = true)
         private String rtsp;
 
-        @NotNull
-        @Schema(description = "设置的AI检测算法", example = "[\"box\",\"face\"]", required = true)
-        private String[] ai;
-
         @Override
         protected void validate() throws InvalidParamException {
-            //todo 检测AI算法是否为指定算法名称
+            //todo
         }
 
         @Override
@@ -150,7 +144,6 @@ public class CameraController {
             Camera model = new Camera();
             model.setCameraName(this.name);
             model.setRtspUrl(this.rtsp);
-            model.setAiTypeArray(CameraVO.transAiTypesToString(this.ai));
             return model;
         }
     }
@@ -173,6 +166,7 @@ public class CameraController {
     }
 
     @Schema(description = "相机查询请求数据")
-    private static class CameraQueryRequest extends QueryRequest<CameraQueryParams> {}
+    private static class CameraQueryRequest extends QueryRequest<CameraQueryParams> {
+    }
 
 }

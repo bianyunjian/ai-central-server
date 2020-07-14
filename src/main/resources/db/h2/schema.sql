@@ -2,7 +2,6 @@ create table `camera` (
     `camera_id` int(11) unsigned not null auto_increment comment '相机ID',
     `camera_name` varchar(255) not null default '' comment '相机名称，具有唯一性',
     `rtsp_url` varchar(255) not null default '' comment 'RTSP连接地址',
-    `ai_type_array` varchar(255) not null default '' comment 'AI检测算法类型数组，使用逗号分隔',
     primary key (`camera_id`)
 ) engine = innodb default charset = utf8mb4;
 
@@ -21,6 +20,7 @@ create table `device_camera` (
     `id` char(36) not null default '' comment '设备与相机联合ID，使用36位UUID',
     `device_id` int(11) not null comment '设备表ID',
     `camera_id` int(11) not null comment '相机表ID',
+    `ai_type_array` varchar(255) not null default '' comment 'AI检测算法类型数组，使用逗号分隔',
     primary key (`id`)
 ) engine = innodb default charset = utf8mb4;
 
@@ -28,7 +28,7 @@ create table `person` (
     `person_id` int(11) unsigned not null auto_increment comment '人员ID',
     `person_name` varchar(255) not null default '' comment '人员名称',
     `phone_num` varchar(50) not null default '' comment '手机号码，具有唯一性',
-    `face_ftr_array` varchar(500) not null default '' comment '人脸特征向量数组,使用逗号分隔',
+    `face_ftr_array` varchar(5120) not null default '' comment '人脸特征向量数组,使用逗号分隔',
     primary key (`person_id`)
 ) engine = innodb default charset = utf8mb4;
 

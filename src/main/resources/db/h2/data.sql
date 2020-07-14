@@ -1,10 +1,10 @@
-insert into camera values (1, '测试相机', 'rtsp://', 'box,garbage');
+insert into camera values (1, '测试相机', 'rtsp://');
 
 insert into device values (1, '测试设备', 0);
 insert into device values (2, '下线设备', 1);
 
-insert into device_camera values ('2e548651-939b-4951-a7a7-c2a7e562c0f7', 1, 1);
-insert into device_camera values ('3e2b8770-64c0-476b-b9d1-4e1d65732997', 2, 1);
+insert into device_camera values ('2e548651-939b-4951-a7a7-c2a7e562c0f7', 1, 1, 'box,garbage');
+insert into device_camera values ('3e2b8770-64c0-476b-b9d1-4e1d65732997', 2, 1, 'box,garbage');
 
 insert into person values (1, '测试人员', '18299098812', '[3.11212,11.11112,4.66554]');
 

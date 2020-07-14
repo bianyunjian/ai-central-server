@@ -21,6 +21,4 @@ public class Camera {
 
     private String rtspUrl;
 
-    private String aiTypeArray;
-
 }
