@@ -7,13 +7,13 @@ import com.hankutech.ax.centralserver.constant.DataECoder;
 import com.hankutech.ax.centralserver.dao.CameraDao;
 import com.hankutech.ax.centralserver.dao.DeviceCameraDao;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
-import com.hankutech.ax.centralserver.model.Camera;
-import com.hankutech.ax.centralserver.model.DeviceCamera;
+import com.hankutech.ax.centralserver.dao.model.Camera;
+import com.hankutech.ax.centralserver.dao.model.DeviceCamera;
 import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.service.CameraService;
-import com.hankutech.ax.centralserver.support.query.CameraQueryParams;
-import com.hankutech.ax.centralserver.support.request.PagedParams;
-import com.hankutech.ax.centralserver.support.response.PagedData;
+import com.hankutech.ax.centralserver.pojo.vo.query.CameraQueryParams;
+import com.hankutech.ax.centralserver.pojo.vo.request.PagedParams;
+import com.hankutech.ax.centralserver.pojo.vo.response.PagedData;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

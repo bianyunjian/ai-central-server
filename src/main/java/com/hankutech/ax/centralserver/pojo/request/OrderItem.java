@@ -1,4 +1,4 @@
-package com.hankutech.ax.centralserver.support.request;
+package com.hankutech.ax.centralserver.pojo.vo.request;
 
 import lombok.Data;
 

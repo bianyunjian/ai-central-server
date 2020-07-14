@@ -1,7 +1,6 @@
-package com.hankutech.ax.centralserver.support.request;
+package com.hankutech.ax.centralserver.pojo.vo.request;
 
 import com.hankutech.ax.centralserver.exception.InvalidParamException;
-import com.hankutech.ax.centralserver.support.request.BaseRequest;
 
 /**
  * 实体数据请求抽象类

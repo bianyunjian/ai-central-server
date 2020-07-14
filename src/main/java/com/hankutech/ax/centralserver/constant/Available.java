@@ -1,4 +1,4 @@
-package com.hankutech.ax.centralserver.support.base;
+package com.hankutech.ax.centralserver.constant;
 
 /**
  * 获取某个具体对象

@@ -2,7 +2,7 @@ package com.hankutech.ax.centralserver.pojo.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.hankutech.ax.centralserver.model.Camera;
+import com.hankutech.ax.centralserver.dao.model.Camera;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

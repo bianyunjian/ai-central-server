@@ -1,7 +1,6 @@
 package com.hankutech.ax.centralserver.constant;
 
-import com.hankutech.ax.centralserver.support.StringGetter;
-import com.hankutech.ax.centralserver.support.response.BaseResponse;
+import com.hankutech.ax.centralserver.pojo.vo.response.BaseResponse;
 
 /**
  * 响应状态枚举类

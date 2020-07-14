@@ -1,8 +1,8 @@
-package com.hankutech.ax.centralserver.support.response;
+package com.hankutech.ax.centralserver.pojo.vo.response;
 
 import com.hankutech.ax.centralserver.constant.ResponseStatus;
 import com.hankutech.ax.centralserver.constant.SysECoder;
-import com.hankutech.ax.centralserver.support.ErrorCoder;
+import com.hankutech.ax.centralserver.constant.ErrorCoder;
 import lombok.Data;
 
 /**

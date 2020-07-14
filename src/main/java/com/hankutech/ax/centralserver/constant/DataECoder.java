@@ -1,7 +1,5 @@
 package com.hankutech.ax.centralserver.constant;
 
-import com.hankutech.ax.centralserver.support.ErrorCoder;
-
 /**
  * @author ZhangXi
  */

@@ -1,4 +1,4 @@
-package com.hankutech.ax.centralserver.model;
+package com.hankutech.ax.centralserver.dao.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

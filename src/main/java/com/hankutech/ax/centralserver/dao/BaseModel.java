@@ -1,4 +1,4 @@
-package com.hankutech.ax.centralserver.support.base;
+package com.hankutech.ax.centralserver.dao;
 
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.Version;

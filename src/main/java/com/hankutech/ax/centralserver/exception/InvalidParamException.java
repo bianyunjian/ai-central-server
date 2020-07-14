@@ -1,7 +1,7 @@
 package com.hankutech.ax.centralserver.exception;
 
 
-import com.hankutech.ax.centralserver.support.ErrorCoder;
+import com.hankutech.ax.centralserver.constant.ErrorCoder;
 
 /**
  * 无效参数异常

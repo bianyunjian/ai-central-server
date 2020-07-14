@@ -1,7 +1,5 @@
 package com.hankutech.ax.centralserver.constant;
 
-import com.hankutech.ax.centralserver.support.ErrorCoder;
-
 /**
  * 系统错误码枚举类
  *

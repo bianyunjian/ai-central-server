@@ -1,12 +1,11 @@
 package com.hankutech.ax.centralserver.service;
 
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
-import com.hankutech.ax.centralserver.model.Camera;
+import com.hankutech.ax.centralserver.dao.model.Camera;
 import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
-import com.hankutech.ax.centralserver.support.query.CameraQueryParams;
-import com.hankutech.ax.centralserver.support.request.PagedParams;
-import com.hankutech.ax.centralserver.support.request.QueryRequest;
-import com.hankutech.ax.centralserver.support.response.PagedData;
+import com.hankutech.ax.centralserver.pojo.vo.query.CameraQueryParams;
+import com.hankutech.ax.centralserver.pojo.vo.request.PagedParams;
+import com.hankutech.ax.centralserver.pojo.vo.response.PagedData;
 
 import java.util.List;
 

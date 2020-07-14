@@ -35,7 +35,7 @@
 
 #### HTTP响应
 
-响应对象可继承 `com.hankutech.ax.centralserver.support.response.BaseResponse`，统一响应格式：
+响应对象可继承 `com.hankutech.ax.centralserver.pojo.vo.response.BaseResponse`，统一响应格式：
 
 ```json
 {

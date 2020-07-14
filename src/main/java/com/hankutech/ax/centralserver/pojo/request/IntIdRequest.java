@@ -1,4 +1,4 @@
-package com.hankutech.ax.centralserver.support.request;
+package com.hankutech.ax.centralserver.pojo.vo.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

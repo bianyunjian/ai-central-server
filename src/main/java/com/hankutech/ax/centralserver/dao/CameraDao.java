@@ -1,7 +1,7 @@
 package com.hankutech.ax.centralserver.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.hankutech.ax.centralserver.model.Camera;
+import com.hankutech.ax.centralserver.dao.model.Camera;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

@@ -1,6 +1,4 @@
-package com.hankutech.ax.centralserver.support;
-
-import com.hankutech.ax.centralserver.support.base.Available;
+package com.hankutech.ax.centralserver.constant;
 
 /**
  * 获取错误码数值
