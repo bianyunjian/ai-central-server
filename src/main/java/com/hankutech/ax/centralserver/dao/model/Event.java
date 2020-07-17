@@ -17,9 +17,9 @@ public class Event {
     @TableId(type = IdType.UUID)
     private String eventId;
 
-    private Integer deviceId;
+    private String deviceName;
 
-    private Integer cameraId;
+    private String cameraName;
 
     private String eventType;
 

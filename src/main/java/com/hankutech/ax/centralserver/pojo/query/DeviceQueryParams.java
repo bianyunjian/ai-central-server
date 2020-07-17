@@ -1,4 +1,11 @@
 package com.hankutech.ax.centralserver.pojo.query;
 
-public class DeviceQueryParams {
+import com.hankutech.ax.centralserver.pojo.request.QueryParams;
+
+/**
+ *
+ *
+ * @author ZhangXi
+ */
+public class DeviceQueryParams extends QueryParams {
 }

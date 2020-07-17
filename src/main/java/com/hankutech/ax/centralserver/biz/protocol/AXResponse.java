@@ -20,7 +20,7 @@ public class AXResponse {
      * 摄像头的编号
      * 由X3, X4两个字节组合而成
      */
-    int CameraNumber;
+    int cameraNumber;
 
     /**
      * 字节X8标示场景应用
