@@ -1,6 +1,7 @@
 create table `camera` (
     `camera_id` int(11) unsigned not null auto_increment comment '相机ID',
     `camera_name` varchar(255) not null default '' comment '相机名称，具有唯一性',
+    `ax_camera_number` int(11) unsigned not null comment '相机在爱信系统的编码',
     `rtsp_url` varchar(255) not null default '' comment 'RTSP连接地址',
     primary key (`camera_id`)
 ) engine = innodb default charset = utf8mb4;
