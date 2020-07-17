@@ -44,8 +44,8 @@ create table `device_person` (
 -- 事件表
 create table `event` (
     `event_id` char(36) not null default '' comment '事件ID，使用36位UUID',
-    `device_id` int(11) not null comment '设备ID',
-    `camera_id` int(11) not null comment '相机ID',
+    `device_name` varchar(255) not null default '' comment '设备名称',
+    `camera_name` varchar(255) not null default '' comment '相机名称',
     `event_type` varchar(50) not null default '' comment '事件类型',
     `event_type_value` int(11) not null comment '预定义事件值，与事件类型有关',
     `event_time` datetime not null comment '事件发生的时间',

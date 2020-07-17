@@ -1,12 +1,10 @@
 package com.hankutech.ax.centralserver.pojo.vo;
 
-import lombok.Data;
 
-@Data
-public class PersonVO {
+import com.hankutech.ax.centralserver.dao.model.Person;
 
-    String name;
-    int id;
-    public static final int FTR_LENGTH = 512;
-    float[] faceFtrArray = new float[FTR_LENGTH];
+/**
+ * @author ZhangXi
+ */
+public class PersonVO extends Person {
 }

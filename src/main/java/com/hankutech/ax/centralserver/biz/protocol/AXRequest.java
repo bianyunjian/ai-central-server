@@ -19,7 +19,7 @@ public class AXRequest {
      * 摄像头的编号
      * 由X3, X4两个字节组合而成
      */
-    int CameraNumber;
+    int cameraNumber;
 
     /**
      * 字节X9标示场景应用

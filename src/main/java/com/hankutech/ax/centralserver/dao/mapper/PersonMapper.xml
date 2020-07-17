@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hankutech.ax.centralserver.dao.PersonDao">
 
+    <sql id="table">person</sql>
+
+    <select id="getListByDeviceId" parameterType="int" resultType="com.hankutech.ax.centralserver.pojo.vo.PersonVO">
+        select P.* from <include refid="table"/> as P
+        left join device_person as DP on P.person_id = DP.person_id
+        where DP.device_id = #{deviceId, jdbcType=INTEGER}
+    </select>
+
+
 </mapper>
