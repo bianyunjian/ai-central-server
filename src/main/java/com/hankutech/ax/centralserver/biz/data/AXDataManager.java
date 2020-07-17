@@ -1,10 +1,12 @@
 package com.hankutech.ax.centralserver.biz.data;
 
+import com.hankutech.ax.centralserver.biz.code.AIBoxResultType;
 import com.hankutech.ax.centralserver.biz.code.AIResult;
 import com.hankutech.ax.centralserver.biz.code.AITaskType;
 import com.hankutech.ax.centralserver.biz.code.ScenarioFlag;
 import com.hankutech.ax.centralserver.biz.protocol.AXRequest;
 import com.hankutech.ax.centralserver.biz.protocol.AXResponse;
+import com.hankutech.ax.centralserver.constant.Common;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -53,7 +55,25 @@ public class AXDataManager {
         AXDataItem data = _dataCacheMap.get(cameraNumber);
         HashMap<AITaskType, AIResultWrapper> aiTaskResultMap = data.getAITaskResultMap();
 
-        return aiTaskResultMap.getOrDefault(taskType, new AIResultWrapper());
+        AIResultWrapper result = aiTaskResultMap.getOrDefault(taskType, new AIResultWrapper());
+        //检查最新事件的时间是否已经超过设定的阈值
+        if (checkIfEventObsolete(result.getEventTime())) {
+            result.setAiResult(AIBoxResultType.EMPTY);
+        }
+        return result;
+    }
+
+    /**
+     * 检查最新事件的时间是否已经超过设定的阈值.
+     * 爱信系统获取数据时, 需要判断事件的有效时间.
+     * 应该只对爱信系统返回有效时间内的最新事件数据.
+     *
+     * @param eventTime
+     * @return
+     */
+    private static boolean checkIfEventObsolete(LocalDateTime eventTime) {
+        LocalDateTime obTime = LocalDateTime.now().minusSeconds(Common.EVENT_OBSOLETE_SECONDS);
+        return eventTime.isBefore(obTime);
     }
 
 

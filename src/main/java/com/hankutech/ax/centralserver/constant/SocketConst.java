@@ -11,7 +11,7 @@ public class SocketConst {
     public static int FIXED_LENGTH_FRAME = 0;
 
     @Autowired
-    public void initSocketServerListeningPort(@Value("${app.socket.server.port}") int port, @Value("${app.socket.server.fixedLengthFrame}") int fixedLengthFrame) {
+    public void initSocketServerListeningPort(@Value("${app.socket.server.port}") int port, @Value("${app.socket.server.fixed-length-frame}") int fixedLengthFrame) {
         LISTENING_PORT = port;
         FIXED_LENGTH_FRAME = fixedLengthFrame;
         System.out.println("socket server listen port=" + LISTENING_PORT);

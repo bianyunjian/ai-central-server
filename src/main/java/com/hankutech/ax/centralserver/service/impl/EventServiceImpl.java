@@ -13,6 +13,7 @@ import com.hankutech.ax.centralserver.pojo.vo.CameraEventVO;
 import com.hankutech.ax.centralserver.pojo.vo.EventVO;
 import com.hankutech.ax.centralserver.service.EventService;
 import com.hankutech.ax.centralserver.support.base.ImageUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 public class EventServiceImpl implements EventService {
+    DateTimeFormatter fromFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
 
@@ -35,9 +37,10 @@ public class EventServiceImpl implements EventService {
     public BaseResponse handleUploadData(DeviceUploadParams request) {
         BaseResponse resp = new BaseResponse();
         String time = request.getTime();
-        LocalDateTime eventTime = LocalDateTime.parse(time);
+        LocalDateTime eventTime = LocalDateTime.parse(time, fromFormatter);
         int deviceId = request.getDeviceId();
-        ScenarioFlag scenarioFlag = ScenarioFlag.valueOf(_deviceDao.selectById(deviceId).getDeviceScenario());
+        String flag = _deviceDao.selectById(deviceId).getDeviceScenario();
+        ScenarioFlag scenarioFlag = StringUtils.isEmpty(flag) ? ScenarioFlag.EMPTY : ScenarioFlag.valueOf(flag);
 
         for (CameraEventVO ev :
                 request.getCameraList()) {
@@ -50,7 +53,7 @@ public class EventServiceImpl implements EventService {
 
                 //解析识别结果
                 String aiTaskType = e.getType();
-                String aiResultValue = e.getValue();
+                Integer aiResultValue = e.getValue();
                 String imageBase64 = e.getImageBase64();
                 String eventType = getEventType(aiTaskType);
                 Integer eventTypeValue = getEventTypeValue(eventType, aiResultValue);
@@ -92,13 +95,16 @@ public class EventServiceImpl implements EventService {
     }
 
     private String SaveEventImage(String imgFileName, String imageBase64) {
+        if (StringUtils.isEmpty(imageBase64)) {
+            return null;
+        }
         String imgFilePath = Common.IMAGE_FOLDER_PATH + imgFileName;
         String imgFormat = Common.IMAGE_FORMAT;
         return ImageUtil.base64ToImage(imageBase64, imgFilePath, imgFormat);
 
     }
 
-    private String getEventDescription(String eventType, String aiResultValue) {
+    private String getEventDescription(String eventType, Integer aiResultValue) {
         AITaskType aiTaskType = AITaskType.valueOf(eventType.toUpperCase());
         String desc = aiTaskType.getDescription() + "-";
 
@@ -107,7 +113,7 @@ public class EventServiceImpl implements EventService {
         return desc;
     }
 
-    private AIResult getEventAIResult(String eventType, String aiResultValue) {
+    private AIResult getEventAIResult(String eventType, Integer aiResultValue) {
         Integer resultValue = getEventTypeValue(eventType, aiResultValue);
         AITaskType aiTaskType = AITaskType.valueOf(eventType.toUpperCase());
 
@@ -128,8 +134,8 @@ public class EventServiceImpl implements EventService {
         return AIBoxResultType.EMPTY;
     }
 
-    private Integer getEventTypeValue(String eventType, String aiResultValue) {
-        return Integer.parseInt(aiResultValue);
+    private Integer getEventTypeValue(String eventType, Integer aiResultValue) {
+        return aiResultValue;
     }
 
     private String getEventType(String aiTaskType) {

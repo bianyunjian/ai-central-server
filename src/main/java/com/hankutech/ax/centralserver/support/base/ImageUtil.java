@@ -27,7 +27,7 @@ public class ImageUtil {
             byte[] bytes = baos.toByteArray();
 
             return encoder.encodeBuffer(bytes).trim();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -42,7 +42,7 @@ public class ImageUtil {
             File f1 = new File(imgFilePath);
             ImageIO.write(bi1, imgFormat, f1);
             return imgFilePath;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class AIResultWrapper {
     private AIResult aiResult;
-    private LocalDateTime dateTime;
+    private LocalDateTime eventTime;
 
     public AIResultWrapper() {
         aiResult = AIBoxResultType.EMPTY;
@@ -18,6 +18,6 @@ public class AIResultWrapper {
 
     public AIResultWrapper(AIResult result, LocalDateTime time) {
         this.aiResult = result;
-        this.dateTime = time;
+        this.eventTime = time;
     }
 }

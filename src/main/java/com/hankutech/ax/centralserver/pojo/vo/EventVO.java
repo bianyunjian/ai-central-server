@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class EventVO {
     String type;
-    String value;
+    Integer value;
     String imageBase64;
 }
