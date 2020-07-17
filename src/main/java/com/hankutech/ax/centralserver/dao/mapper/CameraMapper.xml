@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hankutech.ax.centralserver.dao.CameraDao">
-
-    <insert id="table">camera</insert>
+    <sql id="table">
+        camera
+    </sql>
 
     <select id="getListByDeviceId" parameterType="int" resultType="com.hankutech.ax.centralserver.pojo.vo.CameraVO">
-        select C.* from <include refid="table"/> as C
-        left join device_camera as DC on C.camera_id = DC.camera_id
-        where DC.device_id = #{deviceId, jdbcType=INTEGER}
+        select C.*
+                from
+        <include refid="table"/>
+        as C
+                left join device_camera as DC on C.camera_id = DC.camera_id
+                where DC.device_id = #{deviceId, jdbcType=INTEGER}
     </select>
-
-
 </mapper>

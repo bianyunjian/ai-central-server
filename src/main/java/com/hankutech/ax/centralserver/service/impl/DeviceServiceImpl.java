@@ -43,6 +43,7 @@ public class DeviceServiceImpl implements DeviceService {
 
         QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(Device.COL_DEVICE_NAME, deviceName);
+ 
         Device device = deviceDao.selectOne(queryWrapper);
         if (device != null) {
             DeviceConfigVO data = new DeviceConfigVO();
