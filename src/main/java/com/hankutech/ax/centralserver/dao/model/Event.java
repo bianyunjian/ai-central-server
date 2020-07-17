@@ -9,17 +9,16 @@ import java.time.LocalDateTime;
 /**
  * 事件表实体类
  *
- * @author ZhangXi
  */
 @Data
 public class Event {
 
-    @TableId(type = IdType.ASSIGN_UUID)
-    private String eventId;
+    @TableId(type = IdType.AUTO)
+    private int eventId;
 
-    private String deviceName;
+    private int deviceId;
 
-    private String cameraName;
+    private int cameraId;
 
     private String eventType;
 
@@ -28,5 +27,5 @@ public class Event {
     private LocalDateTime eventTime;
 
     private String description;
-
+    private String eventImagePath;
 }

@@ -17,6 +17,8 @@ public class DeviceCameraConfigVO {
     @Schema(description = "设置的AI检测算法", example = "[\"box\",\"face\"]")
     private String[] ai;
 
+    @Schema(description = "相机在爱信系统的编码", example = "1")
+    private Integer  axCameraNumber;
 
     /**
      * 将AI算法类型从字符串转为字符串数组

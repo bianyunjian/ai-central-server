@@ -12,6 +12,8 @@ create table `device` (
     `device_id` int(11) unsigned not null auto_increment comment 'IOT设备ID',
     `device_name` varchar(255) not null default '' comment 'IOT设备名称，具有唯一性',
     `status` int(2) unsigned not null default 0 comment 'IOT设备状态：0-正常，1-断线',
+    `device_scenario` varchar(50) not null default '' comment '设备使用的场景, 关联 com.hankutech.ax.centralserver.biz.code.ScenarioFlag',
+
     primary key (`device_id`)
 ) engine = innodb default charset = utf8mb4;
 
@@ -51,5 +53,6 @@ create table `event` (
     `event_type_value` int(11) not null comment '预定义事件值，与事件类型有关',
     `event_time` datetime not null comment '事件发生的时间',
     `description` varchar(500) default null comment '事件描述',
+    `event_image_path` VARCHAR(200) NULL COMMENT '事件关联的图片路径',
     primary key (`event_id`)
 ) engine = innodb default charset = utf8mb4;

@@ -11,4 +11,4 @@ insert into person values (1, '测试人员', '18299098812', '[3.11212,11.11112,
 insert into device_person values ('d5cbdbc4-2d2e-4d56-ac48-0e7f8284a4b4', 1, 1);
 insert into device_person values ('b50142e3-6adc-4c5f-b108-c618896b71f7', 2, 1);
 
-insert into event values (0, 1, 1, 'box', 1, '2020-07-10 11:47:56', '周转箱未盖盖子');
+insert into event values (0, 1, 1, 'box', 1, '2020-07-10 11:47:56', '周转箱未盖盖子','');

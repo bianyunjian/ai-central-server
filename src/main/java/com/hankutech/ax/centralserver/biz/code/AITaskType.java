@@ -5,7 +5,7 @@ package com.hankutech.ax.centralserver.biz.code;
  */
 public enum AITaskType {
     EMPTY(0,"UNKNOWN"),
-    SECURITY_BOX(1, "安全防护检测和周转箱颜色检测任务"),
+    BOX(1, "安全防护检测和周转箱颜色检测任务"),
     FACE(2, "人脸识别检测任务"),
     GARBAGE(3, "垃圾分类检测任务"),
     PERSON(4, "有无人员检测任务");
@@ -13,7 +13,7 @@ public enum AITaskType {
         switch (value) {
 
             case 1:
-                return SECURITY_BOX;
+                return BOX;
             case 2:
                 return FACE;
             case 3:

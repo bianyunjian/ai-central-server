@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 public class DeviceUploadParams {
     private String time;
-    private String deviceName;
+    private int deviceId;
     private List<CameraEventVO> cameraList;
 }

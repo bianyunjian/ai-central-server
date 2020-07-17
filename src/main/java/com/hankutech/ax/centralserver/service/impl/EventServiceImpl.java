@@ -1,5 +1,10 @@
 package com.hankutech.ax.centralserver.service.impl;
 
+import com.hankutech.ax.centralserver.biz.code.*;
+import com.hankutech.ax.centralserver.biz.data.AXDataManager;
+import com.hankutech.ax.centralserver.constant.Common;
+import com.hankutech.ax.centralserver.dao.CameraDao;
+import com.hankutech.ax.centralserver.dao.DeviceDao;
 import com.hankutech.ax.centralserver.dao.EventDao;
 import com.hankutech.ax.centralserver.dao.model.Event;
 import com.hankutech.ax.centralserver.pojo.query.DeviceUploadParams;
@@ -7,41 +12,68 @@ import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.vo.CameraEventVO;
 import com.hankutech.ax.centralserver.pojo.vo.EventVO;
 import com.hankutech.ax.centralserver.service.EventService;
+import com.hankutech.ax.centralserver.support.base.ImageUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class EventServiceImpl implements EventService {
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+
     @Resource
     private EventDao _eventDao;
+    @Resource
+    private DeviceDao _deviceDao;
+    @Resource
+    private CameraDao _cameraDao;
 
     @Override
     public BaseResponse handleUploadData(DeviceUploadParams request) {
         BaseResponse resp = new BaseResponse();
         String time = request.getTime();
-        String deviceName = request.getDeviceName();
+        LocalDateTime eventTime = LocalDateTime.parse(time);
+        int deviceId = request.getDeviceId();
+        ScenarioFlag scenarioFlag = ScenarioFlag.valueOf(_deviceDao.selectById(deviceId).getDeviceScenario());
+
         for (CameraEventVO ev :
                 request.getCameraList()) {
 
-            String cameraName = ev.getName();
+            int cameraId = ev.getCameraId();
+            int cameraNumber = _cameraDao.selectById(cameraId).getAxCameraNumber();
 
             for (EventVO e :
                     ev.getEvents()) {
+
+                //解析识别结果
                 String aiTaskType = e.getType();
                 String aiResultValue = e.getValue();
                 String imageBase64 = e.getImageBase64();
+                String eventType = getEventType(aiTaskType);
+                Integer eventTypeValue = getEventTypeValue(eventType, aiResultValue);
+                String description = getEventDescription(eventType, aiResultValue);
+                String imgName = getImageName(deviceId, cameraId, eventType, eventTime
+                );
+                String imgFilePath = SaveEventImage(imgName, imageBase64);
 
+//                更新缓存中， 缓存中只保留 当前最新的结果
+                AITaskType aiTaskTypeEnum = AITaskType.valueOf(eventType.toUpperCase());
+                AIResult aiResult = getEventAIResult(eventType, aiResultValue);
+                AXDataManager.updateAIResult(cameraNumber, scenarioFlag, aiTaskTypeEnum, aiResult, eventTime);
 
+//              持久化到数据库中
                 Event newEventEntity = new Event();
-//                newEventEntity.setCameraId();
-//                newEventEntity.setDeviceId();
-//                newEventEntity.setEventTime(time);
-//                newEventEntity.setEventType();
-//                newEventEntity.setEventTypeValue();
-//                newEventEntity.setDescription("");
+                newEventEntity.setCameraId(cameraId);
+                newEventEntity.setDeviceId(deviceId);
 
+                newEventEntity.setEventTime(eventTime);
+                newEventEntity.setEventType(eventType);
+                newEventEntity.setEventTypeValue(eventTypeValue);
+                newEventEntity.setDescription(description);
+                newEventEntity.setEventImagePath(imgFilePath);
 
                 int affectRowCount = _eventDao.insert(newEventEntity);
                 if (affectRowCount > 0) {
@@ -53,5 +85,55 @@ public class EventServiceImpl implements EventService {
         }
 
         return resp;
+    }
+
+    private String getImageName(int deviceId, int cameraId, String eventType, LocalDateTime time) {
+        return deviceId + "-" + cameraId + "-" + eventType + "-" + time.format(formatter);
+    }
+
+    private String SaveEventImage(String imgFileName, String imageBase64) {
+        String imgFilePath = Common.IMAGE_FOLDER_PATH + imgFileName;
+        String imgFormat = Common.IMAGE_FORMAT;
+        return ImageUtil.base64ToImage(imageBase64, imgFilePath, imgFormat);
+
+    }
+
+    private String getEventDescription(String eventType, String aiResultValue) {
+        AITaskType aiTaskType = AITaskType.valueOf(eventType.toUpperCase());
+        String desc = aiTaskType.getDescription() + "-";
+
+        AIResult aiResult = getEventAIResult(eventType, aiResultValue);
+        desc += aiResult.getDescription();
+        return desc;
+    }
+
+    private AIResult getEventAIResult(String eventType, String aiResultValue) {
+        Integer resultValue = getEventTypeValue(eventType, aiResultValue);
+        AITaskType aiTaskType = AITaskType.valueOf(eventType.toUpperCase());
+
+        switch (aiTaskType) {
+            case BOX:
+                return AIBoxResultType.valueOf(resultValue);
+
+            case GARBAGE:
+                return AIGarbageResultType.valueOf(resultValue);
+
+            case FACE:
+                return AIFaceResultType.valueOf(resultValue);
+
+            case PERSON:
+                return AIPersonResultType.valueOf(resultValue);
+        }
+
+        return AIBoxResultType.EMPTY;
+    }
+
+    private Integer getEventTypeValue(String eventType, String aiResultValue) {
+        return Integer.parseInt(aiResultValue);
+    }
+
+    private String getEventType(String aiTaskType) {
+        return aiTaskType;
+
     }
 }

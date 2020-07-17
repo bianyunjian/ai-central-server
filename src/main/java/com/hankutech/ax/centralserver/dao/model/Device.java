@@ -26,4 +26,9 @@ public class Device {
      */
     private Integer status;
 
+
+    /**
+     * 设备使用的场景, 关联 com.hankutech.ax.centralserver.biz.code.ScenarioFlag
+     */
+    private  String deviceScenario;
 }
