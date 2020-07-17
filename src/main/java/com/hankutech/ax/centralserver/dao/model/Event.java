@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 public class Event {
 
-    @TableId(type = IdType.UUID)
+    @TableId(type = IdType.ASSIGN_UUID)
     private String eventId;
 
     private String deviceName;

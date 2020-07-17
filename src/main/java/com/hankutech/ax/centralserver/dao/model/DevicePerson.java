@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class DevicePerson {
 
-    @TableId(type = IdType.UUID)
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     private Integer deviceId;

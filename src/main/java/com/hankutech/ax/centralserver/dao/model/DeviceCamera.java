@@ -15,7 +15,7 @@ public class DeviceCamera {
     public static final String COL_CAMERA_ID = "camera_id";
     public static final String COL_DEVICE_ID = "device_id";
 
-    @TableId(type = IdType.UUID)
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
 
     private Integer deviceId;

@@ -8,7 +8,7 @@ import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
  *
  * @author ZhangXi
  */
-public enum ResponseStatus implements StringGetter {
+public enum ResponseStatus implements Available<String> {
 
     /**
      * 响应状态
