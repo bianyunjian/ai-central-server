@@ -1,6 +1,8 @@
 package com.hankutech.ax.centralserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hankutech.ax.centralserver.constant.DataECoder;
 import com.hankutech.ax.centralserver.dao.CameraDao;
 import com.hankutech.ax.centralserver.dao.DeviceCameraDao;
@@ -10,7 +12,10 @@ import com.hankutech.ax.centralserver.dao.model.Camera;
 import com.hankutech.ax.centralserver.dao.model.Device;
 import com.hankutech.ax.centralserver.dao.model.DeviceCamera;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
+import com.hankutech.ax.centralserver.menum.DeviceStatus;
 import com.hankutech.ax.centralserver.pojo.query.DeviceQueryParams;
+import com.hankutech.ax.centralserver.pojo.request.PagedParams;
+import com.hankutech.ax.centralserver.pojo.response.PagedData;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceCameraConfigVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceConfigVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceVO;
@@ -84,8 +89,79 @@ public class DeviceServiceImpl implements DeviceService {
         return null;
     }
 
+    @Override
+    public DeviceVO getOneById(Integer id) {
+        Device data = deviceDao.selectById(id);
+        return null == data ? null : new DeviceVO(data);
+    }
 
-    private Device needExistedAndReturn(Integer id) throws InvalidDataException {
+    @Override
+    public List<DeviceVO> getAllList() {
+        List<Device> list = deviceDao.selectList(null);
+        if (null != list && !list.isEmpty()) {
+            List<DeviceVO> result = new ArrayList<>(list.size());
+            for (Device device : list) {
+                result.add(new DeviceVO(device));
+            }
+            return result;
+        }
+        return null;
+    }
+
+    @Override
+    public PagedData<DeviceVO> queryDeviceTable(PagedParams pagedParams, DeviceQueryParams queryParams) {
+        IPage<Device> iPage = new Page<>(pagedParams.getPageNum(), pagedParams.getPageSize());
+        QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
+        //fixme 后续可增加参数
+        iPage = deviceDao.selectPage(iPage, queryWrapper);
+        PagedData<DeviceVO> data = new PagedData<>();
+        data.setTotal(iPage.getTotal());
+        if (iPage.getTotal() > 0) {
+            List<DeviceVO> list = new ArrayList<>();
+            for (Device device : iPage.getRecords()) {
+                list.add(new DeviceVO(device));
+            }
+            data.setList(list);
+        }
+        return data;
+    }
+
+    @Override
+    public DeviceVO addDevice(Device newOne) throws InvalidDataException {
+        // 检测设备名称是否重复
+        needNameNotRepeated(newOne.getDeviceName());
+        // 插入数据
+        newOne.setStatus(DeviceStatus.NORMAL.getStatusValue());
+        deviceDao.insert(newOne);
+        return new DeviceVO(newOne);
+    }
+
+    @Override
+    public DeviceVO updateDevice(Device updateOne) throws InvalidDataException {
+        // 检测设备名称是否重复，设备数据是否存在
+        Device oldOne = needNameNotRepeated(updateOne.getDeviceName()).needExistedAndReturn(updateOne.getDeviceId());
+        // 更改数据
+        updateOne.setStatus(oldOne.getStatus());
+        deviceDao.updateById(updateOne);
+        return new DeviceVO(updateOne);
+    }
+
+    @Override
+    public void deleteDevice(Integer id) throws InvalidDataException {
+        // 检查设备是否存在
+        needExistedAndReturn(id);
+        // 删除设备
+        QueryWrapper<DeviceCamera> delRelatedCameraQueryWrapper = new QueryWrapper<>();
+        delRelatedCameraQueryWrapper.eq(DeviceCamera.COL_DEVICE_ID, id);
+        deviceCameraDao.delete(delRelatedCameraQueryWrapper);
+        deviceDao.deleteById(id);
+    }
+
+
+    //==================================================================================================================
+
+
+    protected Device needExistedAndReturn(Integer id) throws InvalidDataException {
         // 检测设备数据是否存在
         Device oldOne = null;
         if (null != id) {
@@ -100,7 +176,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
 
-    private DeviceServiceImpl needNameNotRepeated(String name) throws InvalidDataException {
+    protected DeviceServiceImpl needNameNotRepeated(String name) throws InvalidDataException {
         // 检测设备名称是否重复
         QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(Device.COL_DEVICE_NAME, name);
@@ -112,5 +188,6 @@ public class DeviceServiceImpl implements DeviceService {
         }
         return this;
     }
+
 
 }

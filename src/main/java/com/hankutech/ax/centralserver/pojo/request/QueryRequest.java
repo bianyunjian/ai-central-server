@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author ZhangXi
@@ -25,7 +26,7 @@ public class QueryRequest<K extends QueryParams> extends BaseRequest {
      * 排序参数
      */
     @Schema(description = "排序参数")
-    private OrderParams orderParams;
+    private List<OrderItem> orderParams;
 
     /**
      * 查询参数

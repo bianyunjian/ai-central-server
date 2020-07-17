@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 前端界面相机VO
+ * 适配前端界面API的相机VO
  *
  * @author ZhangXi
  */

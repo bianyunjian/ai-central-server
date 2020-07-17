@@ -1,8 +1,9 @@
 package com.hankutech.ax.centralserver.pojo.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hankutech.ax.centralserver.dao.model.Device;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -12,28 +13,23 @@ import lombok.ToString;
  */
 @Schema(name = "Device", description = "设备数据")
 @ToString
-public class DeviceVO extends Device {
+@Data
+public class DeviceVO {
 
     @Schema(description = "设备ID", example = "1")
-    @JsonProperty("id")
-    @Override
-    public Integer getDeviceId() {
-        return super.getDeviceId();
-    }
+    private Integer id;
 
     @Schema(description = "设备名称", example = "1号垃圾口检测器")
-    @JsonProperty("name")
-    @Override
-    public String getDeviceName() {
-        return super.getDeviceName();
-    }
+    private String name;
 
+    @Schema(description = "设备状态", example = "1")
+    private Integer status;
 
     public DeviceVO(Device device) {
         if (null != device) {
-            this.setDeviceId(device.getDeviceId());
-            this.setDeviceName(device.getDeviceName());
-            this.setStatus(device.getStatus());
+            this.id = device.getDeviceId();
+            this.name = device.getDeviceName();
+            this.status = device.getStatus();
         }
     }
 }
