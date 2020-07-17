@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class Device {
 
-    public static final String COL_DEVICE_NAME = "device_name";
+    public static final String COL_DEVICE_ID = "device_id";
 
     @TableId(type = IdType.AUTO)
     private Integer deviceId;

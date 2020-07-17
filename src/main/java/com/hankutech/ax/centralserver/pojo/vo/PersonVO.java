@@ -1,10 +1,14 @@
 package com.hankutech.ax.centralserver.pojo.vo;
 
 
-import com.hankutech.ax.centralserver.dao.model.Person;
+import lombok.Data;
 
-/**
- * @author ZhangXi
- */
-public class PersonVO extends Person {
+@Data
+public class PersonVO {
+    private Integer id;
+
+    private String name;
+
+    private Float[] faceFtrArray;
+
 }

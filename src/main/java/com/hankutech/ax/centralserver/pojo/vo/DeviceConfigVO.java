@@ -1,30 +1,18 @@
 package com.hankutech.ax.centralserver.pojo.vo;
 
-import com.hankutech.ax.centralserver.dao.model.Device;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
-import java.util.List;
+import java.util.ArrayList;
 
-/**
- * @author ZhangXi
- */
+
 @Schema(description = "带配置信息的设备数据")
-public class DeviceConfigVO extends DeviceVO {
+@Data
+public class DeviceConfigVO {
 
-    @Schema(description = "相机信息列表")
-    private List<CameraVO> cameraList;
+    private Integer deviceId;
+    private String deviceName;
+    private ArrayList<DeviceCameraConfigVO> deviceCameraConfigList;
 
 
-    public DeviceConfigVO(Device device, List<CameraVO> cameras) {
-        super(device);
-        this.cameraList = cameras;
-    }
-
-    public List<CameraVO> getCameraList() {
-        return cameraList;
-    }
-
-    public void setCameraList(List<CameraVO> cameraList) {
-        this.cameraList = cameraList;
-    }
 }
