@@ -12,7 +12,7 @@ import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.vo.CameraEventVO;
 import com.hankutech.ax.centralserver.pojo.vo.EventVO;
 import com.hankutech.ax.centralserver.service.EventService;
-import com.hankutech.ax.centralserver.support.base.ImageUtil;
+import com.hankutech.ax.centralserver.support.ImageUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

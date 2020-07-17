@@ -1,4 +1,4 @@
-package com.hankutech.ax.centralserver.support.base;
+package com.hankutech.ax.centralserver.support;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
