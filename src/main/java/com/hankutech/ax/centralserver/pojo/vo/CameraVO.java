@@ -1,49 +1,33 @@
 package com.hankutech.ax.centralserver.pojo.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hankutech.ax.centralserver.dao.model.Camera;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 相机VO
  *
  * @author ZhangXi
  */
-@EqualsAndHashCode(callSuper = true)
+@Schema(description = "相机数据")
 @Data
-public class CameraVO extends Camera {
+public class CameraVO {
 
     @Schema(description = "相机ID", example = "1")
-    @JsonProperty("id")
-    @Override
-    public Integer getCameraId() {
-        return super.getCameraId();
-    }
+    private Integer id;
 
     @Schema(description = "摄像头名称", example = "测试相机")
-    @JsonProperty(value = "name")
-    @Override
-    public String getCameraName() {
-        return super.getCameraName();
-    }
+    private String name;
 
     @Schema(description = "RTSP地址", example = "rtsp://192.168.1.234")
-    @JsonProperty(value = "rtsp")
-    @Override
-    public String getRtspUrl() {
-        return super.getRtspUrl();
-    }
-
+    private String rtsp;
 
     public CameraVO(Camera camera) {
         if (null != camera) {
-            this.setCameraId(camera.getCameraId());
-            this.setCameraName(camera.getCameraName());
-            this.setRtspUrl(camera.getRtspUrl());
+            this.id = camera.getCameraId();
+            this.name = camera.getCameraName();
+            this.rtsp = camera.getRtspUrl();
         }
     }
-
 
 }

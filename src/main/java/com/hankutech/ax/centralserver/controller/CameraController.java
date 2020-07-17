@@ -9,6 +9,7 @@ import com.hankutech.ax.centralserver.pojo.request.IntIdRequest;
 import com.hankutech.ax.centralserver.pojo.request.QueryRequest;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.response.PagedData;
+import com.hankutech.ax.centralserver.pojo.vo.CameraFrontVO;
 import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.service.CameraService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,8 +38,12 @@ import java.util.List;
 @RestController
 public class CameraController {
 
+    private final CameraService cameraService;
+
     @Autowired
-    private CameraService cameraService;
+    public CameraController(CameraService cameraService) {
+        this.cameraService = cameraService;
+    }
 
     @Operation(summary = "根据ID获取相机")
     @GetMapping(path = "/{id}")
@@ -61,12 +66,11 @@ public class CameraController {
     @Operation(summary = "分页查询相机")
     @PostMapping(path = "/table")
     public CameraPagedResponse queryCameraTable(@RequestBody @Validated CameraQueryRequest request) {
-        PagedData<CameraVO> data = cameraService.queryCameraTable(request.getPagedParams(), request.getQueryParams());
+        PagedData<CameraFrontVO> data = cameraService.queryCameraTable(request.getPagedParams(), request.getQueryParams());
         CameraPagedResponse response = new CameraPagedResponse();
         response.success("分页查询相机成功", data);
         return response;
     }
-
 
     @Operation(summary = "新增相机")
     @PostMapping(path = "/add")
@@ -113,7 +117,7 @@ public class CameraController {
     }
 
     @Schema(description = "相机分页列表响应数据")
-    private static class CameraPagedResponse extends BaseResponse<PagedData<CameraVO>> {
+    private static class CameraPagedResponse extends BaseResponse<PagedData<CameraFrontVO>> {
     }
 
     @Schema(description = "新增相机请求数据")
@@ -128,6 +132,10 @@ public class CameraController {
         @NotBlank
         @Schema(description = "rtsp连接地址", example = "rtsp://192.168.1.234", required = true)
         private String rtsp;
+
+        @NotNull
+        @Schema(description = "艾信相机编码", example = "1", required = true)
+        private Integer axCameraNumber;
 
         @Override
         protected void validate() throws InvalidParamException {
@@ -144,6 +152,7 @@ public class CameraController {
             Camera model = new Camera();
             model.setCameraName(this.name);
             model.setRtspUrl(this.rtsp);
+            model.setAxCameraNumber(this.axCameraNumber);
             return model;
         }
     }

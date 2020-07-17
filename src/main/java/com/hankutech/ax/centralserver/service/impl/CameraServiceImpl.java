@@ -9,6 +9,7 @@ import com.hankutech.ax.centralserver.dao.DeviceCameraDao;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.dao.model.Camera;
 import com.hankutech.ax.centralserver.dao.model.DeviceCamera;
+import com.hankutech.ax.centralserver.pojo.vo.CameraFrontVO;
 import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.service.CameraService;
 import com.hankutech.ax.centralserver.pojo.query.CameraQueryParams;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 相机Service层
+ * 相机Service层实现类
  *
  * @author ZhangXi
  */
@@ -56,17 +57,17 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public PagedData<CameraVO> queryCameraTable(PagedParams pagedParams, CameraQueryParams queryParams) {
+    public PagedData<CameraFrontVO> queryCameraTable(PagedParams pagedParams, CameraQueryParams queryParams) {
         IPage<Camera> iPage = new Page<>(pagedParams.getPageNum(), pagedParams.getPageSize());
         QueryWrapper<Camera> queryWrapper = new QueryWrapper<>();
         //fixme 待增加分页查询参数
         iPage = cameraDao.selectPage(iPage, queryWrapper);
-        PagedData<CameraVO> data = new PagedData<>();
+        PagedData<CameraFrontVO> data = new PagedData<>();
         data.setTotal(iPage.getTotal());
         if (iPage.getTotal() > 0) {
-            List<CameraVO> list = new ArrayList<>();
+            List<CameraFrontVO> list = new ArrayList<>();
             for (Camera camera : iPage.getRecords()) {
-                list.add(new CameraVO(camera));
+                list.add(new CameraFrontVO(camera));
             }
             data.setList(list);
         }
@@ -75,13 +76,13 @@ public class CameraServiceImpl implements CameraService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public CameraVO addCamera(Camera one) throws InvalidDataException {
+    public CameraVO addCamera(Camera newOne) throws InvalidDataException {
         // 检测名称重复
-        needNameNotRepeated(one.getCameraName());
+        needNameNotRepeated(newOne.getCameraName());
         // 插入数据
-        one.setCameraId(null);
-        cameraDao.insert(one);
-        return new CameraVO(one);
+        newOne.setCameraId(null);
+        cameraDao.insert(newOne);
+        return new CameraVO(newOne);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -103,6 +104,7 @@ public class CameraServiceImpl implements CameraService {
         cameraDao.deleteById(id);
     }
 
+    //==================================================================================================================
 
 
     protected CameraServiceImpl needNameNotRepeated(String name) throws InvalidDataException {
@@ -132,7 +134,6 @@ public class CameraServiceImpl implements CameraService {
         return oldOne;
     }
 
-
     protected CameraServiceImpl needNoneRelatedDevice(Integer id) throws InvalidDataException {
         // 检测相机是否关联设备
         QueryWrapper<DeviceCamera> queryWrapper = new QueryWrapper<>();
@@ -145,6 +146,5 @@ public class CameraServiceImpl implements CameraService {
         }
         return this;
     }
-
 
 }
