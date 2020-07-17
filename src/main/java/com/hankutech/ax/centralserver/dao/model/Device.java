@@ -15,6 +15,8 @@ public class Device {
     @TableId(type = IdType.AUTO)
     private Integer deviceId;
 
+    public static final String COL_DEVICE_NAME = "device_name";
+
     private String deviceName;
 
     /**

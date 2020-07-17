@@ -8,5 +8,5 @@ public class PersonVO {
     String name;
     int id;
     public static final int FTR_LENGTH = 512;
-    float[] faceFtrArray = new float[FTR_LENGTH];
+    Float[] faceFtrArray = new Float[0];
 }

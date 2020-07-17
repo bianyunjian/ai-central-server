@@ -21,4 +21,5 @@ public class Camera {
 
     private String rtspUrl;
 
+    private Integer axCameraNumber;
 }
