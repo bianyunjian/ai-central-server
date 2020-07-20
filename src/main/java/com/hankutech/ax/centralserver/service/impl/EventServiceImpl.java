@@ -98,8 +98,9 @@ public class EventServiceImpl implements EventService {
         if (StringUtils.isEmpty(imageBase64)) {
             return null;
         }
-        String imgFilePath = Common.IMAGE_FOLDER_PATH + imgFileName;
         String imgFormat = Common.IMAGE_FORMAT;
+        String imgFilePath = Common.IMAGE_FOLDER_PATH + imgFileName + "." + imgFormat;
+
         return ImageUtil.base64ToImage(imageBase64, imgFilePath, imgFormat);
 
     }

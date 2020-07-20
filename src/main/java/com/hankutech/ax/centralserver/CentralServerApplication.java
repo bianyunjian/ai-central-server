@@ -12,6 +12,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.File;
 
@@ -21,7 +23,14 @@ import java.io.File;
  * @author ZhangXi
  */
 @SpringBootApplication
-public class CentralServerApplication implements ApplicationRunner, DisposableBean {
+public class CentralServerApplication implements ApplicationRunner, DisposableBean, WebMvcConfigurer {
+    @Value("${app.event.image-folder-path}")
+    private String imageFolderPath;
+    @Value("${app.event.image-format}")
+    String imageFormat;
+    @Value("${app.event.event-obsolete-seconds}")
+    int eventObSeconds;
+
     private static SocketServer server;
 
     public static void main(String[] args) {
@@ -51,11 +60,9 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
 
     }
 
+
     @Autowired
-    public void init(@Value("${app.event.image-format}") String imageFormat,
-                     @Value("${app.event.image-folder-path}") String imageFolderPath,
-                     @Value("${app.event.event-obsolete-seconds}") int eventObSeconds
-    ) {
+    public void init() {
         Common.IMAGE_FORMAT = imageFormat;
         Common.IMAGE_FOLDER_PATH = imageFolderPath;
         Common.EVENT_OBSOLETE_SECONDS = eventObSeconds;
@@ -63,5 +70,19 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
         File f = new File(Common.IMAGE_FOLDER_PATH);
         f.mkdirs();
     }
+
+
+    /**
+     * 自定义静态资源访问
+     *
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/eventImage/**").addResourceLocations(
+                "file:" + imageFolderPath);
+        System.out.println("自定义静态资源目录:" + "/eventImage/**" + "-->" + "file:" + imageFolderPath);
+    }
+
 
 }

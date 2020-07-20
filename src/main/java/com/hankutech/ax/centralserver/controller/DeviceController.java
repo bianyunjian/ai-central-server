@@ -101,20 +101,23 @@ public class DeviceController {
     }
 
 
-
     //==================================================================================================================
 
     @Schema(description = "设备响应数据")
-    private static class DeviceResponse extends BaseResponse<DeviceVO> {}
+    private static class DeviceResponse extends BaseResponse<DeviceVO> {
+    }
 
     @Schema(description = "设备列表响应数据")
-    private static class DeviceListResponse extends BaseResponse<List<DeviceVO>> {}
+    private static class DeviceListResponse extends BaseResponse<List<DeviceVO>> {
+    }
 
     @Schema(description = "设备分页响应数据")
-    private static class DevicePagedResponse extends BaseResponse<PagedData<DeviceVO>> {}
+    private static class DevicePagedResponse extends BaseResponse<PagedData<DeviceVO>> {
+    }
 
     @Schema(description = "设备分页查询请求数据")
-    private static class DeviceQueryRequest extends QueryRequest<DeviceQueryParams> {}
+    private static class DeviceQueryRequest extends QueryRequest<DeviceQueryParams> {
+    }
 
     @Schema(description = "新增设备请求数据")
     @EqualsAndHashCode(callSuper = true)
@@ -130,10 +133,12 @@ public class DeviceController {
         private String scenario;
 
         @Override
-        protected void validate() throws InvalidParamException {}
+        protected void validate() throws InvalidParamException {
+        }
 
         @Override
-        protected void format() throws InvalidParamException {}
+        protected void format() throws InvalidParamException {
+        }
 
         @Override
         protected Device buildData() {

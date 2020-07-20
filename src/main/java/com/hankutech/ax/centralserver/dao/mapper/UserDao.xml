@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hankutech.ax.centralserver.dao.UserDao">
+  <resultMap id="BaseResultMap" type="com.hankutech.ax.centralserver.dao.model.User">
+    <!--@mbg.generated-->
+    <!--@Table `user`-->
+    <id column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="display_name" jdbcType="VARCHAR" property="displayName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    user_name, `password`, display_name
+  </sql>
+</mapper>
