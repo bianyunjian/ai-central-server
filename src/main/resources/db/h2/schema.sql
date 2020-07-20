@@ -58,7 +58,7 @@ create table `event` (
 ) engine = innodb default charset = utf8mb4;
 
 
-CREATE TABLE `aixin`.`user` (
+CREATE TABLE `user` (
   `user_name` VARCHAR(100) NOT NULL,
   `password` VARCHAR(100) NOT NULL,
   `display_name` VARCHAR(100) NOT NULL,

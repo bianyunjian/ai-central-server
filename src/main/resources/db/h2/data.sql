@@ -13,5 +13,5 @@ insert into device_person values ('b50142e3-6adc-4c5f-b108-c618896b71f7', 2, 1);
 
 insert into event values (0, 1, 1, 'box', 1, '2020-07-10 11:47:56', '周转箱未盖盖子','');
 
-INSERT INTO `aixin`.`user` (`user_name`, `password`, `display_name`) VALUES ('admin@ax.com', 'MTIzNDU2', '管理员');
-INSERT INTO `aixin`.`user` (`user_name`, `password`, `display_name`) VALUES ('test@ax.com', 'MTIzNDU2', '测试人员');
+INSERT INTO `user` (`user_name`, `password`, `display_name`) VALUES ('admin@ax.com', 'MTIzNDU2', '管理员');
+INSERT INTO `user` (`user_name`, `password`, `display_name`) VALUES ('test@ax.com', 'MTIzNDU2', '测试人员');
