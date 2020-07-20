@@ -3,12 +3,14 @@ package com.hankutech.ax.centralserver.controller;
 import com.hankutech.ax.centralserver.dao.model.Device;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.exception.InvalidParamException;
+import com.hankutech.ax.centralserver.pojo.dto.DeviceConfigDTO;
 import com.hankutech.ax.centralserver.pojo.query.DeviceQueryParams;
 import com.hankutech.ax.centralserver.pojo.request.AbstractObjectRequest;
 import com.hankutech.ax.centralserver.pojo.request.IntIdRequest;
 import com.hankutech.ax.centralserver.pojo.request.QueryRequest;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.response.PagedData;
+import com.hankutech.ax.centralserver.pojo.vo.AiTypeConfigVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceVO;
 import com.hankutech.ax.centralserver.service.DeviceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,9 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 设备控制器
@@ -101,6 +106,34 @@ public class DeviceController {
     }
 
 
+    @Operation(summary = "获取算法类型列表")
+    @GetMapping(path = "/aiTypes")
+    public BaseResponse<Map<String, String>> getAiTypes() {
+        BaseResponse<Map<String, String>> response = new BaseResponse<>();
+        Map<String, String> data = new HashMap<>(4);
+        data.put("box", "周转箱与安全防护检测算法");
+        data.put("face", "人脸识别检测算法");
+        data.put("garbage", "垃圾袋分类检测算法");
+        data.put("person", "有无人员检测算法");
+        response.success("获取算法类型列表成功", data);
+        return response;
+    }
+
+    @Operation(summary = "配置设备")
+    @PostMapping(path = "/config")
+    public BaseResponse configDevice(@RequestBody @Validated DeviceConfigRequest request) throws InvalidDataException {
+        DeviceConfigDTO dto = request.buildData();
+        deviceService.configDevice(dto);
+        BaseResponse response = new BaseResponse();
+        response.success("设备配置成功");
+        return response;
+    }
+
+
+
+
+
+
 
     //==================================================================================================================
 
@@ -120,7 +153,6 @@ public class DeviceController {
     @EqualsAndHashCode(callSuper = true)
     @Data
     private static class DeviceAddRequest extends AbstractObjectRequest<Device> {
-
         @NotBlank
         @Schema(description = "设备名称", example = "测试设备0001", required = true)
         private String name;
@@ -148,7 +180,6 @@ public class DeviceController {
     @EqualsAndHashCode(callSuper = true)
     @Data
     private static class DeviceUpdateRequest extends DeviceAddRequest {
-
         @NotNull
         @Schema(description = "设备ID", example = "1", required = true)
         private Integer id;
@@ -158,6 +189,40 @@ public class DeviceController {
             Device model = super.buildData();
             model.setDeviceId(this.id);
             return model;
+        }
+    }
+
+    @Schema(description = "配置设备请求数据")
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    private static class DeviceConfigRequest extends AbstractObjectRequest<DeviceConfigDTO> {
+
+        @NotNull
+        @Schema(description = "设备ID", example = "1", required = true)
+        private Integer deviceId;
+
+        @Valid
+        @NotNull
+        @Schema(description = "检测算法类型列表", required = true)
+        private List<AiTypeConfigVO> aiConfig;
+
+
+        @Override
+        protected void validate() throws InvalidParamException {
+
+        }
+
+        @Override
+        protected void format() throws InvalidParamException {
+
+        }
+
+        @Override
+        protected DeviceConfigDTO buildData() {
+            DeviceConfigDTO dto = new DeviceConfigDTO();
+            dto.setDeviceId(this.deviceId);
+            dto.setAiTypeConfig(this.aiConfig);
+            return dto;
         }
     }
 

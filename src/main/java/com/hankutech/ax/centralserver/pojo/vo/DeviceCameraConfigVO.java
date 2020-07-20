@@ -23,9 +23,11 @@ public class DeviceCameraConfigVO {
     /**
      * 将AI算法类型从字符串转为字符串数组
      *
+     * 使用{@link com.hankutech.ax.centralserver.tool.AiTypeTool#transAiTypesToArray(String)}替代
      * @param types
      * @return
      */
+    @Deprecated
     public static String[] transAiTypesToArray(String types) {
         if (null != types && types.length() > 0) {
             return types.contains(",") ? types.split(",") : new String[]{types};
@@ -37,9 +39,12 @@ public class DeviceCameraConfigVO {
     /**
      * 将AI算法类型从数组转为字符串
      *
+     * 使用{@link com.hankutech.ax.centralserver.tool.AiTypeTool#transAiTypesToString(String[])}替代
+     *
      * @param aiTypes
      * @return
      */
+    @Deprecated
     public static String transAiTypesToString(String[] aiTypes) {
         if (null != aiTypes && aiTypes.length > 0) {
             StringBuilder sb = new StringBuilder();

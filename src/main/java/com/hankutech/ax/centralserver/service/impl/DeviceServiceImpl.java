@@ -13,24 +13,32 @@ import com.hankutech.ax.centralserver.dao.model.Device;
 import com.hankutech.ax.centralserver.dao.model.DeviceCamera;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.menum.DeviceStatus;
+import com.hankutech.ax.centralserver.pojo.dto.DeviceConfigDTO;
 import com.hankutech.ax.centralserver.pojo.query.DeviceQueryParams;
 import com.hankutech.ax.centralserver.pojo.request.PagedParams;
 import com.hankutech.ax.centralserver.pojo.response.PagedData;
+import com.hankutech.ax.centralserver.pojo.vo.AiTypeConfigVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceCameraConfigVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceConfigVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceVO;
 import com.hankutech.ax.centralserver.service.DeviceService;
+import com.hankutech.ax.centralserver.tool.AiTypeTool;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * @author ZhangXi
  */
+@Slf4j
 @Service("deviceService")
 public class DeviceServiceImpl implements DeviceService {
 
@@ -126,6 +134,7 @@ public class DeviceServiceImpl implements DeviceService {
         return data;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public DeviceVO addDevice(Device newOne) throws InvalidDataException {
         // 检测设备名称是否重复
@@ -136,6 +145,7 @@ public class DeviceServiceImpl implements DeviceService {
         return new DeviceVO(newOne);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public DeviceVO updateDevice(Device updateOne) throws InvalidDataException {
         // 检测设备名称是否重复，设备数据是否存在
@@ -146,6 +156,7 @@ public class DeviceServiceImpl implements DeviceService {
         return new DeviceVO(updateOne);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteDevice(Integer id) throws InvalidDataException {
         // 检查设备是否存在
@@ -153,8 +164,42 @@ public class DeviceServiceImpl implements DeviceService {
         // 删除设备
         QueryWrapper<DeviceCamera> delRelatedCameraQueryWrapper = new QueryWrapper<>();
         delRelatedCameraQueryWrapper.eq(DeviceCamera.COL_DEVICE_ID, id);
+        // fixme 删除其他关联
         deviceCameraDao.delete(delRelatedCameraQueryWrapper);
         deviceDao.deleteById(id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void configDevice(DeviceConfigDTO configDTO) throws InvalidDataException {
+        Integer deviceId = configDTO.getDeviceId();
+        // 检测设备是否存在
+        needExistedAndReturn(deviceId);
+        // 重新匹配摄像头与对应算法
+        List<AiTypeConfigVO> aiConfigs = configDTO.getAiTypeConfig();
+        if (null != aiConfigs && !aiConfigs.isEmpty()) {
+            List<DeviceCamera> listData = new ArrayList<>(aiConfigs.size());
+            for (AiTypeConfigVO config : aiConfigs) {
+                Integer cameraId = config.getCameraId();
+                if (null == cameraId || null == cameraDao.selectById(cameraId)) {
+                    log.warn("相机ID={} 数据不存在", cameraId);
+                    continue;
+                }
+                DeviceCamera dc = new DeviceCamera();
+                dc.setId(UUID.randomUUID().toString());
+                dc.setDeviceId(deviceId);
+                dc.setCameraId(cameraId);
+                dc.setAiTypeArray(AiTypeTool.transAiTypesToString(config.getAiTypes()));
+                listData.add(dc);
+            }
+            if (!listData.isEmpty()) {
+                // 重新匹配关系
+                QueryWrapper<DeviceCamera> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq(DeviceCamera.COL_DEVICE_ID, deviceId);
+                deviceCameraDao.delete(queryWrapper);
+                deviceCameraDao.batchInsertList(listData);
+            }
+        }
     }
 
 

@@ -2,6 +2,7 @@ package com.hankutech.ax.centralserver.service;
 
 import com.hankutech.ax.centralserver.dao.model.Device;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
+import com.hankutech.ax.centralserver.pojo.dto.DeviceConfigDTO;
 import com.hankutech.ax.centralserver.pojo.query.DeviceQueryParams;
 import com.hankutech.ax.centralserver.pojo.request.PagedParams;
 import com.hankutech.ax.centralserver.pojo.response.PagedData;
@@ -65,5 +66,12 @@ public interface DeviceService {
      * @param id 设备ID
      */
     void deleteDevice(Integer id) throws InvalidDataException;
+
+
+
+
+    void configDevice(DeviceConfigDTO configDTO) throws InvalidDataException;
+
+
 
 }

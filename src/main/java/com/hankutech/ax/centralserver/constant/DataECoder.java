@@ -25,6 +25,6 @@ public enum DataECoder implements ErrorCoder {
 
     @Override
     public Integer get() {
-        return null;
+        return this.errorCode;
     }
 }
