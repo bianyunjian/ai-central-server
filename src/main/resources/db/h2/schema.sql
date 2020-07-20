@@ -56,3 +56,11 @@ create table `event` (
     `event_image_path` VARCHAR(200) NULL COMMENT '事件关联的图片路径',
     primary key (`event_id`)
 ) engine = innodb default charset = utf8mb4;
+
+
+CREATE TABLE `aixin`.`user` (
+  `user_name` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  `display_name` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`user_name`)
+  ) engine = innodb default charset = utf8mb4;;

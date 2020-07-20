@@ -1,7 +1,9 @@
 package com.hankutech.ax.centralserver.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -17,5 +19,14 @@ import org.springframework.context.annotation.Configuration;
         )
 )
 @Configuration
+@SecurityScheme(
+        name = ApiDocConfiguration.AUTH_NAME,
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = ApiDocConfiguration.AUTH_BEARER_FORMAT,
+        scheme = ApiDocConfiguration.AUTH_SCHEMA
+)
 public class ApiDocConfiguration {
+    public static final String AUTH_NAME = "bearerAuth";
+    public static final String AUTH_BEARER_FORMAT = "JWT";
+    public static final String AUTH_SCHEMA = "bearer";
 }

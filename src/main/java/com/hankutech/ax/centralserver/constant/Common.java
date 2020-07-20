@@ -9,7 +9,7 @@ public class Common {
     /**
      * 事件图片的保存格式
      */
-    public static String IMAGE_FORMAT = "jpg";
+    public static String IMAGE_FORMAT = "png";
     /**
      * 事件图片的保存目录
      */

@@ -1,8 +1,11 @@
 package com.hankutech.ax.centralserver.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.hankutech.ax.centralserver.dao.model.User;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.vo.auth.*;
+import com.hankutech.ax.centralserver.service.UserService;
 import com.hankutech.ax.centralserver.support.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -18,42 +21,54 @@ import java.util.Date;
 @RequestMapping(path = "/auth")
 public class AuthController {
 
+    UserService _userService;
+
+    public AuthController(UserService _userService) {
+        this._userService = _userService;
+    }
+
     @PostMapping(value = "/login")
     public BaseResponse<LoginResp> login(@RequestBody @Validated LoginReq param) {
 
         BaseResponse<LoginResp> obj = new BaseResponse<LoginResp>();
         LoginResp resp = new LoginResp();
 
-        String passwordBase64 = "MTIzNDU2"; //"123456";
+        String password = param.getPassword();
         String userName = param.getUserName();
-        String userId = userName;
 
-        boolean checkUserName = userName.equals("admin@ax.com");
-        boolean checkPassword = TokenUtil.getInstance().verifyPassword(param.getPassword(), passwordBase64) == false;
-        if (checkUserName && checkPassword) {
-            obj.fail("username or password incorrect");
-            return obj;
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(User.COL_USER_NAME, userName);
+        User findUser = _userService.getOne(queryWrapper);
+
+        if (findUser != null) {
+            boolean checkUserName = userName.equals(findUser.getUserName());
+            boolean checkPassword = TokenUtil.getInstance().verifyPassword(param.getPassword(), findUser.getPassword());
+            if (checkUserName && checkPassword) {
+
+                resp.setUserName(userName);
+                resp.setDisplayName(findUser.getDisplayName());
+
+                Date issueAt = new Date();
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.MINUTE, TokenUtil.getInstance().TOKEN_EXPIRE_MINUTES);
+                Date expireAt = calendar.getTime();
+                resp.setIssuedAt(issueAt);
+                resp.setExpiresAt(expireAt);
+
+                String[] audienceArray = {userName};
+                String accessToken = TokenUtil.getInstance().generateAccessToken(issueAt, expireAt, audienceArray);
+                resp.setAccessToken(accessToken);
+                resp.setRefreshToken(accessToken);
+                resp.setValid(true);
+                obj.success("success", resp);
+
+                //TokenManager加入到缓存中
+                //TokenManager.updateTokenCache(resp);
+                return obj;
+            }
         }
-        resp.setUserId(userId);
-        resp.setUserName(userName);
-        resp.setLoginName(param.getUserName());
 
-        Date issueAt = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, TokenUtil.getInstance().TOKEN_EXPIRE_MINUTES);
-        Date expireAt = calendar.getTime();
-        resp.setIssuedAt(issueAt);
-        resp.setExpiresAt(expireAt);
-
-        String[] audienceArray = {userId, userName};
-        String accessToken = TokenUtil.getInstance().generateAccessToken(issueAt, expireAt, audienceArray);
-        resp.setAccessToken(accessToken);
-        resp.setRefreshToken(accessToken);
-        resp.setValid(true);
-        obj.success("success", resp);
-
-        //TokenManager加入到缓存中
-//        TokenManager.updateTokenCache(resp);
+        obj.fail("username or password incorrect");
         return obj;
     }
 
