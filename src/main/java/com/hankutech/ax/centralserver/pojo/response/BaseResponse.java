@@ -1,7 +1,7 @@
 package com.hankutech.ax.centralserver.pojo.response;
 
+import com.hankutech.ax.centralserver.constant.ErrorCode;
 import com.hankutech.ax.centralserver.constant.ResponseStatus;
-import com.hankutech.ax.centralserver.constant.SysECoder;
 import com.hankutech.ax.centralserver.constant.ErrorCoder;
 import lombok.Data;
 
@@ -26,7 +26,7 @@ public class BaseResponse<T> {
 
     public void success() {
         this.status = ResponseStatus.SUCCESS;
-        this.errorCode = SysECoder.DEFAULT_NO_ERROR.get();
+        this.errorCode = ErrorCode.DEFAULT_NO_ERROR.get();
     }
 
     public void success(String message) {

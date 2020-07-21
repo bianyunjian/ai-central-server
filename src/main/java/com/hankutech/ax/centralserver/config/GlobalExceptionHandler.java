@@ -1,6 +1,6 @@
 package com.hankutech.ax.centralserver.config;
 
-import com.hankutech.ax.centralserver.constant.SysECoder;
+import com.hankutech.ax.centralserver.constant.ErrorCode;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.exception.InvalidParamException;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
         log.error("处理未知异常", e);
         BaseResponse response = new BaseResponse();
         String message = "发生未知错误";
-        response.fail(message, SysECoder.INNER_ERROR);
+        response.fail(message, ErrorCode.INNER_ERROR);
         return response;
     }
 
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
             };
             message = MessageFormat.format("参数：{0}={1} 校验失败，原因：{2}", infos[0], infos[1], infos[2]);
         }
-        response.fail(message, SysECoder.PARAM_INVALID);
+        response.fail(message, ErrorCode.PARAM_INVALID);
         return response;
     }
 

@@ -3,7 +3,7 @@ package com.hankutech.ax.centralserver.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hankutech.ax.centralserver.constant.DataECoder;
+import com.hankutech.ax.centralserver.constant.ErrorCode;
 import com.hankutech.ax.centralserver.dao.CameraDao;
 import com.hankutech.ax.centralserver.dao.DeviceCameraDao;
 import com.hankutech.ax.centralserver.dao.DeviceDao;
@@ -32,7 +32,6 @@ import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -215,7 +214,7 @@ public class DeviceServiceImpl implements DeviceService {
         if (null == oldOne) {
             throw new InvalidDataException(
                     MessageFormat.format("设备ID={0} 数据不存在", id)
-            ).with(DataECoder.DEVICE_NOT_EXIST);
+            ).with(ErrorCode.DEVICE_NOT_EXIST);
         }
         return oldOne;
     }
@@ -229,7 +228,7 @@ public class DeviceServiceImpl implements DeviceService {
         if (null != repeatedOne) {
             throw new InvalidDataException(
                     MessageFormat.format("设备名称：{0} 重复", name)
-            ).with(DataECoder.DEVICE_REPEAT_NAME);
+            ).with(ErrorCode.DEVICE_REPEAT_NAME);
         }
         return this;
     }

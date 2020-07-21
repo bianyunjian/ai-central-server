@@ -3,7 +3,7 @@ package com.hankutech.ax.centralserver.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hankutech.ax.centralserver.constant.DataECoder;
+import com.hankutech.ax.centralserver.constant.ErrorCode;
 import com.hankutech.ax.centralserver.dao.CameraDao;
 import com.hankutech.ax.centralserver.dao.DeviceCameraDao;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
@@ -115,7 +115,7 @@ public class CameraServiceImpl implements CameraService {
         if (null != repeatedOne) {
             throw new InvalidDataException(
                     MessageFormat.format("相机名称：{0} 重复!", name)
-            ).with(DataECoder.CAMERA_REPEAT_NAME);
+            ).with(ErrorCode.CAMERA_REPEAT_NAME);
         }
         return this;
     }
@@ -129,7 +129,7 @@ public class CameraServiceImpl implements CameraService {
         if (null == oldOne) {
             throw new InvalidDataException(
                     MessageFormat.format("相机ID={0} 不存在", id)
-            ).with(DataECoder.CAMERA_NOT_EXIST);
+            ).with(ErrorCode.CAMERA_NOT_EXIST);
         }
         return oldOne;
     }
@@ -142,7 +142,7 @@ public class CameraServiceImpl implements CameraService {
         if (count > 0) {
             throw new InvalidDataException(
                     MessageFormat.format("相机ID={0} 有关联设备", id)
-            ).with(DataECoder.CAMERA_HAS_DEVICE);
+            ).with(ErrorCode.CAMERA_HAS_DEVICE);
         }
         return this;
     }
