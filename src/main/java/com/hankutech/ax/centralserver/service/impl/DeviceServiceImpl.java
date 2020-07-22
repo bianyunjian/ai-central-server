@@ -33,6 +33,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author ZhangXi
@@ -77,7 +78,7 @@ public class DeviceServiceImpl implements DeviceService {
                     newVO.setId(camera.getCameraId());
                     newVO.setRtsp(camera.getRtspUrl());
                     newVO.setAxCameraNumber(camera.getAxCameraNumber());
-                    
+
                     if (StringUtils.isEmpty(dc.getAiTypeArray()) == false) {
                         newVO.setAi(dc.getAiTypeArray().split(","));
                     }
@@ -198,6 +199,25 @@ public class DeviceServiceImpl implements DeviceService {
                 deviceCameraDao.delete(queryWrapper);
                 deviceCameraDao.batchInsertList(listData);
             }
+        }
+    }
+
+    @Override
+    public List<DeviceVO> getDeviceListByName(String deviceName) {
+
+        QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(Device.COL_DEVICE_NAME, deviceName);
+        List<Device> deviceList = deviceDao.selectList(queryWrapper);
+
+        if (deviceList != null && deviceList.size() > 0) {
+            return deviceList.stream().map(t -> {
+                DeviceVO v = new DeviceVO(t);
+
+                return v;
+            }).collect(Collectors.toList());
+
+        } else {
+            return null;
         }
     }
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hankutech.ax.centralserver.dao.CameraMapper">
+  <resultMap id="BaseResultMap" type="com.hankutech.ax.centralserver.dao.model.Camera">
+    <!--@mbg.generated-->
+    <!--@Table camera-->
+    <id column="camera_id" jdbcType="INTEGER" property="cameraId" />
+    <result column="camera_name" jdbcType="VARCHAR" property="cameraName" />
+    <result column="rtsp_url" jdbcType="VARCHAR" property="rtspUrl" />
+    <result column="ax_camera_number" jdbcType="INTEGER" property="axCameraNumber" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    camera_id, camera_name, rtsp_url, ax_camera_number, description
+  </sql>
+</mapper>

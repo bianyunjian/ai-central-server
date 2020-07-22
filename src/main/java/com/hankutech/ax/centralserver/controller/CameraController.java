@@ -9,7 +9,6 @@ import com.hankutech.ax.centralserver.pojo.request.IntIdRequest;
 import com.hankutech.ax.centralserver.pojo.request.QueryRequest;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.response.PagedData;
-import com.hankutech.ax.centralserver.pojo.vo.CameraFrontVO;
 import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.service.CameraService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,7 +65,7 @@ public class CameraController {
     @Operation(summary = "分页查询相机")
     @PostMapping(path = "/table")
     public CameraPagedResponse queryCameraTable(@RequestBody @Validated CameraQueryRequest request) {
-        PagedData<CameraFrontVO> data = cameraService.queryCameraTable(request.getPagedParams(), request.getQueryParams());
+        PagedData<CameraVO> data = cameraService.queryCameraTable(request.getPagedParams(), request.getQueryParams());
         CameraPagedResponse response = new CameraPagedResponse();
         response.success("分页查询相机成功", data);
         return response;
@@ -117,7 +116,7 @@ public class CameraController {
     }
 
     @Schema(description = "相机分页列表响应数据")
-    private static class CameraPagedResponse extends BaseResponse<PagedData<CameraFrontVO>> {
+    private static class CameraPagedResponse extends BaseResponse<PagedData<CameraVO>> {
     }
 
     @Schema(description = "新增相机请求数据")

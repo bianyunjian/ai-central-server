@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hankutech.ax.centralserver.dao.PersonMapper">
+  <resultMap id="BaseResultMap" type="com.hankutech.ax.centralserver.dao.model.Person">
+    <!--@mbg.generated-->
+    <!--@Table person-->
+    <id column="person_id" jdbcType="INTEGER" property="personId" />
+    <result column="person_name" jdbcType="VARCHAR" property="personName" />
+    <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+    <result column="face_ftr_array" jdbcType="VARCHAR" property="faceFtrArray" />
+    <result column="image" jdbcType="LONGVARCHAR" property="image" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    person_id, person_name, phone_num, face_ftr_array, image
+  </sql>
+</mapper>

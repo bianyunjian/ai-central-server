@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hankutech.ax.centralserver.dao.EventMapper">
+  <resultMap id="BaseResultMap" type="com.hankutech.ax.centralserver.dao.model.Event">
+    <!--@mbg.generated-->
+    <!--@Table event-->
+    <id column="event_id" jdbcType="INTEGER" property="eventId" />
+    <result column="device_id" jdbcType="INTEGER" property="deviceId" />
+    <result column="camera_id" jdbcType="INTEGER" property="cameraId" />
+    <result column="event_type" jdbcType="VARCHAR" property="eventType" />
+    <result column="event_type_value" jdbcType="INTEGER" property="eventTypeValue" />
+    <result column="event_time" jdbcType="TIMESTAMP" property="eventTime" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="event_image_path" jdbcType="VARCHAR" property="eventImagePath" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    event_id, device_id, camera_id, event_type, event_type_value, event_time, description, 
+    event_image_path
+  </sql>
+</mapper>

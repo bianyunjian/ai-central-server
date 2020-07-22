@@ -72,6 +72,7 @@ public class AXDataManager {
      * @return
      */
     private static boolean checkIfEventObsolete(LocalDateTime eventTime) {
+        if (eventTime == null) return true;
         LocalDateTime obTime = LocalDateTime.now().minusSeconds(Common.EVENT_OBSOLETE_SECONDS);
         return eventTime.isBefore(obTime);
     }

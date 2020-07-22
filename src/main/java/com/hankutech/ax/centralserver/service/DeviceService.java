@@ -26,6 +26,7 @@ public interface DeviceService {
 
     /**
      * 根据ID获取设备
+     *
      * @param id 设备ID
      * @return {@link DeviceVO}
      */
@@ -33,12 +34,14 @@ public interface DeviceService {
 
     /**
      * 获取所有设备列表
+     *
      * @return {@link List<DeviceVO>}
      */
     List<DeviceVO> getAllList();
 
     /**
      * 分页查询设备
+     *
      * @param pagedParams {@link PagedParams}
      * @param queryParams {@link DeviceQueryParams}
      * @return {@link PagedData<DeviceVO>}
@@ -47,6 +50,7 @@ public interface DeviceService {
 
     /**
      * 新增设备
+     *
      * @param newOne {@link Device}
      * @return {@link DeviceVO}
      * @throws InvalidDataException 数据异常
@@ -55,6 +59,7 @@ public interface DeviceService {
 
     /**
      * 修改设备
+     *
      * @param updateOne {@link Device}
      * @return {@link DeviceVO}
      * @throws InvalidDataException 数据异常
@@ -63,15 +68,14 @@ public interface DeviceService {
 
     /**
      * 删除设备
+     *
      * @param id 设备ID
      */
     void deleteDevice(Integer id) throws InvalidDataException;
 
 
-
-
     void configDevice(DeviceConfigDTO configDTO) throws InvalidDataException;
 
 
-
+    List<DeviceVO> getDeviceListByName(String deviceName);
 }

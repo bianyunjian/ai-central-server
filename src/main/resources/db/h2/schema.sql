@@ -3,6 +3,7 @@ create table `camera` (
     `camera_name` varchar(255) not null default '' comment '相机名称，具有唯一性',
     `ax_camera_number` int(11) unsigned not null comment '相机在爱信系统的编码',
     `rtsp_url` varchar(255) not null default '' comment 'RTSP连接地址',
+    `description` VARCHAR(500) NULL COMMENT '备注描述' ,
     primary key (`camera_id`)
 ) engine = innodb default charset = utf8mb4;
 
@@ -13,6 +14,7 @@ create table `device` (
     `device_name` varchar(255) not null default '' comment 'IOT设备名称，具有唯一性',
     `status` int(2) unsigned not null default 0 comment 'IOT设备状态：0-正常，1-断线',
     `device_scenario` varchar(50) not null default '' comment '设备使用的场景, 关联 com.hankutech.ax.centralserver.biz.code.ScenarioFlag',
+    `description` VARCHAR(500) NULL COMMENT '备注描述' ,
 
     primary key (`device_id`)
 ) engine = innodb default charset = utf8mb4;
@@ -30,6 +32,7 @@ create table `device_camera` (
 create table `person` (
     `person_id` int(11) unsigned not null auto_increment comment '人员ID',
     `person_name` varchar(255) not null default '' comment '人员名称',
+    `image` text not null default '' comment '照片base64',
     `phone_num` varchar(50) not null default '' comment '手机号码，具有唯一性',
     `face_ftr_array` varchar(5120) not null default '' comment '人脸特征向量数组,使用逗号分隔',
     primary key (`person_id`)

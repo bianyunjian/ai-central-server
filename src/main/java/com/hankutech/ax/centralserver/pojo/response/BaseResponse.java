@@ -1,8 +1,8 @@
 package com.hankutech.ax.centralserver.pojo.response;
 
 import com.hankutech.ax.centralserver.constant.ErrorCode;
-import com.hankutech.ax.centralserver.constant.ResponseStatus;
 import com.hankutech.ax.centralserver.constant.ErrorCoder;
+import com.hankutech.ax.centralserver.constant.ResponseStatus;
 import lombok.Data;
 
 /**
@@ -15,13 +15,13 @@ public class BaseResponse<T> {
 
     private static final String DEFAULT_MESSAGE = "";
 
-    private ResponseStatus status;
+    private ResponseStatus status = ResponseStatus.SUCCESS;
 
-    private Integer errorCode;
+    private int errorCode;
 
     private T data;
 
-    private String message;
+    private String message = "";
 
 
     public void success() {
@@ -50,7 +50,7 @@ public class BaseResponse<T> {
 
     public void fail(String message, ErrorCoder errorCode) {
         fail(message);
-        if(null != errorCode) {
+        if (null != errorCode) {
             this.errorCode = errorCode.get();
         }
     }

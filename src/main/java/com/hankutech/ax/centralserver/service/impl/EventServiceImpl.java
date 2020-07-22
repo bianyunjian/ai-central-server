@@ -1,6 +1,8 @@
 package com.hankutech.ax.centralserver.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hankutech.ax.centralserver.biz.code.*;
+import com.hankutech.ax.centralserver.biz.data.AIResultWrapper;
 import com.hankutech.ax.centralserver.biz.data.AXDataManager;
 import com.hankutech.ax.centralserver.constant.Common;
 import com.hankutech.ax.centralserver.dao.CameraDao;
@@ -10,15 +12,23 @@ import com.hankutech.ax.centralserver.dao.model.Event;
 import com.hankutech.ax.centralserver.pojo.query.DeviceUploadParams;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.vo.CameraEventVO;
+import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.pojo.vo.EventVO;
+import com.hankutech.ax.centralserver.pojo.vo.event.history.HistoryEventVO;
+import com.hankutech.ax.centralserver.pojo.vo.event.realtime.RealtimeEventVO;
 import com.hankutech.ax.centralserver.service.EventService;
 import com.hankutech.ax.centralserver.support.ImageUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -72,7 +82,7 @@ public class EventServiceImpl implements EventService {
                 newEventEntity.setCameraId(cameraId);
                 newEventEntity.setDeviceId(deviceId);
 
-                newEventEntity.setEventTime(eventTime);
+                newEventEntity.setEventTime(Date.from(eventTime.atZone(ZoneId.systemDefault()).toInstant()));
                 newEventEntity.setEventType(eventType);
                 newEventEntity.setEventTypeValue(eventTypeValue);
                 newEventEntity.setDescription(description);
@@ -86,9 +96,47 @@ public class EventServiceImpl implements EventService {
                 }
             }
         }
-
         return resp;
     }
+
+    @Override
+    public List<RealtimeEventVO> getRealtimeEvent(CameraVO cameraVO) {
+        List<RealtimeEventVO> result = new ArrayList<>();
+        Integer cameraNumber = cameraVO.getAxCameraNumber();
+
+        AITaskType[] taskTypes = new AITaskType[]{
+                AITaskType.BOX, AITaskType.FACE, AITaskType.GARBAGE, AITaskType.PERSON
+        };
+        for (AITaskType t : taskTypes
+        ) {
+            AIResultWrapper aiResult = AXDataManager.getLatestAIResult(cameraNumber, t);
+            if (aiResult.getAiResult() != AIBoxResultType.EMPTY) {
+                RealtimeEventVO vo4Box = new RealtimeEventVO();
+                vo4Box.setEventTime(aiResult.getEventTime());
+                vo4Box.setEventType(t.toString().toLowerCase());
+                vo4Box.setEventTypeValue(aiResult.getAiResult().getValue());
+                vo4Box.setDescription(aiResult.getAiResult().getDescription());
+                result.add(vo4Box);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<HistoryEventVO> getHistoryEvent(List<Integer> deviceIdList, LocalDateTime startTime, LocalDateTime endTime) {
+        QueryWrapper<Event> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in(Event.COL_DEVICE_ID, deviceIdList);
+        queryWrapper.between(Event.COL_EVENT_TIME, startTime, endTime);
+        queryWrapper.orderByAsc(Event.COL_EVENT_ID);
+        List<Event> eventList = _eventDao.selectList(queryWrapper);
+
+        if (eventList != null && eventList.size() > 0) {
+            return eventList.stream().map(t ->
+                    new HistoryEventVO(t)).collect(Collectors.toList());
+        }
+        return null;
+    }
+
 
     private String getImageName(int deviceId, int cameraId, String eventType, LocalDateTime time) {
         return deviceId + "-" + cameraId + "-" + eventType + "-" + time.format(formatter);

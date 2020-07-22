@@ -4,11 +4,12 @@ package com.hankutech.ax.centralserver.biz.code;
  * 字节X10标示任务类型
  */
 public enum AITaskType {
-    EMPTY(0,"UNKNOWN"),
+    EMPTY(0, "UNKNOWN"),
     BOX(1, "安全防护检测和周转箱颜色检测任务"),
     FACE(2, "人脸识别检测任务"),
     GARBAGE(3, "垃圾分类检测任务"),
     PERSON(4, "有无人员检测任务");
+
     public static AITaskType valueOf(int value) {
         switch (value) {
 
@@ -24,6 +25,7 @@ public enum AITaskType {
                 return EMPTY;
         }
     }
+
     int value;
     String description;
 

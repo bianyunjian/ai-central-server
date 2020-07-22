@@ -6,15 +6,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hankutech.ax.centralserver.constant.ErrorCode;
 import com.hankutech.ax.centralserver.dao.CameraDao;
 import com.hankutech.ax.centralserver.dao.DeviceCameraDao;
-import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.dao.model.Camera;
 import com.hankutech.ax.centralserver.dao.model.DeviceCamera;
-import com.hankutech.ax.centralserver.pojo.vo.CameraFrontVO;
-import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
-import com.hankutech.ax.centralserver.service.CameraService;
+import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.pojo.query.CameraQueryParams;
 import com.hankutech.ax.centralserver.pojo.request.PagedParams;
 import com.hankutech.ax.centralserver.pojo.response.PagedData;
+import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
+import com.hankutech.ax.centralserver.service.CameraService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +21,7 @@ import javax.annotation.Resource;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 相机Service层实现类
@@ -57,17 +57,17 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public PagedData<CameraFrontVO> queryCameraTable(PagedParams pagedParams, CameraQueryParams queryParams) {
+    public PagedData<CameraVO> queryCameraTable(PagedParams pagedParams, CameraQueryParams queryParams) {
         IPage<Camera> iPage = new Page<>(pagedParams.getPageNum(), pagedParams.getPageSize());
         QueryWrapper<Camera> queryWrapper = new QueryWrapper<>();
         //fixme 待增加分页查询参数
         iPage = cameraDao.selectPage(iPage, queryWrapper);
-        PagedData<CameraFrontVO> data = new PagedData<>();
+        PagedData<CameraVO> data = new PagedData<>();
         data.setTotal(iPage.getTotal());
         if (iPage.getTotal() > 0) {
-            List<CameraFrontVO> list = new ArrayList<>();
+            List<CameraVO> list = new ArrayList<>();
             for (Camera camera : iPage.getRecords()) {
-                list.add(new CameraFrontVO(camera));
+                list.add(new CameraVO(camera));
             }
             data.setList(list);
         }
@@ -102,6 +102,31 @@ public class CameraServiceImpl implements CameraService {
         needNoneRelatedDevice(id).needExistedAndReturn(id);
         // 删除数据
         cameraDao.deleteById(id);
+    }
+
+    @Override
+    public List<CameraVO> getCameraListByDeviceId(Integer deviceId) {
+        QueryWrapper<DeviceCamera> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(DeviceCamera.COL_DEVICE_ID, deviceId);
+        List<DeviceCamera> dataList = deviceCameraDao.selectList(queryWrapper);
+        if (dataList != null && dataList.size() > 0) {
+            List<Integer> cameraIdList = dataList.stream().map(t -> t.getCameraId()).collect(Collectors.toList());
+            return getCameraListById(cameraIdList);
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<CameraVO> getCameraListById(List<Integer> cameraIdList) {
+        QueryWrapper<Camera> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in(Camera.COL_CAMERA_ID, cameraIdList);
+        List<Camera> cameraList = cameraDao.selectList(queryWrapper);
+        if (cameraList != null && cameraList.size() > 0) {
+            return cameraList.stream().map(t -> new CameraVO(t)).collect(Collectors.toList());
+        }
+
+        return null;
     }
 
     //==================================================================================================================
