@@ -12,10 +12,11 @@ import com.hankutech.ax.centralserver.pojo.response.PagedData;
 import com.hankutech.ax.centralserver.pojo.vo.PersonLibraryVO;
 import com.hankutech.ax.centralserver.pojo.vo.PersonVO;
 import com.hankutech.ax.centralserver.service.PersonService;
-import com.hankutech.ax.centralserver.support.FaceUtil;
+import com.hankutech.ax.centralserver.support.face.FaceUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,7 +65,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonVO addPerson(PersonAddRequest request) {
+    public PersonVO addPerson(PersonAddRequest request) throws InvalidObjectException {
         Person newPerson = new Person();
         newPerson.setPersonName(request.getPersonName());
         newPerson.setPhoneNum(request.getPhoneNum());

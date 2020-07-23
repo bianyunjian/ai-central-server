@@ -7,12 +7,14 @@ import com.hankutech.ax.centralserver.pojo.response.PagedData;
 import com.hankutech.ax.centralserver.pojo.vo.PersonLibraryVO;
 import com.hankutech.ax.centralserver.pojo.vo.PersonVO;
 
+import java.io.InvalidObjectException;
+
 public interface PersonService {
     PersonLibraryVO getPersonLibrary();
 
     PagedData<PersonVO> queryPersonTable(PagedParams pagedParams, PersonParams queryParams);
 
-    PersonVO addPerson(PersonAddRequest request);
+    PersonVO addPerson(PersonAddRequest request) throws InvalidObjectException;
 
     void deletePerson(Integer id);
 }

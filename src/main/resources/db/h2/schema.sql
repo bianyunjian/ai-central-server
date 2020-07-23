@@ -32,9 +32,9 @@ create table `device_camera` (
 create table `person` (
     `person_id` int(11) unsigned not null auto_increment comment '人员ID',
     `person_name` varchar(255) not null default '' comment '人员名称',
-    `image` text not null default '' comment '照片base64',
+    `image` MEDIUMTEXT not null  comment '照片base64',
     `phone_num` varchar(50) not null default '' comment '手机号码，具有唯一性',
-    `face_ftr_array` varchar(5120) not null default '' comment '人脸特征向量数组,使用逗号分隔',
+    `face_ftr_array` MEDIUMTEXT not null  comment '人脸特征向量数组,使用逗号分隔',
     primary key (`person_id`)
 ) engine = innodb default charset = utf8mb4;
 
