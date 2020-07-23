@@ -242,6 +242,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     protected DeviceServiceImpl needNameNotRepeated(String name) throws InvalidDataException {
         // 检测设备名称是否重复
+        //todo 检测名称重复应该剔除本身,因为更新时可能并不会修改名称
         QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(Device.COL_DEVICE_NAME, name);
         Device repeatedOne = deviceDao.selectOne(queryWrapper);
