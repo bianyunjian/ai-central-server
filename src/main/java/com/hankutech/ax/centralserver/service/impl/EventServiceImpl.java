@@ -1,6 +1,8 @@
 package com.hankutech.ax.centralserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hankutech.ax.centralserver.biz.code.*;
 import com.hankutech.ax.centralserver.biz.data.AIResultWrapper;
 import com.hankutech.ax.centralserver.biz.data.AXDataManager;
@@ -10,7 +12,9 @@ import com.hankutech.ax.centralserver.dao.DeviceDao;
 import com.hankutech.ax.centralserver.dao.EventDao;
 import com.hankutech.ax.centralserver.dao.model.Event;
 import com.hankutech.ax.centralserver.pojo.query.DeviceUploadParams;
+import com.hankutech.ax.centralserver.pojo.request.PagedParams;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
+import com.hankutech.ax.centralserver.pojo.response.PagedData;
 import com.hankutech.ax.centralserver.pojo.vo.CameraEventVO;
 import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.pojo.vo.EventVO;
@@ -28,7 +32,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -122,19 +125,29 @@ public class EventServiceImpl implements EventService {
         return result;
     }
 
+
     @Override
-    public List<HistoryEventVO> getHistoryEvent(List<Integer> deviceIdList, LocalDateTime startTime, LocalDateTime endTime) {
+    public PagedData<HistoryEventVO> getHistoryEvent(List<Integer> deviceIdList, LocalDateTime startTime, LocalDateTime endTime, PagedParams pagedParams) {
         QueryWrapper<Event> queryWrapper = new QueryWrapper<>();
         queryWrapper.in(Event.COL_DEVICE_ID, deviceIdList);
         queryWrapper.between(Event.COL_EVENT_TIME, startTime, endTime);
         queryWrapper.orderByAsc(Event.COL_EVENT_ID);
-        List<Event> eventList = _eventDao.selectList(queryWrapper);
 
-        if (eventList != null && eventList.size() > 0) {
-            return eventList.stream().map(t ->
-                    new HistoryEventVO(t)).collect(Collectors.toList());
+
+        IPage<Event> iPage = new Page<>(pagedParams.getPageNum(), pagedParams.getPageSize());
+        iPage = _eventDao.selectPage(iPage, queryWrapper);
+
+        PagedData<HistoryEventVO> data = new PagedData<>();
+        data.setTotal(iPage.getTotal());
+        if (iPage.getTotal() > 0) {
+            List<HistoryEventVO> list = new ArrayList<>();
+            for (Event evt : iPage.getRecords()) {
+                list.add(new HistoryEventVO(evt));
+            }
+            data.setList(list);
         }
-        return null;
+        return data;
+
     }
 
 

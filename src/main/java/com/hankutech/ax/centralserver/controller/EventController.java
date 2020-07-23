@@ -2,7 +2,9 @@ package com.hankutech.ax.centralserver.controller;
 
 import com.hankutech.ax.centralserver.pojo.query.DeviceParams;
 import com.hankutech.ax.centralserver.pojo.query.HistoryEventParams;
+import com.hankutech.ax.centralserver.pojo.request.QueryRequest;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
+import com.hankutech.ax.centralserver.pojo.response.PagedData;
 import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceVO;
 import com.hankutech.ax.centralserver.pojo.vo.event.history.HistoryEventVO;
@@ -79,20 +81,20 @@ public class EventController {
 
     @Operation(summary = "历史数据查询")
     @PostMapping(path = "/getHistoryEvent")
-    public BaseResponse<List<HistoryEventVO>> getHistoryEvent(@RequestBody @Validated HistoryEventParams request) {
-        BaseResponse<List<HistoryEventVO>> resp = new BaseResponse<>();
+    public BaseResponse<PagedData<HistoryEventVO>> getHistoryEvent(@RequestBody @Validated QueryRequest<HistoryEventParams> request) {
+        BaseResponse<PagedData<HistoryEventVO>> resp = new BaseResponse<>();
 
-        List<DeviceVO> deviceVOList = _deviceService.getDeviceListByName(request.getDeviceName());
+        List<DeviceVO> deviceVOList = _deviceService.getDeviceListByName(request.getQueryParams().getDeviceName());
         if (deviceVOList != null && deviceVOList.size() > 0) {
             List<Integer> deviceIdList = deviceVOList.stream().map(t -> t.getId()).collect(Collectors.toList());
-            List<HistoryEventVO> data = _eventService.getHistoryEvent(deviceIdList, request.getStartTime(), request.getEndTime());
+            PagedData<HistoryEventVO> data = _eventService.getHistoryEvent(deviceIdList, request.getQueryParams().getStartTime(), request.getQueryParams().getEndTime(), request.getPagedParams());
 
             if (data != null) {
-                List<Integer> cameraIdList = data.stream().map(t -> t.getCameraId()).distinct().collect(Collectors.toList());
+                List<Integer> cameraIdList = data.getList().stream().map(t -> t.getCameraId()).distinct().collect(Collectors.toList());
 
                 List<CameraVO> cameraVOList = _cameraService.getCameraListById(cameraIdList);
 
-                for (HistoryEventVO h : data
+                for (HistoryEventVO h : data.getList()
 
                 ) {
                     String deviceName = deviceVOList.stream().filter(t -> t.getId() == h.getDeviceId()).findFirst().get().getName();

@@ -5,4 +5,5 @@ package com.hankutech.ax.centralserver.pojo.request;
  *
  * @author ZhangXi
  */
-public class QueryParams {}
+public class QueryParams {
+}

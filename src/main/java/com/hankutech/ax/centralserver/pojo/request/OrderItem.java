@@ -1,5 +1,6 @@
 package com.hankutech.ax.centralserver.pojo.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 
@@ -11,8 +12,10 @@ import lombok.Data;
 @Data
 public class OrderItem {
 
+    @Schema(description = "排序列名", example = "")
     private String name;
 
+    @Schema(description = "排序方向", example = "")
     private String order;
 
 }

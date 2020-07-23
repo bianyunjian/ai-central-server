@@ -1,7 +1,10 @@
 package com.hankutech.ax.centralserver.service;
 
+import com.hankutech.ax.centralserver.pojo.query.CameraQueryParams;
 import com.hankutech.ax.centralserver.pojo.query.DeviceUploadParams;
+import com.hankutech.ax.centralserver.pojo.request.PagedParams;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
+import com.hankutech.ax.centralserver.pojo.response.PagedData;
 import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.pojo.vo.event.history.HistoryEventVO;
 import com.hankutech.ax.centralserver.pojo.vo.event.realtime.RealtimeEventVO;
@@ -14,5 +17,7 @@ public interface EventService {
 
     List<RealtimeEventVO> getRealtimeEvent(CameraVO cameraVO);
 
-    List<HistoryEventVO> getHistoryEvent(List<Integer> deviceIdList, LocalDateTime startTime, LocalDateTime endTime);
+    PagedData<HistoryEventVO> getHistoryEvent(List<Integer> deviceIdList, LocalDateTime startTime, LocalDateTime endTime, PagedParams pagedParams);
+
+
 }
