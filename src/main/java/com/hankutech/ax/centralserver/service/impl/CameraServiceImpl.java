@@ -134,6 +134,7 @@ public class CameraServiceImpl implements CameraService {
 
     protected CameraServiceImpl needNameNotRepeated(String name) throws InvalidDataException {
         // 检测名称重复
+        //todo 检测名称重复应该剔除本身,因为更新时可能并不会修改名称
         QueryWrapper<Camera> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(Camera.COL_CAMERA_NAME, name);
         Camera repeatedOne = cameraDao.selectOne(queryWrapper);
