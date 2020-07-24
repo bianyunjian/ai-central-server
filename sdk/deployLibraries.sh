@@ -41,10 +41,11 @@ apt -y install  libilmbase-dev
 apt -y install  libopenblas-dev
 apt -y install  libilmbase6
 apt -y install  libopenexr-dev
-
+apt clean
 #copy libs
-cp /sdk/*.so /usr/local/lib -rf
-cp /sdk/*.so.* /usr/local/lib -rf
+echo '/sdk' > /etc/ld.so.conf.d/facesdk.conf
+#cp /sdk/*.so /usr/local/lib -rf
+#cp /sdk/*.so.* /usr/local/lib -rf
 
 ldconfig
 

@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.InvalidObjectException;
-
 /**
  * 人脸库接口
  */
@@ -53,10 +51,15 @@ public class FaceController {
 
     @Operation(summary = "新增人脸")
     @PostMapping(path = "/add")
-    public BaseResponse<PersonVO> add(@RequestBody @Validated PersonAddRequest request) throws InvalidObjectException {
+    public BaseResponse<PersonVO> add(@RequestBody @Validated PersonAddRequest request) {
         BaseResponse<PersonVO> resp = new BaseResponse<PersonVO>();
-        PersonVO data = _personService.addPerson(request);
-        resp.success("新增人脸成功", data);
+        try {
+            PersonVO data = _personService.addPerson(request);
+            resp.success("新增人脸成功", data);
+        } catch (Exception ex) {
+            resp.fail(ex.getMessage());
+        }
+
         return resp;
     }
 
