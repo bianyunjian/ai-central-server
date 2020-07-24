@@ -1,0 +1,1 @@
+docker run -itd -p 19001:9001 -p 14000:4000 -p 19002:9002 central-server:v0.0.1
