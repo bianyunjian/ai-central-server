@@ -15,7 +15,6 @@ create table `device` (
     `status` int(2) unsigned not null default 0 comment 'IOT设备状态：0-正常，1-断线',
     `device_scenario` varchar(50) not null default '' comment '设备使用的场景, 关联 com.hankutech.ax.centralserver.biz.code.ScenarioFlag',
     `description` VARCHAR(500) NULL COMMENT '备注描述' ,
-
     primary key (`device_id`)
 ) engine = innodb default charset = utf8mb4;
 
@@ -28,6 +27,8 @@ create table `device_camera` (
     `ai_type_array` varchar(255) not null default '' comment 'AI检测算法类型数组，使用逗号分隔',
     primary key (`id`)
 ) engine = innodb default charset = utf8mb4;
+
+create unique index `uk_dc_union_dev_cam` on `device_camera` (`device_id`, `camera_id`);
 
 create table `person` (
     `person_id` int(11) unsigned not null auto_increment comment '人员ID',
