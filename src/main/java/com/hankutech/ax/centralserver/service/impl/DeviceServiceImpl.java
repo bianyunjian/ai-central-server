@@ -120,7 +120,7 @@ public class DeviceServiceImpl implements DeviceService {
     public PagedData<DeviceVO> queryDeviceTable(PagedParams pagedParams, DeviceQueryParams queryParams) {
         IPage<Device> iPage = new Page<>(pagedParams.getPageNum(), pagedParams.getPageSize());
         QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
-        //fixme 后续可增加参数
+        queryWrapper.like(Device.COL_DEVICE_NAME, queryParams.getName());
         iPage = deviceDao.selectPage(iPage, queryWrapper);
         PagedData<DeviceVO> data = new PagedData<>();
         data.setTotal(iPage.getTotal());
@@ -138,9 +138,8 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public DeviceVO addDevice(Device newOne) throws InvalidDataException {
         // 检测设备名称是否重复
-        needNameNotRepeated(newOne.getDeviceName());
+        needNotRepeated(newOne);
         // 插入数据
-        newOne.setStatus(DeviceStatus.NORMAL.getStatusValue());
         deviceDao.insert(newOne);
         return new DeviceVO(newOne);
     }
@@ -149,9 +148,8 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public DeviceVO updateDevice(Device updateOne) throws InvalidDataException {
         // 检测设备名称是否重复，设备数据是否存在
-        Device oldOne = needNameNotRepeated(updateOne.getDeviceName()).needExistedAndReturn(updateOne.getDeviceId());
+        Device oldOne = needNotRepeated(updateOne).needExistedAndReturn(updateOne.getDeviceId());
         // 更改数据
-        updateOne.setStatus(oldOne.getStatus());
         deviceDao.updateById(updateOne);
         return new DeviceVO(updateOne);
     }
@@ -240,15 +238,20 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
 
-    protected DeviceServiceImpl needNameNotRepeated(String name) throws InvalidDataException {
+    protected DeviceServiceImpl needNotRepeated(Device device) throws InvalidDataException {
         // 检测设备名称是否重复
-        //todo 检测名称重复应该剔除本身,因为更新时可能并不会修改名称
         QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(Device.COL_DEVICE_NAME, name);
-        Device repeatedOne = deviceDao.selectOne(queryWrapper);
-        if (null != repeatedOne) {
+        queryWrapper.eq(Device.COL_DEVICE_NAME, device.getDeviceName());
+
+        List<Device> repeatList = deviceDao.selectList(queryWrapper);
+        if (null != repeatList && !repeatList.isEmpty()) {
+            if (repeatList.size() == 1
+                    && device.getDeviceId() != null
+                    && device.getDeviceId().equals(repeatList.get(0).getDeviceId())) {
+                return this;
+            }
             throw new InvalidDataException(
-                    MessageFormat.format("设备名称：{0} 重复", name)
+                    MessageFormat.format("设备名称：{0} 重复", device.getDeviceName())
             ).with(ErrorCode.DEVICE_REPEAT_NAME);
         }
         return this;
