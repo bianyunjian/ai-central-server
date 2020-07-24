@@ -1,4 +1,4 @@
-insert into camera values (1, '测试相机2', 1,'rtsp://192.168.1.1', '测试相机说明');
+insert into camera values (1, '测试相机', 1,'rtsp://192.168.1.1', '测试相机说明');
 
 insert into device values (1, '测试设备', 0, '0', '三楼门口');
 insert into device values (2, '下线设备', 1, '0', '三楼楼梯口');
