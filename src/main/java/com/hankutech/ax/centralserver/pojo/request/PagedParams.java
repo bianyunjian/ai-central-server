@@ -1,5 +1,7 @@
 package com.hankutech.ax.centralserver.pojo.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -21,5 +23,9 @@ public class PagedParams {
     @NotNull
     @Schema(description = "每页数据量", example = "10", required = true)
     private Integer pageSize;
+
+    @Hidden
+    @JsonIgnore
+    private Integer start;
 
 }

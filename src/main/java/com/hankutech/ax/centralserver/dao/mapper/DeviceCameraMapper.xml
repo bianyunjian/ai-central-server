@@ -17,4 +17,44 @@
 
 
 
+    <select id="queryAiConfigList" resultType="com.hankutech.ax.centralserver.pojo.vo.AiConfigVO">
+        select dc.id as id, dc.device_id as deviceId, dc.camera_id as cameraId, dc.ai_type_array as aiTypeArray,
+            d.device_name as deviceName, c.camera_name as cameraName
+        from device_camera as dc
+        left join device as d on d.device_id = dc.device_id
+        left join camera as c on c.camera_id = dc.camera_id
+        <where>
+            <if test="query.name != null and query.name != ''">
+                <bind name="likeName" value="'%' + query.name + '%'"/>
+                d.device_name like #{likeName, jdbcType=VARCHAR} or c.camera_name like #{likeName, jdbcType=VARCHAR}
+            </if>
+        </where>
+        limit #{page.start,jdbcType=INTEGER}, #{page.pageSize,jdbcType=INTEGER}
+    </select>
+
+    <select id="queryAiConfigTotal" resultType="long">
+        select count(dc.id)
+        from device_camera as dc
+        left join device as d on d.device_id = dc.device_id
+        left join camera as c on c.camera_id = dc.camera_id
+        <where>
+            <if test="query.name != null and query.name != ''">
+                <bind name="likeName" value="'%' + query.name + '%'"/>
+                d.device_name like #{likeName, jdbcType=VARCHAR} or c.camera_name like #{likeName, jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getAiConfigById" resultType="com.hankutech.ax.centralserver.pojo.vo.AiConfigVO">
+        select dc.id as id, dc.device_id as deviceId, dc.camera_id as cameraId, dc.ai_type_array as aiTypeArray,
+        d.device_name as deviceName, c.camera_name as cameraName
+        from device_camera as dc
+        left join device as d on d.device_id = dc.device_id
+        left join camera as c on c.camera_id = dc.camera_id
+        where dc.id = #{id,jdbcType=VARCHAR}
+    </select>
+
+
+
 </mapper>

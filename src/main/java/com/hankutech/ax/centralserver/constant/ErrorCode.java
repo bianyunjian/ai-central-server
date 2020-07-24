@@ -18,8 +18,10 @@ public enum ErrorCode implements ErrorCoder {
     CAMERA_HAS_DEVICE(100104, "相机已关联设备"),
     /** 设备数据错误码 */
     DEVICE_NOT_EXIST(100201, "设备数据不存在"),
-    DEVICE_REPEAT_NAME(100202, "设备名称重复");
-
+    DEVICE_REPEAT_NAME(100202, "设备名称重复"),
+    /** 算法配置错误码 */
+    AI_CONFIG_NOT_EXIST(100301, "算法配置数据不存在"),
+    AI_CONFIG_PAIR_REPEAT(100302, "设备已匹配相机");
 
     private Integer errorCode;
     private String desc;
