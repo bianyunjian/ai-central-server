@@ -60,7 +60,7 @@ public class CameraServiceImpl implements CameraService {
     public PagedData<CameraVO> queryCameraTable(PagedParams pagedParams, CameraQueryParams queryParams) {
         IPage<Camera> iPage = new Page<>(pagedParams.getPageNum(), pagedParams.getPageSize());
         QueryWrapper<Camera> queryWrapper = new QueryWrapper<>();
-        //fixme 待增加分页查询参数
+        queryWrapper.like(Camera.COL_CAMERA_NAME, queryParams.getName());
         iPage = cameraDao.selectPage(iPage, queryWrapper);
         PagedData<CameraVO> data = new PagedData<>();
         data.setTotal(iPage.getTotal());
@@ -78,7 +78,7 @@ public class CameraServiceImpl implements CameraService {
     @Override
     public CameraVO addCamera(Camera newOne) throws InvalidDataException {
         // 检测名称重复
-        needNameNotRepeated(newOne.getCameraName());
+        needNotRepeated(newOne);
         // 插入数据
         newOne.setCameraId(null);
         cameraDao.insert(newOne);
@@ -89,7 +89,7 @@ public class CameraServiceImpl implements CameraService {
     @Override
     public CameraVO updateCamera(Camera updateOne) throws InvalidDataException {
         // 检测待修改数据是否存在，名称是否重复
-        needNameNotRepeated(updateOne.getCameraName()).needExistedAndReturn(updateOne.getCameraId());
+        needNotRepeated(updateOne).needExistedAndReturn(updateOne.getCameraId());
         // 修改数据
         cameraDao.updateById(updateOne);
         return new CameraVO(updateOne);
@@ -132,15 +132,19 @@ public class CameraServiceImpl implements CameraService {
     //==================================================================================================================
 
 
-    protected CameraServiceImpl needNameNotRepeated(String name) throws InvalidDataException {
+    protected CameraServiceImpl needNotRepeated(Camera camera) throws InvalidDataException {
         // 检测名称重复
-        //todo 检测名称重复应该剔除本身,因为更新时可能并不会修改名称
         QueryWrapper<Camera> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(Camera.COL_CAMERA_NAME, name);
-        Camera repeatedOne = cameraDao.selectOne(queryWrapper);
-        if (null != repeatedOne) {
+        queryWrapper.eq(Camera.COL_CAMERA_NAME, camera.getCameraName());
+        List<Camera> repeatList = cameraDao.selectList(queryWrapper);
+        if (null != repeatList && !repeatList.isEmpty()) {
+            if (repeatList.size() == 1
+                    && camera.getCameraId() != null
+                    && camera.getCameraId().equals(repeatList.get(0).getCameraId())) {
+                return this;
+            }
             throw new InvalidDataException(
-                    MessageFormat.format("相机名称：{0} 重复!", name)
+                    MessageFormat.format("相机名称：{0} 重复!", camera.getCameraName())
             ).with(ErrorCode.CAMERA_REPEAT_NAME);
         }
         return this;
