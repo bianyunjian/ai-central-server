@@ -157,9 +157,16 @@ public class DeviceController {
         @Schema(description = "设备名称", example = "测试设备0001", required = true)
         private String name;
 
+        @NotNull
+        @Schema(description = "设备状态", example = "0", required = true)
+        private Integer status;
+
         @NotBlank
         @Schema(description = "设备使用场景", example = "1", required = true)
         private String scenario;
+
+        @Schema(description = "设备说明", example = "三楼拐角")
+        private String description;
 
         @Override
         protected void validate() throws InvalidParamException {}
@@ -171,7 +178,9 @@ public class DeviceController {
         protected Device buildData() {
             Device model = new Device();
             model.setDeviceName(this.name);
+            model.setStatus(this.status);
             model.setDeviceScenario(this.scenario);
+            model.setDescription(this.description);
             return model;
         }
     }

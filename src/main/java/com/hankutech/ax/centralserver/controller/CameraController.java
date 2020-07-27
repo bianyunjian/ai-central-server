@@ -136,6 +136,9 @@ public class CameraController {
         @Schema(description = "艾信相机编码", example = "1", required = true)
         private Integer axCameraNumber;
 
+        @Schema(description = "相机说明", example = "三楼楼梯口")
+        private String description;
+
         @Override
         protected void validate() throws InvalidParamException {
             //todo
@@ -152,6 +155,7 @@ public class CameraController {
             model.setCameraName(this.name);
             model.setRtspUrl(this.rtsp);
             model.setAxCameraNumber(this.axCameraNumber);
+            model.setDescription(this.description);
             return model;
         }
     }
