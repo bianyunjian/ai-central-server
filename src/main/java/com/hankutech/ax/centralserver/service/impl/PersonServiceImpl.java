@@ -14,6 +14,7 @@ import com.hankutech.ax.centralserver.pojo.vo.PersonVO;
 import com.hankutech.ax.centralserver.service.PersonService;
 import com.hankutech.ax.centralserver.support.face.FaceUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.InvalidObjectException;
@@ -43,8 +44,6 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PagedData<PersonVO> queryPersonTable(PagedParams pagedParams, PersonParams queryParams) {
-
-
         QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
         queryWrapper.like(Person.COL_PERSON_NAME, queryParams.getPersonName());
         queryWrapper.orderByAsc(Person.COL_PERSON_ID);
@@ -64,18 +63,22 @@ public class PersonServiceImpl implements PersonService {
         return data;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public PersonVO addPerson(PersonAddRequest request) throws InvalidObjectException {
         Person newPerson = new Person();
         newPerson.setPersonName(request.getPersonName());
         newPerson.setPhoneNum(request.getPhoneNum());
         newPerson.setImage(request.getImage());
-        String faceFtrArrayString = FaceUtil.getFaceFtrArrayString(newPerson.getImage());
-        newPerson.setFaceFtrArray(faceFtrArrayString);
+//        String faceFtrArrayString = FaceUtil.getFaceFtrArrayString(newPerson.getImage());
+//        newPerson.setFaceFtrArray(faceFtrArrayString);
+        newPerson.setFaceFtrArray(""); //todo 后续改回调试代码
+
         _personDao.insert(newPerson);
         return new PersonVO(newPerson);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deletePerson(Integer personId) {
         QueryWrapper<Person> deleteWrapper = new QueryWrapper<>();

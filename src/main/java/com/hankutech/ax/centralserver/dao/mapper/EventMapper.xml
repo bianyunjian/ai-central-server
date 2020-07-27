@@ -2,4 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hankutech.ax.centralserver.dao.EventDao">
 
+
+    <select id="getTableList" resultType="com.hankutech.ax.centralserver.pojo.vo.event.history.HistoryEventVO">
+        select e.event_id as eventId, e.device_id as deviceId, e.camera_id as cameraId, e.event_type as eventType,
+            e.event_type_value as eventTypeValue, e.event_time as eventTime, e.description as description,
+            e.event_image_path as eventImagePath, d.device_name as deviceName, c.camera_name as cameraName
+        from event as e
+        left join device as d on d.device_id = e.device_id
+        left join camera as c on c.camera_id = e.camera_id
+        <where>
+            <if test="null != query.deviceName and query.deviceName != ''">
+                <bind name="likeName" value="'%' + query.deviceName + '%'"/>
+                and d.device_name = #{likeName,jdbcType=VARCHAR}
+            </if>
+            <if test="query.startTime != null and query.startTime != ''">
+                and e.event_time between #{query.startTime,jdbcType=VARCHAR} and #{query.endTime,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by e.device_id
+        limit #{page.start,jdbcType=INTEGER}, #{page.pageSize,jdbcType=INTEGER}
+    </select>
+
+    <select id="getTableTotal" resultType="long">
+        select count(e.event_id)
+        from event as e
+        left join device as d on d.device_id = e.device_id
+        left join camera as c on c.camera_id = e.camera_id
+        <where>
+            <if test="null != query.deviceName and query.deviceName != ''">
+                <bind name="likeName" value="'%' + query.deviceName + '%'"/>
+                and d.device_name = #{likeName,jdbcType=VARCHAR}
+            </if>
+            <if test="query.startTime != null and query.startTime != ''">
+                and e.event_time between #{query.startTime,jdbcType=VARCHAR} and #{query.endTime,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+
 </mapper>

@@ -84,28 +84,30 @@ public class EventController {
     public BaseResponse<PagedData<HistoryEventVO>> getHistoryEvent(@RequestBody @Validated QueryRequest<HistoryEventParams> request) {
         BaseResponse<PagedData<HistoryEventVO>> resp = new BaseResponse<>();
 
-        List<DeviceVO> deviceVOList = _deviceService.getDeviceListByName(request.getQueryParams().getDeviceName());
-        if (deviceVOList != null && deviceVOList.size() > 0) {
-            List<Integer> deviceIdList = deviceVOList.stream().map(t -> t.getId()).collect(Collectors.toList());
-            PagedData<HistoryEventVO> data = _eventService.getHistoryEvent(deviceIdList, request.getQueryParams().getStartTime(), request.getQueryParams().getEndTime(), request.getPagedParams());
-
-            if (data != null) {
-                List<Integer> cameraIdList = data.getList().stream().map(t -> t.getCameraId()).distinct().collect(Collectors.toList());
-
-                List<CameraVO> cameraVOList = _cameraService.getCameraListById(cameraIdList);
-
-                for (HistoryEventVO h : data.getList()
-
-                ) {
-                    String deviceName = deviceVOList.stream().filter(t -> t.getId() == h.getDeviceId()).findFirst().get().getName();
-                    String cameraName = cameraVOList.stream().filter(t -> t.getId() == h.getCameraId()).findFirst().get().getName();
-                    h.setDeviceName(deviceName);
-                    h.setCameraName(cameraName);
-                }
-            }
-
-            resp.success("OK", data);
-        }
+//        List<DeviceVO> deviceVOList = _deviceService.getDeviceListByName(request.getQueryParams().getDeviceName());
+//        if (deviceVOList != null && deviceVOList.size() > 0) {
+//            List<Integer> deviceIdList = deviceVOList.stream().map(t -> t.getId()).collect(Collectors.toList());
+//            PagedData<HistoryEventVO> data = _eventService.getHistoryEvent(deviceIdList, request.getQueryParams().getStartTime(), request.getQueryParams().getEndTime(), request.getPagedParams());
+//
+//            if (data != null && data.getList() != null && !data.getList().isEmpty()) {
+//                List<Integer> cameraIdList = data.getList().stream().map(t -> t.getCameraId()).distinct().collect(Collectors.toList());
+//
+//                List<CameraVO> cameraVOList = _cameraService.getCameraListById(cameraIdList);
+//
+//                for (HistoryEventVO h : data.getList()
+//
+//                ) {
+//                    String deviceName = deviceVOList.stream().filter(t -> t.getId() == h.getDeviceId()).findFirst().get().getName();
+//                    String cameraName = cameraVOList.stream().filter(t -> t.getId() == h.getCameraId()).findFirst().get().getName();
+//                    h.setDeviceName(deviceName);
+//                    h.setCameraName(cameraName);
+//                }
+//            }
+//
+//            resp.success("OK", data);
+//        }
+        PagedData<HistoryEventVO> data = _eventService.queryHistoryEvent(request.getPagedParams(), request.getQueryParams());
+        resp.success("分页查询历史事件数据成功", data);
         return resp;
     }
 

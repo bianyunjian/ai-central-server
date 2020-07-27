@@ -12,6 +12,7 @@ import com.hankutech.ax.centralserver.dao.DeviceDao;
 import com.hankutech.ax.centralserver.dao.EventDao;
 import com.hankutech.ax.centralserver.dao.model.Event;
 import com.hankutech.ax.centralserver.pojo.query.DeviceUploadParams;
+import com.hankutech.ax.centralserver.pojo.query.HistoryEventParams;
 import com.hankutech.ax.centralserver.pojo.request.PagedParams;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.response.PagedData;
@@ -48,12 +49,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public BaseResponse handleUploadData(DeviceUploadParams request) {
+        // todo 处理数据异常情况，例如id不存在等
         BaseResponse resp = new BaseResponse();
         String time = request.getTime();
         LocalDateTime eventTime = LocalDateTime.parse(time, fromFormatter);
         int deviceId = request.getDeviceId();
         String flag = _deviceDao.selectById(deviceId).getDeviceScenario();
-        ScenarioFlag scenarioFlag = StringUtils.isEmpty(flag) ? ScenarioFlag.EMPTY : ScenarioFlag.valueOf(flag);
+        // debug1: ScenarioFlag.valueOf参数应为int
+        ScenarioFlag scenarioFlag = StringUtils.isEmpty(flag) ? ScenarioFlag.EMPTY : ScenarioFlag.valueOf(Integer.parseInt(flag));
 
         for (CameraEventVO ev :
                 request.getCameraList()) {
@@ -148,6 +151,19 @@ public class EventServiceImpl implements EventService {
         }
         return data;
 
+    }
+
+    @Override
+    public PagedData<HistoryEventVO> queryHistoryEvent(PagedParams pagedParams, HistoryEventParams queryParams) {
+        pagedParams.setStart((pagedParams.getPageNum() - 1) * pagedParams.getPageSize());
+        List<HistoryEventVO> list = _eventDao.getTableList(pagedParams, queryParams);
+        long total = _eventDao.getTableTotal(queryParams);
+        PagedData<HistoryEventVO> data = new PagedData<>();
+        data.setTotal(total);
+        if (total > 0) {
+            data.setList(list);
+        }
+        return data;
     }
 
 
