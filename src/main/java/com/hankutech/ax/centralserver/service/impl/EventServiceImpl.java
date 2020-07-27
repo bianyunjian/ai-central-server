@@ -203,8 +203,10 @@ public class EventServiceImpl implements EventService {
                 return AIGarbageResultType.valueOf(resultValue);
 
             case FACE:
-                return AIFaceResultType.valueOf(resultValue);
-
+                if (resultValue > 0) {
+                    return AIFaceResultType.FACE_PASS;
+                }
+                return AIFaceResultType.EMPTY;
             case PERSON:
                 return AIPersonResultType.valueOf(resultValue);
         }
