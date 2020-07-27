@@ -53,7 +53,7 @@ public class EventServiceImpl implements EventService {
         LocalDateTime eventTime = LocalDateTime.parse(time, fromFormatter);
         int deviceId = request.getDeviceId();
         String flag = _deviceDao.selectById(deviceId).getDeviceScenario();
-        ScenarioFlag scenarioFlag = StringUtils.isEmpty(flag) ? ScenarioFlag.EMPTY : ScenarioFlag.valueOf(flag);
+        ScenarioFlag scenarioFlag = StringUtils.isEmpty(flag) ? ScenarioFlag.EMPTY : ScenarioFlag.valueOf(Integer.parseInt(flag));
 
         for (CameraEventVO ev :
                 request.getCameraList()) {
@@ -187,8 +187,10 @@ public class EventServiceImpl implements EventService {
                 return AIGarbageResultType.valueOf(resultValue);
 
             case FACE:
-                return AIFaceResultType.valueOf(resultValue);
-
+                if (resultValue > 0) {
+                    return AIFaceResultType.FACE_PASS;
+                }
+                return AIFaceResultType.EMPTY;
             case PERSON:
                 return AIPersonResultType.valueOf(resultValue);
         }
