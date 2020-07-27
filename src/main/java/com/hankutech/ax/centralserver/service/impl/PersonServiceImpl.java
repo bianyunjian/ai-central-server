@@ -70,9 +70,8 @@ public class PersonServiceImpl implements PersonService {
         newPerson.setPersonName(request.getPersonName());
         newPerson.setPhoneNum(request.getPhoneNum());
         newPerson.setImage(request.getImage());
-//        String faceFtrArrayString = FaceUtil.getFaceFtrArrayString(newPerson.getImage());
-//        newPerson.setFaceFtrArray(faceFtrArrayString);
-        newPerson.setFaceFtrArray(""); //todo 后续改回调试代码
+        String faceFtrArrayString = FaceUtil.getFaceFtrArrayString(newPerson.getImage());
+        newPerson.setFaceFtrArray(faceFtrArrayString);
 
         _personDao.insert(newPerson);
         return new PersonVO(newPerson);
