@@ -61,6 +61,22 @@
 100001 | 系统内部错误
 
 
+### 容器化说明
+
+```shell script
+# 构建jar包
+mvn clean package  -Dmaven.test.skip=true
+
+# 构建基础镜像（如果未构建的话）
+docker build -f base.Dockerfile -t ax-base:1.0 .
+
+# 构建中心服务镜像
+docker build -f Dockerfile -t central-server:xxx .
+
+# 运行中心服务容器
+docker run -p 9001:9001 -d central-server:xxx
+```
+
 
 
 
