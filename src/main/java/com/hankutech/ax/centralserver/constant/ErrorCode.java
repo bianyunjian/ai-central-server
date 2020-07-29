@@ -21,7 +21,10 @@ public enum ErrorCode implements ErrorCoder {
     DEVICE_REPEAT_NAME(100202, "设备名称重复"),
     /** 算法配置错误码 */
     AI_CONFIG_NOT_EXIST(100301, "算法配置数据不存在"),
-    AI_CONFIG_PAIR_REPEAT(100302, "设备已匹配相机");
+    AI_CONFIG_PAIR_REPEAT(100302, "设备已匹配相机"),
+    /** 人员数据错误码 */
+    PERSON_NOT_EXIST(100401, "人员数据不存在"),
+    PERSON_REPEAT_NAME(100402, "人员名称重复");
 
     private Integer errorCode;
     private String desc;

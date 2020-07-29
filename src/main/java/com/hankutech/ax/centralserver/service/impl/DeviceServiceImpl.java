@@ -162,8 +162,8 @@ public class DeviceServiceImpl implements DeviceService {
         // 删除设备
         QueryWrapper<DeviceCamera> delRelatedCameraQueryWrapper = new QueryWrapper<>();
         delRelatedCameraQueryWrapper.eq(DeviceCamera.COL_DEVICE_ID, id);
-        // fixme 删除其他关联
         deviceCameraDao.delete(delRelatedCameraQueryWrapper);
+        // fixme 删除其他关联
         deviceDao.deleteById(id);
     }
 

@@ -58,14 +58,12 @@ public class EventServiceImpl implements EventService {
         // debug1: ScenarioFlag.valueOf参数应为int
         ScenarioFlag scenarioFlag = StringUtils.isEmpty(flag) ? ScenarioFlag.EMPTY : ScenarioFlag.valueOf(Integer.parseInt(flag));
 
-        for (CameraEventVO ev :
-                request.getCameraList()) {
+        for (CameraEventVO ev : request.getCameraList()) {
 
             int cameraId = ev.getCameraId();
             int cameraNumber = _cameraDao.selectById(cameraId).getAxCameraNumber();
 
-            for (EventVO e :
-                    ev.getEvents()) {
+            for (EventVO e : ev.getEvents()) {
 
                 //解析识别结果
                 String aiTaskType = e.getType();

@@ -126,7 +126,7 @@ public class AiConfigController {
 
         @Override
         protected void validate() throws InvalidParamException {
-            // todo 校验算法类型是否符合
+            //fixme 校验算法类型是否符合
         }
 
         @Override

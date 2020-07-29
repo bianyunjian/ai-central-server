@@ -37,8 +37,14 @@ public class ImageUtil {
     public static String base64ToImage(String base64String, String imgFilePath, String imgFormat) {
         try {
             byte[] bytes1 = decoder.decodeBuffer(base64String);
+            if (null == bytes1 || bytes1.length == 0) {
+                return null;
+            }
             ByteArrayInputStream bais = new ByteArrayInputStream(bytes1);
             BufferedImage bi1 = ImageIO.read(bais);
+            if (null == bi1) {
+                return null;
+            }
             File f1 = new File(imgFilePath);
             ImageIO.write(bi1, imgFormat, f1);
             return imgFilePath;
