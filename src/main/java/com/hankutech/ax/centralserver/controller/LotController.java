@@ -1,5 +1,6 @@
 package com.hankutech.ax.centralserver.controller;
 
+import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.pojo.query.DeviceParams;
 import com.hankutech.ax.centralserver.pojo.query.DeviceUploadParams;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
@@ -63,7 +64,8 @@ public class LotController {
 
     @Operation(summary = "边缘设备上传识别结果")
     @PostMapping(path = "/uploadData")
-    public BaseResponse uploadData(@RequestBody @Validated DeviceUploadParams request) {
+    public BaseResponse uploadData(@RequestBody @Validated DeviceUploadParams request) throws InvalidDataException {
+//        log.info("收到事件：{}", request.toString());
         BaseResponse resp = _eventService.handleUploadData(request);
         return resp;
     }

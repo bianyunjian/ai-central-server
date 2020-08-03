@@ -7,10 +7,14 @@ import com.hankutech.ax.centralserver.biz.code.*;
 import com.hankutech.ax.centralserver.biz.data.AIResultWrapper;
 import com.hankutech.ax.centralserver.biz.data.AXDataManager;
 import com.hankutech.ax.centralserver.constant.Common;
+import com.hankutech.ax.centralserver.constant.ErrorCode;
 import com.hankutech.ax.centralserver.dao.CameraDao;
 import com.hankutech.ax.centralserver.dao.DeviceDao;
 import com.hankutech.ax.centralserver.dao.EventDao;
+import com.hankutech.ax.centralserver.dao.model.Camera;
+import com.hankutech.ax.centralserver.dao.model.Device;
 import com.hankutech.ax.centralserver.dao.model.Event;
+import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.pojo.query.DeviceUploadParams;
 import com.hankutech.ax.centralserver.pojo.query.HistoryEventParams;
 import com.hankutech.ax.centralserver.pojo.request.PagedParams;
@@ -23,17 +27,21 @@ import com.hankutech.ax.centralserver.pojo.vo.event.history.HistoryEventVO;
 import com.hankutech.ax.centralserver.pojo.vo.event.realtime.RealtimeEventVO;
 import com.hankutech.ax.centralserver.service.EventService;
 import com.hankutech.ax.centralserver.support.ImageUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Date;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class EventServiceImpl implements EventService {
     DateTimeFormatter fromFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -47,24 +55,38 @@ public class EventServiceImpl implements EventService {
     @Resource
     private CameraDao _cameraDao;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public BaseResponse handleUploadData(DeviceUploadParams request) {
-        // todo 处理数据异常情况，例如id不存在等
+    public BaseResponse handleUploadData(DeviceUploadParams request) throws InvalidDataException {
         BaseResponse resp = new BaseResponse();
         String time = request.getTime();
         LocalDateTime eventTime = LocalDateTime.parse(time, fromFormatter);
         int deviceId = request.getDeviceId();
-        String flag = _deviceDao.selectById(deviceId).getDeviceScenario();
+        // 检测设备是否存在
+        Device device = _deviceDao.selectById(deviceId);
+        if (null == device) {
+            throw new InvalidDataException(MessageFormat.format("设备ID={0}不存在", deviceId)).with(ErrorCode.DEVICE_NOT_EXIST);
+        }
+        String flag = device.getDeviceScenario();
         // debug1: ScenarioFlag.valueOf参数应为int
         ScenarioFlag scenarioFlag = StringUtils.isEmpty(flag) ? ScenarioFlag.EMPTY : ScenarioFlag.valueOf(Integer.parseInt(flag));
 
+        List<Event> batchList = new ArrayList<>();
         for (CameraEventVO ev : request.getCameraList()) {
-
             int cameraId = ev.getCameraId();
+            // 检测相机是否存在
+            Camera camera = _cameraDao.selectById(cameraId);
+            if (null == camera) {
+                throw new InvalidDataException(MessageFormat.format("相机ID={0}不存在", cameraId)).with(ErrorCode.CAMERA_NOT_EXIST);
+            }
             int cameraNumber = _cameraDao.selectById(cameraId).getAxCameraNumber();
+            List<EventVO> list = ev.getEvents();
+            if (null == list || list.isEmpty()) {
+                log.warn("相机ID={} 无事件", cameraId);
+                continue;
+            }
 
-            for (EventVO e : ev.getEvents()) {
-
+            for (EventVO e : list) {
                 //解析识别结果
                 String aiTaskType = e.getType();
                 Integer aiResultValue = e.getValue();
@@ -75,31 +97,34 @@ public class EventServiceImpl implements EventService {
                 String imgName = getImageName(deviceId, cameraId, eventType, eventTime
                 );
                 String imgFilePath = SaveEventImage(imgName, imageBase64);
-
 //                更新缓存中， 缓存中只保留 当前最新的结果
                 AITaskType aiTaskTypeEnum = AITaskType.valueOf(eventType.toUpperCase());
                 AIResult aiResult = getEventAIResult(eventType, aiResultValue);
                 AXDataManager.updateAIResult(cameraNumber, scenarioFlag, aiTaskTypeEnum, aiResult, eventTime);
-
 //              持久化到数据库中
                 Event newEventEntity = new Event();
                 newEventEntity.setCameraId(cameraId);
                 newEventEntity.setDeviceId(deviceId);
-
                 newEventEntity.setEventTime(Date.from(eventTime.atZone(ZoneId.systemDefault()).toInstant()));
                 newEventEntity.setEventType(eventType);
                 newEventEntity.setEventTypeValue(eventTypeValue);
                 newEventEntity.setDescription(description);
-                newEventEntity.setEventImagePath(imgFilePath);
-
-                int affectRowCount = _eventDao.insert(newEventEntity);
-                if (affectRowCount > 0) {
-                    resp.success("Add new Event Data OK", newEventEntity.getEventId());
-                } else {
-                    resp.fail("Add new Event Data failed");
-                }
+                newEventEntity.setEventImagePath(imgFilePath == null ? "" : imgFilePath);
+                // 加入批量list
+                batchList.add(newEventEntity);
+//
+//                int affectRowCount = _eventDao.insert(newEventEntity);
+//                if (affectRowCount > 0) {
+//                    resp.success("Add new Event Data OK", newEventEntity.getEventId());
+//                } else {
+//                    resp.fail("Add new Event Data failed");
+//                }
             }
         }
+        if (!batchList.isEmpty()) {
+            _eventDao.batchInsert(batchList);
+        }
+        resp.success("事件上传成功");
         return resp;
     }
 

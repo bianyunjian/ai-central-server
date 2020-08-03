@@ -3,9 +3,11 @@ package com.hankutech.ax.centralserver.pojo.query;
 import com.hankutech.ax.centralserver.pojo.vo.CameraEventVO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
+@ToString
 @Data
 public class DeviceUploadParams {
     @Schema(description = "发生时间", example = "2020-07-17 15:00:00")

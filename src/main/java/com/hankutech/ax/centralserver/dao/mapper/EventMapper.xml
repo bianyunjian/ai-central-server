@@ -40,4 +40,23 @@
     </select>
 
 
+    <insert id="batchInsert" parameterType="list">
+        insert into event (device_id, camera_id, event_type, event_type_value, event_time,
+            description, event_image_path)
+        values
+        <foreach collection="list" item="e" separator=",">
+            (
+                #{e.deviceId, jdbcType=INTEGER},
+                #{e.cameraId, jdbcType=INTEGER},
+                #{e.eventType, jdbcType=VARCHAR},
+                #{e.eventTypeValue, jdbcType=INTEGER},
+                #{e.eventTime, jdbcType=TIMESTAMP},
+                #{e.description, jdbcType=VARCHAR},
+                #{e.eventImagePath, jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+
+
 </mapper>

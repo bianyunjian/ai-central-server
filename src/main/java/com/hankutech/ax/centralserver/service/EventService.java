@@ -1,5 +1,6 @@
 package com.hankutech.ax.centralserver.service;
 
+import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.pojo.query.CameraQueryParams;
 import com.hankutech.ax.centralserver.pojo.query.DeviceUploadParams;
 import com.hankutech.ax.centralserver.pojo.query.HistoryEventParams;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
-    BaseResponse handleUploadData(DeviceUploadParams request);
+    BaseResponse handleUploadData(DeviceUploadParams request) throws InvalidDataException;
 
     List<RealtimeEventVO> getRealtimeEvent(CameraVO cameraVO);
 

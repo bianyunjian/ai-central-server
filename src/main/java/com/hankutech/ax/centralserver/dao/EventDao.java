@@ -23,5 +23,8 @@ public interface EventDao extends BaseMapper<Event> {
     long getTableTotal(@Param("query")HistoryEventParams queryParams);
 
 
+    void batchInsert(List<Event> list);
+
+
 
 }
