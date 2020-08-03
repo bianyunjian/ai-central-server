@@ -30,6 +30,8 @@ echo 'deb http://mirrors.aliyun.com/ubuntu/ bionic universe main restricted mult
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AA8E81B4331F7F50
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CBF8D6FD518E17E1
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7638D0442B90D010
 
 cat /etc/apt/sources.list
 apt update
