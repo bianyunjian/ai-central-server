@@ -13,7 +13,7 @@
         <where>
             <if test="null != query.deviceName and query.deviceName != ''">
                 <bind name="likeName" value="'%' + query.deviceName + '%'"/>
-                and d.device_name = #{likeName,jdbcType=VARCHAR}
+                and d.device_name like #{likeName,jdbcType=VARCHAR}
             </if>
             <if test="query.startTime != null and query.startTime != ''">
                 and e.event_time between #{query.startTime,jdbcType=VARCHAR} and #{query.endTime,jdbcType=VARCHAR}
@@ -31,7 +31,7 @@
         <where>
             <if test="null != query.deviceName and query.deviceName != ''">
                 <bind name="likeName" value="'%' + query.deviceName + '%'"/>
-                and d.device_name = #{likeName,jdbcType=VARCHAR}
+                and d.device_name like #{likeName,jdbcType=VARCHAR}
             </if>
             <if test="query.startTime != null and query.startTime != ''">
                 and e.event_time between #{query.startTime,jdbcType=VARCHAR} and #{query.endTime,jdbcType=VARCHAR}
