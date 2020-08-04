@@ -1,5 +1,6 @@
 package com.hankutech.ax.centralserver.service;
 
+import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.pojo.query.PersonParams;
 import com.hankutech.ax.centralserver.pojo.request.PagedParams;
 import com.hankutech.ax.centralserver.pojo.request.PersonAddRequest;
@@ -14,7 +15,7 @@ public interface PersonService {
 
     PagedData<PersonVO> queryPersonTable(PagedParams pagedParams, PersonParams queryParams);
 
-    PersonVO addPerson(PersonAddRequest request) throws InvalidObjectException;
+    PersonVO addPerson(PersonAddRequest request) throws InvalidObjectException, InvalidDataException;
 
-    void deletePerson(Integer id);
+    void deletePerson(Integer id) throws InvalidDataException;
 }

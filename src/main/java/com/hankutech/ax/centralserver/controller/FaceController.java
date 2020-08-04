@@ -1,6 +1,7 @@
 package com.hankutech.ax.centralserver.controller;
 
 import com.hankutech.ax.centralserver.dao.model.Person;
+import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.exception.InvalidParamException;
 import com.hankutech.ax.centralserver.pojo.query.PersonParams;
 import com.hankutech.ax.centralserver.pojo.request.AbstractObjectRequest;
@@ -23,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
+import java.io.InvalidObjectException;
 
 /**
  * 人脸库接口
@@ -61,22 +63,17 @@ public class FaceController {
 
     @Operation(summary = "新增人脸")
     @PostMapping(path = "/add")
-    public BaseResponse<PersonVO> add(@RequestBody @Validated PersonAddRequest request) {
+    public BaseResponse<PersonVO> add(@RequestBody @Validated PersonAddRequest request) throws InvalidObjectException, InvalidDataException {
         BaseResponse<PersonVO> resp = new BaseResponse<PersonVO>();
-        try {
-            PersonVO data = _personService.addPerson(request);
-            resp.success("新增人脸成功", data);
-        } catch (Exception ex) {
-            resp.fail(ex.getMessage());
-        }
-
+        PersonVO data = _personService.addPerson(request);
+        resp.success("新增人脸成功", data);
         return resp;
     }
 
 
     @Operation(summary = "删除人脸")
     @PostMapping(path = "/delete")
-    public BaseResponse delete(@RequestBody @Validated IntIdRequest request) {
+    public BaseResponse delete(@RequestBody @Validated IntIdRequest request) throws InvalidDataException {
         Integer id = request.getId();
         _personService.deletePerson(id);
         BaseResponse response = new BaseResponse();
