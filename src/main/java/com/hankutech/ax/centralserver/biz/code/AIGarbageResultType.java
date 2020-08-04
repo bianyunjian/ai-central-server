@@ -9,6 +9,7 @@ public enum AIGarbageResultType implements AIResult{
     WET(2, "湿垃圾（黑色垃圾袋）"),
     RECYCLABLE(3, "可回收垃圾（绿色垃圾袋）"),
     HAZARDOUS(4, "有害垃圾（红色垃圾袋）"),
+    BLUE(90, "其他垃圾(蓝色垃圾袋)"),
     EXCEPTION(99, "异常") ;
     public static AIGarbageResultType valueOf(int value) {
         switch (value) {
@@ -21,6 +22,8 @@ public enum AIGarbageResultType implements AIResult{
                 return RECYCLABLE;
             case 4:
                 return HAZARDOUS;
+            case 90:
+                return BLUE;
             case 99:
                 return EXCEPTION;
             default:
