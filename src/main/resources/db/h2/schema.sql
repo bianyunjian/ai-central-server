@@ -61,6 +61,8 @@ create table `event` (
     primary key (`event_id`)
 ) engine = innodb default charset = utf8mb4;
 
+alter table `event` add index index_event_time (`event_time`);
+
 
 CREATE TABLE `user` (
   `user_name` VARCHAR(100) NOT NULL,

@@ -3,8 +3,10 @@ package com.hankutech.ax.centralserver.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.hankutech.ax.centralserver.constant.ErrorCode;
 import com.hankutech.ax.centralserver.dao.PersonDao;
 import com.hankutech.ax.centralserver.dao.model.Person;
+import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.pojo.query.PersonParams;
 import com.hankutech.ax.centralserver.pojo.request.PagedParams;
 import com.hankutech.ax.centralserver.pojo.request.PersonAddRequest;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.InvalidObjectException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,7 +68,15 @@ public class PersonServiceImpl implements PersonService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public PersonVO addPerson(PersonAddRequest request) throws InvalidObjectException {
+    public PersonVO addPerson(PersonAddRequest request) throws InvalidObjectException, InvalidDataException {
+        // 检测人员是否名称重复
+        QueryWrapper<Person> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(Person.COL_PERSON_NAME, request.getPersonName());
+        Person repeatOne = _personDao.selectOne(queryWrapper);
+        if (null != repeatOne) {
+            throw new InvalidDataException(MessageFormat.format("人员名称={0}重复", request.getPersonName()))
+                    .with(ErrorCode.PERSON_REPEAT_NAME);
+        }
         Person newPerson = new Person();
         newPerson.setPersonName(request.getPersonName());
         newPerson.setPhoneNum(request.getPhoneNum());
@@ -79,7 +90,13 @@ public class PersonServiceImpl implements PersonService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void deletePerson(Integer personId) {
+    public void deletePerson(Integer personId) throws InvalidDataException {
+        // 检测人员是否存在
+        Person existOne = _personDao.selectById(personId);
+        if (null == existOne) {
+            throw new InvalidDataException(MessageFormat.format("ID={0}的人员不存在", personId))
+                    .with(ErrorCode.PERSON_NOT_EXIST);
+        }
         QueryWrapper<Person> deleteWrapper = new QueryWrapper<>();
         deleteWrapper.eq(Person.COL_PERSON_ID, personId);
         _personDao.delete(deleteWrapper);
