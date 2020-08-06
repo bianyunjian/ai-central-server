@@ -4,7 +4,7 @@ package com.hankutech.ax.centralserver.biz.code;
  * 有无人员检测任务应答
  */
 public enum AIPersonResultType implements AIResult{
-    EMPTY(0,"UNKNOWN"),
+    EMPTY(0,"没人"),
     PERSON_EXIST(1, "有人"),
     NO_PERSON(2, "没人"),
     EXCEPTION(99, "异常");

@@ -31,7 +31,6 @@ public class AXRequest {
      */
     AITaskType taskType;
 
-
     /**
      * 验证是否有效的数据结构
      *

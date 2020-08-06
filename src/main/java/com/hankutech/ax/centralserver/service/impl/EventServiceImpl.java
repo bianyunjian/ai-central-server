@@ -75,6 +75,8 @@ public class EventServiceImpl implements EventService {
         for (CameraEventVO ev : request.getCameraList()) {
             int cameraId = ev.getCameraId();
             // 检测相机是否存在
+//            //TODO
+//            cameraId = 1;
             Camera camera = _cameraDao.selectById(cameraId);
             if (null == camera) {
                 throw new InvalidDataException(MessageFormat.format("相机ID={0}不存在", cameraId)).with(ErrorCode.CAMERA_NOT_EXIST);
@@ -85,7 +87,7 @@ public class EventServiceImpl implements EventService {
                 log.warn("相机ID={} 无事件", cameraId);
                 continue;
             }
-
+            //log.info("相机ID={} 有事件数量{}", cameraId,list.size());
             for (EventVO e : list) {
                 //解析识别结果
                 String aiTaskType = e.getType();

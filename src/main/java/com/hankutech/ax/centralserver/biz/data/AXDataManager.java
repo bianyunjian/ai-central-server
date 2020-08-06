@@ -111,7 +111,7 @@ public class AXDataManager {
             } else {
                 map.put(taskType, aiResultWrapper);
             }
-            System.out.println("update AXDataItem for cameraNumber[" + cameraNumber + "]");
+            //System.out.println("update AXDataItem for cameraNumber[" + cameraNumber + "]");
         }
     }
 }
