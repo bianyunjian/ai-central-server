@@ -3,14 +3,15 @@ package com.hankutech.ax.centralserver.biz.code;
 /**
  * 垃圾分类检测任务应答
  */
-public enum AIGarbageResultType implements AIResult{
-    EMPTY(0,"UNKNOWN"),
+public enum AIGarbageResultType implements AIResult {
+    //    EMPTY(0,"UNKNOWN"),
     DRY(1, "干垃圾（灰色垃圾袋）"),
     WET(2, "湿垃圾（黑色垃圾袋）"),
     RECYCLABLE(3, "可回收垃圾（绿色垃圾袋）"),
     HAZARDOUS(4, "有害垃圾（红色垃圾袋）"),
-    BLUE(90, "其他垃圾(蓝色垃圾袋)"),
-    EXCEPTION(99, "异常") ;
+    //    BLUE(99, "其他垃圾(蓝色垃圾袋)"),
+    EXCEPTION(99, "其他异常(未知垃圾类型)");
+
     public static AIGarbageResultType valueOf(int value) {
         switch (value) {
 
@@ -22,14 +23,13 @@ public enum AIGarbageResultType implements AIResult{
                 return RECYCLABLE;
             case 4:
                 return HAZARDOUS;
-            case 90:
-                return BLUE;
             case 99:
                 return EXCEPTION;
             default:
-                return EMPTY;
+                return EXCEPTION;
         }
     }
+
     int value;
     String description;
 

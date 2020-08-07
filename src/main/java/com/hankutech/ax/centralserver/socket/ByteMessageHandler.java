@@ -1,7 +1,7 @@
 package com.hankutech.ax.centralserver.socket;
 
-import com.hankutech.ax.centralserver.biz.protocol.AXDataConverter;
 import com.hankutech.ax.centralserver.biz.data.AXDataManager;
+import com.hankutech.ax.centralserver.biz.protocol.AXDataConverter;
 import com.hankutech.ax.centralserver.biz.protocol.AXRequest;
 import com.hankutech.ax.centralserver.biz.protocol.AXResponse;
 import io.netty.buffer.ByteBuf;
@@ -67,9 +67,11 @@ public class ByteMessageHandler extends ChannelInboundHandlerAdapter {
                 log.error("未能正确处理请求数据，request={},response={}", request, response);
             }
             int[] respData = AXDataConverter.convertResponse(response);
-            byte[] respByteData = ByteConverter.toByte(respData);
-            log.info("转换后的响应数据：{}", response.toString());
 
+            byte[] respByteData = ByteConverter.toByte(respData);
+
+            log.info("转换后的响应数据：{}", response.toString());
+            log.info("发送的响应数据：{}", respByteData);
             ByteBuf responseByteBuf = Unpooled.buffer(respByteData.length);
             responseByteBuf.writeBytes(respByteData);
             ctx.channel().writeAndFlush(responseByteBuf);
