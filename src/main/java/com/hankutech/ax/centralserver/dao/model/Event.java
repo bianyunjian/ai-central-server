@@ -4,17 +4,18 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.util.Date;
 import lombok.Data;
+
+import java.util.Date;
 
 @Data
 @TableName(value = "event")
 public class Event {
     /**
-     * 事件ID，使用36位UUID
+     * 事件ID
      */
     @TableId(value = "event_id", type = IdType.AUTO)
-    private Integer eventId;
+    private Integer eventId = 0;
 
     /**
      * 设备ID

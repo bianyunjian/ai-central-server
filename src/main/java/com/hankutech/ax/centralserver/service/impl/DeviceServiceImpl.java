@@ -12,7 +12,6 @@ import com.hankutech.ax.centralserver.dao.model.Camera;
 import com.hankutech.ax.centralserver.dao.model.Device;
 import com.hankutech.ax.centralserver.dao.model.DeviceCamera;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
-import com.hankutech.ax.centralserver.menum.DeviceStatus;
 import com.hankutech.ax.centralserver.pojo.dto.DeviceConfigDTO;
 import com.hankutech.ax.centralserver.pojo.query.DeviceQueryParams;
 import com.hankutech.ax.centralserver.pojo.request.PagedParams;
@@ -52,7 +51,7 @@ public class DeviceServiceImpl implements DeviceService {
     private CameraDao cameraDao;
 
     @Override
-    public DeviceConfigVO getDeviceConfig(String deviceName) {
+    public DeviceConfigVO getDeviceConfig(String deviceName, List<String> aiCameraFilter) {
 
         QueryWrapper<Device> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(Device.COL_DEVICE_NAME, deviceName);
@@ -72,6 +71,8 @@ public class DeviceServiceImpl implements DeviceService {
                 for (DeviceCamera dc : deviceCameraList
                 ) {
 
+                    if (checkCameraAiType(dc.getAiTypeArray(), aiCameraFilter) == false) continue;
+
                     Camera camera = cameraDao.selectById(dc.getCameraId());
                     DeviceCameraConfigVO newVO = new DeviceCameraConfigVO();
                     newVO.setName(camera.getCameraName());
@@ -90,6 +91,22 @@ public class DeviceServiceImpl implements DeviceService {
         }
 
         return null;
+    }
+
+    private boolean checkCameraAiType(String aiTypeArray, List<String> aiCameraFilter) {
+        if (aiCameraFilter == null || aiCameraFilter.size() == 0) return true;
+        if (StringUtils.isEmpty(aiTypeArray)) {
+            return false;
+        }
+
+        for (String ai :
+                aiCameraFilter) {
+
+            if (aiTypeArray.contains(ai) == false) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

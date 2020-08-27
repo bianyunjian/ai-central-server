@@ -7,6 +7,7 @@ import com.hankutech.ax.centralserver.biz.code.ScenarioFlag;
 import com.hankutech.ax.centralserver.biz.protocol.AXRequest;
 import com.hankutech.ax.centralserver.biz.protocol.AXResponse;
 import com.hankutech.ax.centralserver.constant.Common;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -87,9 +88,16 @@ public class AXDataManager {
      * @param aiResult
      * @param dateTime
      */
-    public static void updateAIResult(int cameraNumber, ScenarioFlag scenarioFlag, AITaskType taskType, AIResult aiResult, LocalDateTime dateTime) {
+    public static void updateAIResult(int cameraNumber, ScenarioFlag scenarioFlag, AITaskType taskType, AIResult aiResult, LocalDateTime dateTime, String eventType, String eventTypeValue) {
 
         AIResultWrapper aiResultWrapper = new AIResultWrapper(aiResult, dateTime);
+        if (StringUtils.isEmpty(eventTypeValue) == false) {
+            HashMap<String, String> extProperty = new HashMap<>();
+            extProperty.put("eventType", eventType);
+            extProperty.put("eventTypeValue", eventTypeValue);
+            aiResultWrapper.setExtProperty(extProperty);
+        }
+
         if (_dataCacheMap.containsKey(cameraNumber) == false) {
             AXDataItem newData = new AXDataItem();
             newData.setCameraNumber(cameraNumber);
