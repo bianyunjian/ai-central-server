@@ -17,6 +17,14 @@ create table `device` (
     `description` VARCHAR(500) NULL COMMENT '备注描述' ,
     primary key (`device_id`)
 ) engine = innodb default charset = utf8mb4;
+ALTER TABLE `device`
+ADD COLUMN `ax_plc_id` VARCHAR(255) NOT NULL default '0' COMMENT '艾信 plc的编号， 用于plc与中心服务器通讯时标识自己' AFTER `description`;
+ALTER TABLE `device`
+ADD COLUMN `app_id` VARCHAR(255) NOT NULL  default '0' COMMENT 'app编号， 用于app与中心服务器通讯时标识自己' AFTER `ax_plc_id`;
+ALTER TABLE `device`
+ADD COLUMN `device_group_id` INT(11) NOT NULL DEFAULT 0 COMMENT '设备楼栋分组编号， 相同楼栋分组编号的设备中， 只能有一个是活动状态' AFTER `app_id`;
+
+
 
 create unique index `uk_device_name` on `device` (`device_name`);
 
@@ -50,9 +58,9 @@ create table `device_person` (
 
 -- 事件表
 create table `event` (
-    `event_id` char(36) not null default '' comment '事件ID，使用36位UUID',
-    `device_id` int(11) not null comment '设备表ID',
-    `camera_id` int(11) not null comment '相机表ID',
+    `event_id` int(11) unsigned not null auto_increment comment '事件ID',
+    `device_id` int(11) not null   comment '设备ID',
+    `camera_id` int(11) not null   comment '相机ID',
     `event_type` varchar(50) not null default '' comment '事件类型',
     `event_type_value` int(11) not null comment '预定义事件值，与事件类型有关',
     `event_time` datetime not null comment '事件发生的时间',
@@ -62,6 +70,7 @@ create table `event` (
 ) engine = innodb default charset = utf8mb4;
 
 alter table `event` add index index_event_time (`event_time`);
+
 
 
 CREATE TABLE `user` (

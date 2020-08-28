@@ -19,7 +19,7 @@
                 and e.event_time between #{query.startTime,jdbcType=VARCHAR} and #{query.endTime,jdbcType=VARCHAR}
             </if>
         </where>
-        order by e.device_id
+        order by e.device_id asc,e.camera_id asc ,e.event_type asc,e.event_time desc
         limit #{page.start,jdbcType=INTEGER}, #{page.pageSize,jdbcType=INTEGER}
     </select>
 

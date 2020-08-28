@@ -19,7 +19,7 @@ import java.util.List;
 public interface DeviceService {
 
 
-    DeviceConfigVO getDeviceConfig(String deviceName);
+    DeviceConfigVO getDeviceConfig(String deviceName, List<String> aiCameraFilter);
 
     List<DeviceVO> getDeviceList(DeviceQueryParams request);
 

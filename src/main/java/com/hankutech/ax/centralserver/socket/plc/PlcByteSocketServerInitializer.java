@@ -1,5 +1,6 @@
-package com.hankutech.ax.centralserver.socket;
+package com.hankutech.ax.centralserver.socket.plc;
 
+import com.hankutech.ax.centralserver.socket.BroadCastChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -11,11 +12,11 @@ import io.netty.handler.timeout.IdleStateHandler;
  *
  * @author ZhangXi
  */
-public class ByteSocketServerInitializer extends ChannelInitializer<SocketChannel> {
+public class PlcByteSocketServerInitializer extends ChannelInitializer<SocketChannel> {
 
     private int fixedLengthFrame = 10;
 
-    public ByteSocketServerInitializer(int fixedLengthFrame) {
+    public PlcByteSocketServerInitializer(int fixedLengthFrame) {
         this.fixedLengthFrame = fixedLengthFrame;
     }
 
@@ -25,7 +26,7 @@ public class ByteSocketServerInitializer extends ChannelInitializer<SocketChanne
         pipeline.addLast(new IdleStateHandler(5, 5, 10));
         pipeline.addLast(new FixedLengthFrameDecoder(fixedLengthFrame));
 
-        pipeline.addLast(new ByteMessageHandler());
+        pipeline.addLast(new PlcByteMessageHandler());
 
         pipeline.addLast(new BroadCastChannelHandler());
 

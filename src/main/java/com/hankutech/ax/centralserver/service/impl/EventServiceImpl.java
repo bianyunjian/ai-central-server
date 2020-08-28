@@ -75,8 +75,6 @@ public class EventServiceImpl implements EventService {
         for (CameraEventVO ev : request.getCameraList()) {
             int cameraId = ev.getCameraId();
             // 检测相机是否存在
-//            //TODO
-//            cameraId = 1;
             Camera camera = _cameraDao.selectById(cameraId);
             if (null == camera) {
                 throw new InvalidDataException(MessageFormat.format("相机ID={0}不存在", cameraId)).with(ErrorCode.CAMERA_NOT_EXIST);
@@ -102,7 +100,7 @@ public class EventServiceImpl implements EventService {
 //                更新缓存中， 缓存中只保留 当前最新的结果
                 AITaskType aiTaskTypeEnum = AITaskType.valueOf(eventType.toUpperCase());
                 AIResult aiResult = getEventAIResult(eventType, aiResultValue);
-                AXDataManager.updateAIResult(cameraNumber, scenarioFlag, aiTaskTypeEnum, aiResult, eventTime);
+                AXDataManager.updateAIResult(cameraNumber, scenarioFlag, aiTaskTypeEnum, aiResult, eventTime, eventType, String.valueOf(eventTypeValue));
 //              持久化到数据库中
                 Event newEventEntity = new Event();
                 newEventEntity.setCameraId(cameraId);
@@ -146,7 +144,7 @@ public class EventServiceImpl implements EventService {
                 vo4Box.setEventTime(aiResult.getEventTime());
                 vo4Box.setEventType(t.toString().toLowerCase());
                 vo4Box.setEventTypeValue(aiResult.getAiResult().getValue());
-                vo4Box.setDescription(aiResult.getAiResult().getDescription());
+                vo4Box.setDescription(aiResult.getAiResult().getDescription() + aiResult.getExtProperty());
                 result.add(vo4Box);
             }
         }

@@ -12,11 +12,17 @@ import com.hankutech.ax.centralserver.service.PersonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * lot端边缘设备接口
@@ -44,7 +50,14 @@ public class LotController {
     public BaseResponse<DeviceConfigVO> getDeviceConfig(@RequestBody @Validated DeviceParams request) {
         BaseResponse<DeviceConfigVO> resp = new BaseResponse<>();
 
-        DeviceConfigVO data = _deviceService.getDeviceConfig(request.getDeviceName());
+        List<String> aiCameraFilter = new ArrayList<>();
+        if (StringUtils.isEmpty(request.getSupportAI())) {
+            aiCameraFilter.add("person");
+            aiCameraFilter.add("garbage");
+        } else {
+            aiCameraFilter.addAll(Arrays.stream(request.getSupportAI().trim().split(",")).collect(Collectors.toList()));
+        }
+        DeviceConfigVO data = _deviceService.getDeviceConfig(request.getDeviceName(), aiCameraFilter);
         resp.success("OK", data);
         return resp;
     }

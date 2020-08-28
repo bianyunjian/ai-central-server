@@ -1,9 +1,10 @@
-package com.hankutech.ax.centralserver.socket;
+package com.hankutech.ax.centralserver.socket.plc;
 
 import com.hankutech.ax.centralserver.biz.data.AXDataManager;
-import com.hankutech.ax.centralserver.biz.protocol.AXDataConverter;
-import com.hankutech.ax.centralserver.biz.protocol.AXRequest;
-import com.hankutech.ax.centralserver.biz.protocol.AXResponse;
+import com.hankutech.ax.centralserver.biz.protocol.plc.PlcDataConverter;
+import com.hankutech.ax.centralserver.biz.protocol.plc.PlcRequest;
+import com.hankutech.ax.centralserver.biz.protocol.plc.PlcResponse;
+import com.hankutech.ax.centralserver.socket.ByteConverter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -12,11 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 字节数据处理器
- *
- * @author ZhangXi
  */
 @Slf4j
-public class ByteMessageHandler extends ChannelInboundHandlerAdapter {
+public class PlcByteMessageHandler extends ChannelInboundHandlerAdapter {
+
+    private static String TAG = "[PlcByteMessageHandler]";
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
@@ -46,32 +47,32 @@ public class ByteMessageHandler extends ChannelInboundHandlerAdapter {
 
             byte[] bytes = new byte[buf.readableBytes()];
             buf.getBytes(0, bytes);
-            log.info("接收的原始字节数据：{}", bytes);
+            log.info(TAG + "接收的原始字节数据：{}", bytes);
 
             int[] convertedData = ByteConverter.fromByte(bytes);
-            log.info("转换后的数据：{}", convertedData);
+            log.info(TAG + "转换后的数据：{}", convertedData);
 
-            AXResponse response = AXResponse.DefaultEmpty();
-            AXRequest request = AXDataConverter.parseRequest(convertedData);
+            PlcResponse response = PlcResponse.defaultEmpty();
+            PlcRequest request = PlcDataConverter.parseRequest(convertedData);
             if (request != null && request.isValid()) {
-                log.info("解析后的请求数据：{}", request.toString());
+                log.info(TAG + "解析后的请求数据：{}", request.toString());
                 response = AXDataManager.query(request);
                 if (response != null) {
-                    log.info("查询到的响应数据：{}", response.toString());
+                    log.info(TAG + "查询到的响应数据：{}", response.toString());
                 }
             }
             if (response == null) {
-                response = AXResponse.DefaultEmpty();
+                response = PlcResponse.defaultEmpty();
             }
             if (response.isValid() == false) {
-                log.error("未能正确处理请求数据，request={},response={}", request, response);
+                log.error(TAG + "未能正确处理请求数据，request={},response={}", request, response);
             }
-            int[] respData = AXDataConverter.convertResponse(response);
+            int[] respData = PlcDataConverter.convertResponse(response);
 
             byte[] respByteData = ByteConverter.toByte(respData);
 
-            log.info("转换后的响应数据：{}", response.toString());
-            log.info("发送的响应数据：{}", respByteData);
+            log.info(TAG + "转换后的响应数据：{}", response.toString());
+            log.info(TAG + "发送的响应数据：{}", respByteData);
             ByteBuf responseByteBuf = Unpooled.buffer(respByteData.length);
             responseByteBuf.writeBytes(respByteData);
             ctx.channel().writeAndFlush(responseByteBuf);

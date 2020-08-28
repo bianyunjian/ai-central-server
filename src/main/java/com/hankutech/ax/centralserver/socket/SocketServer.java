@@ -1,7 +1,10 @@
 package com.hankutech.ax.centralserver.socket;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelId;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +32,8 @@ public class SocketServer {
 
     private ChannelFuture channelFuture;
     private final ChannelInitializer initializer;
-
+    NioEventLoopGroup bossGroup;
+    NioEventLoopGroup workerGroup;
 
     public SocketServer(int port, ChannelInitializer initializer) {
         this.port = port;
@@ -42,8 +46,8 @@ public class SocketServer {
      * @throws NettyServerException Netty服务端异常
      */
     public void start() throws NettyServerException {
-        NioEventLoopGroup bossGroup = new NioEventLoopGroup();
-        NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+        bossGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup();
 
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
@@ -67,18 +71,11 @@ public class SocketServer {
                 // 保存到Map
                 SOCKET_SERVER_MAP.put(this.port, this);
             }
-            Channel channel = channelFuture.channel();
-            /**CloseFuture异步方式关闭*/
-            channel.closeFuture().sync();
-
-            SOCKET_SERVER_MAP.remove(port);
-            log.info("socket服务端：{} 已关闭！", port);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
+
         }
     }
 
@@ -88,7 +85,12 @@ public class SocketServer {
     public void shutdown() {
         if (null != channelFuture) {
             channelFuture.channel().close();
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
         }
+        SOCKET_SERVER_MAP.remove(port);
+        log.info("socket服务端：{} 已关闭！", port);
+
     }
 
     public void sendData(Object msg, ChannelId... channelIds) {
