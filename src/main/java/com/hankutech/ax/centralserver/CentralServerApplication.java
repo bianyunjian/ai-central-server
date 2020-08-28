@@ -2,9 +2,10 @@ package com.hankutech.ax.centralserver;
 
 import com.hankutech.ax.centralserver.constant.Common;
 import com.hankutech.ax.centralserver.constant.SocketConst;
-import com.hankutech.ax.centralserver.socket.ByteSocketServerInitializer;
 import com.hankutech.ax.centralserver.socket.NettyServerException;
 import com.hankutech.ax.centralserver.socket.SocketServer;
+import com.hankutech.ax.centralserver.socket.app.AppByteSocketServerInitializer;
+import com.hankutech.ax.centralserver.socket.plc.PlcByteSocketServerInitializer;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,16 +32,24 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
     @Value("${app.event.event-obsolete-seconds}")
     int eventObSeconds;
 
-    private static SocketServer server;
+    private static SocketServer socketServer4Plc;
+    private static SocketServer socketServer4App;
 
     public static void main(String[] args) {
 
         System.out.println(Common.SERVICE_NAME + "开始启动");
         SpringApplication.run(CentralServerApplication.class, args);
 
-        server = new SocketServer(SocketConst.LISTENING_PORT, new ByteSocketServerInitializer(SocketConst.FIXED_LENGTH_FRAME));
+        socketServer4Plc = new SocketServer(SocketConst.LISTENING_PORT_PLC, new PlcByteSocketServerInitializer(SocketConst.FIXED_LENGTH_FRAME));
         try {
-            server.start();
+            socketServer4Plc.start();
+        } catch (NettyServerException e) {
+            e.printStackTrace();
+        }
+
+        socketServer4App = new SocketServer(SocketConst.LISTENING_PORT_APP, new AppByteSocketServerInitializer(SocketConst.FIXED_LENGTH_FRAME));
+        try {
+            socketServer4App.start();
         } catch (NettyServerException e) {
             e.printStackTrace();
         }
@@ -49,8 +58,11 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
     @Override
     public void destroy() throws Exception {
         System.out.println(Common.SERVICE_NAME + "结束");
-        if (server != null) {
-            server.shutdown();
+        if (socketServer4Plc != null) {
+            socketServer4Plc.shutdown();
+        }
+        if (socketServer4App != null) {
+            socketServer4App.shutdown();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.hankutech.ax.centralserver.socket;
 
+import com.hankutech.ax.centralserver.socket.plc.PlcByteSocketServerInitializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ class SocketServerTest {
 
     @Test
     void testByteServer() throws Exception {
-        SocketServer server = new SocketServer(4000, new ByteSocketServerInitializer(10));
+        SocketServer server = new SocketServer(4000, new PlcByteSocketServerInitializer(10));
         server.start();
         Assertions.assertTrue(NettyTool.isLocalPortUsing(4000));
         TimeUnit.SECONDS.sleep(500);

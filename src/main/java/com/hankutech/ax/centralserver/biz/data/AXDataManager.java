@@ -4,8 +4,10 @@ import com.hankutech.ax.centralserver.biz.code.AIBoxResultType;
 import com.hankutech.ax.centralserver.biz.code.AIResult;
 import com.hankutech.ax.centralserver.biz.code.AITaskType;
 import com.hankutech.ax.centralserver.biz.code.ScenarioFlag;
-import com.hankutech.ax.centralserver.biz.protocol.AXRequest;
-import com.hankutech.ax.centralserver.biz.protocol.AXResponse;
+import com.hankutech.ax.centralserver.biz.protocol.app.AppRequest;
+import com.hankutech.ax.centralserver.biz.protocol.app.AppResponse;
+import com.hankutech.ax.centralserver.biz.protocol.plc.PlcRequest;
+import com.hankutech.ax.centralserver.biz.protocol.plc.PlcResponse;
 import com.hankutech.ax.centralserver.constant.Common;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,17 +16,33 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AXDataManager {
-    public static AXResponse query(AXRequest request) {
 
-        AXResponse response = new AXResponse();
+    public static PlcResponse query(PlcRequest request) {
 
-        response.setSysRunFlag(request.getSysRunFlag());
-        response.setCameraNumber(request.getCameraNumber());
-        response.setScenarioFlag(request.getScenarioFlag());
-        response.setTaskType(request.getTaskType());
+        PlcResponse response = PlcResponse.defaultEmpty();
 
-        AIResultWrapper aiResultWrapper = getLatestAIResult(request.getCameraNumber(), request.getTaskType());
-        response.setAiResult(aiResultWrapper);
+        response.setPlcNumber(request.getPlcNumber());
+        response.setMessageType(request.getMessageType());
+
+
+        //TODO
+//        AIResultWrapper aiResultWrapper = getLatestAIResult(request.getPlcNumber(), request.getMessageType());
+//        response.setPayload(0);
+
+        return response;
+    }
+
+    public static AppResponse query(AppRequest request) {
+
+        AppResponse response = AppResponse.defaultEmpty();
+
+        response.setAppNumber(request.getAppNumber());
+        response.setMessageType(request.getMessageType());
+
+
+        //TODO
+//        AIResultWrapper aiResultWrapper = getLatestAIResult(request.getPlcNumber(), request.getMessageType());
+//        response.setPayload(0);
 
         return response;
     }
