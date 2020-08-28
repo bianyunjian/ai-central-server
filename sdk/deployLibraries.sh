@@ -43,6 +43,8 @@ apt -y install  libilmbase-dev
 apt -y install  libopenblas-dev
 apt -y install  libilmbase6
 apt -y install  libopenexr-dev
+apt -y install  libjpeg-dev
+apt -y install  libjasper-dev
 apt clean
 #copy libs
 echo '/sdk' > /etc/ld.so.conf.d/facesdk.conf
