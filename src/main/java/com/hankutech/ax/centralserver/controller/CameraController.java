@@ -132,10 +132,6 @@ public class CameraController {
         @Schema(description = "rtsp连接地址", example = "rtsp://192.168.1.234", required = true)
         private String rtsp;
 
-        @NotNull
-        @Schema(description = "艾信相机编码", example = "1", required = true)
-        private Integer axCameraNumber;
-
         @Schema(description = "相机说明", example = "三楼楼梯口")
         private String description;
 
@@ -154,7 +150,6 @@ public class CameraController {
             Camera model = new Camera();
             model.setCameraName(this.name);
             model.setRtspUrl(this.rtsp);
-            model.setAxCameraNumber(this.axCameraNumber);
             model.setDescription(this.description);
             return model;
         }

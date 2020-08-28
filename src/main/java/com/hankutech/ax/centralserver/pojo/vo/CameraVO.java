@@ -22,9 +22,6 @@ public class CameraVO {
     @Schema(description = "RTSP地址", example = "rtsp://192.168.1.234")
     private String rtsp;
 
-    @Schema(description = "艾信相机编码", example = "1")
-    private Integer axCameraNumber;
-
     @Schema(description = "描述", example = "")
     private String description;
 
@@ -33,7 +30,6 @@ public class CameraVO {
             this.id = camera.getCameraId();
             this.name = camera.getCameraName();
             this.rtsp = camera.getRtspUrl();
-            this.axCameraNumber = camera.getAxCameraNumber();
             this.description = camera.getDescription();
         }
     }

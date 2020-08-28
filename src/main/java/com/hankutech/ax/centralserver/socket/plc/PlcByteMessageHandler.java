@@ -1,10 +1,10 @@
 package com.hankutech.ax.centralserver.socket.plc;
 
-import com.hankutech.ax.centralserver.biz.data.AXDataManager;
-import com.hankutech.ax.centralserver.biz.protocol.plc.PlcDataConverter;
-import com.hankutech.ax.centralserver.biz.protocol.plc.PlcRequest;
-import com.hankutech.ax.centralserver.biz.protocol.plc.PlcResponse;
+import com.hankutech.ax.centralserver.bizmessage.AXMessageExchange;
 import com.hankutech.ax.centralserver.socket.ByteConverter;
+import com.hankutech.ax.message.protocol.plc.PlcDataConverter;
+import com.hankutech.ax.message.protocol.plc.PlcRequest;
+import com.hankutech.ax.message.protocol.plc.PlcResponse;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -56,7 +56,7 @@ public class PlcByteMessageHandler extends ChannelInboundHandlerAdapter {
             PlcRequest request = PlcDataConverter.parseRequest(convertedData);
             if (request != null && request.isValid()) {
                 log.info(TAG + "解析后的请求数据：{}", request.toString());
-                response = AXDataManager.query(request);
+                response = AXMessageExchange.query(request);
                 if (response != null) {
                     log.info(TAG + "查询到的响应数据：{}", response.toString());
                 }

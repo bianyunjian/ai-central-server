@@ -1,10 +1,10 @@
 package com.hankutech.ax.centralserver.socket.app;
 
-import com.hankutech.ax.centralserver.biz.data.AXDataManager;
-import com.hankutech.ax.centralserver.biz.protocol.app.AppDataConverter;
-import com.hankutech.ax.centralserver.biz.protocol.app.AppRequest;
-import com.hankutech.ax.centralserver.biz.protocol.app.AppResponse;
+import com.hankutech.ax.centralserver.bizmessage.AXMessageExchange;
 import com.hankutech.ax.centralserver.socket.ByteConverter;
+import com.hankutech.ax.message.protocol.app.AppDataConverter;
+import com.hankutech.ax.message.protocol.app.AppRequest;
+import com.hankutech.ax.message.protocol.app.AppResponse;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -56,7 +56,7 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
             AppRequest request = AppDataConverter.parseRequest(convertedData);
             if (request != null && request.isValid()) {
                 log.info(TAG + "解析后的请求数据：{}", request.toString());
-                response = AXDataManager.query(request);
+                response = AXMessageExchange.query(request);
                 if (response != null) {
                     log.info(TAG + "查询到的响应数据：{}", response.toString());
                 }

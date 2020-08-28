@@ -3,9 +3,8 @@ package com.hankutech.ax.centralserver.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hankutech.ax.centralserver.biz.code.*;
-import com.hankutech.ax.centralserver.biz.data.AIResultWrapper;
-import com.hankutech.ax.centralserver.biz.data.AXDataManager;
+import com.hankutech.ax.centralserver.bizmessage.AIResultWrapper;
+import com.hankutech.ax.centralserver.bizmessage.AIDataManager;
 import com.hankutech.ax.centralserver.constant.Common;
 import com.hankutech.ax.centralserver.constant.ErrorCode;
 import com.hankutech.ax.centralserver.dao.CameraDao;
@@ -21,12 +20,12 @@ import com.hankutech.ax.centralserver.pojo.request.PagedParams;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.response.PagedData;
 import com.hankutech.ax.centralserver.pojo.vo.CameraEventVO;
-import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.pojo.vo.EventVO;
 import com.hankutech.ax.centralserver.pojo.vo.event.history.HistoryEventVO;
 import com.hankutech.ax.centralserver.pojo.vo.event.realtime.RealtimeEventVO;
 import com.hankutech.ax.centralserver.service.EventService;
 import com.hankutech.ax.centralserver.support.ImageUtil;
+import com.hankutech.ax.message.code.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -79,7 +78,6 @@ public class EventServiceImpl implements EventService {
             if (null == camera) {
                 throw new InvalidDataException(MessageFormat.format("相机ID={0}不存在", cameraId)).with(ErrorCode.CAMERA_NOT_EXIST);
             }
-            int cameraNumber = _cameraDao.selectById(cameraId).getAxCameraNumber();
             List<EventVO> list = ev.getEvents();
             if (null == list || list.isEmpty()) {
                 log.warn("相机ID={} 无事件", cameraId);
@@ -100,7 +98,7 @@ public class EventServiceImpl implements EventService {
 //                更新缓存中， 缓存中只保留 当前最新的结果
                 AITaskType aiTaskTypeEnum = AITaskType.valueOf(eventType.toUpperCase());
                 AIResult aiResult = getEventAIResult(eventType, aiResultValue);
-                AXDataManager.updateAIResult(cameraNumber, scenarioFlag, aiTaskTypeEnum, aiResult, eventTime, eventType, String.valueOf(eventTypeValue));
+                AIDataManager.updateAIResult(device, cameraId, scenarioFlag, aiTaskTypeEnum, aiResult, eventTime, eventType, String.valueOf(eventTypeValue));
 //              持久化到数据库中
                 Event newEventEntity = new Event();
                 newEventEntity.setCameraId(cameraId);
@@ -129,16 +127,16 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<RealtimeEventVO> getRealtimeEvent(CameraVO cameraVO) {
+    public List<RealtimeEventVO> getRealtimeEvent(int deviceId, int cameraId) {
         List<RealtimeEventVO> result = new ArrayList<>();
-        Integer cameraNumber = cameraVO.getAxCameraNumber();
+
 
         AITaskType[] taskTypes = new AITaskType[]{
                 AITaskType.BOX, AITaskType.FACE, AITaskType.GARBAGE, AITaskType.PERSON
         };
         for (AITaskType t : taskTypes
         ) {
-            AIResultWrapper aiResult = AXDataManager.getLatestAIResult(cameraNumber, t);
+            AIResultWrapper aiResult = AIDataManager.getLatestAIResultByDevice(deviceId, t, cameraId);
             if (aiResult.getAiResult() != AIBoxResultType.EMPTY) {
                 RealtimeEventVO vo4Box = new RealtimeEventVO();
                 vo4Box.setEventTime(aiResult.getEventTime());

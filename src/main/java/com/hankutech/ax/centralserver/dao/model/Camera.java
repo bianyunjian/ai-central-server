@@ -27,11 +27,6 @@ public class Camera {
     @TableField(value = "rtsp_url")
     private String rtspUrl;
 
-    /**
-     * 相机在爱信系统的编码
-     */
-    @TableField(value = "ax_camera_number")
-    private Integer axCameraNumber;
 
     /**
      * 备注描述
@@ -45,7 +40,6 @@ public class Camera {
 
     public static final String COL_RTSP_URL = "rtsp_url";
 
-    public static final String COL_AX_CAMERA_NUMBER = "ax_camera_number";
 
     public static final String COL_DESCRIPTION = "description";
 }

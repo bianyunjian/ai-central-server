@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 数据查询接口
@@ -70,7 +69,7 @@ public class EventController {
                     newCameraData.setCameraId(cvo.getId());
                     newCameraData.setCameraName(cvo.getName());
                     newData.getCameraList().add(newCameraData);
-                    List<RealtimeEventVO> eventList = _eventService.getRealtimeEvent(cvo);
+                    List<RealtimeEventVO> eventList = _eventService.getRealtimeEvent(dvo.getId(), cvo.getId());
                     newCameraData.setEventList(eventList);
                 }
             }

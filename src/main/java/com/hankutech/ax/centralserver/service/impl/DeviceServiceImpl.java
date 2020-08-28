@@ -78,7 +78,6 @@ public class DeviceServiceImpl implements DeviceService {
                     newVO.setName(camera.getCameraName());
                     newVO.setId(camera.getCameraId());
                     newVO.setRtsp(camera.getRtspUrl());
-                    newVO.setAxCameraNumber(camera.getAxCameraNumber());
 
                     if (StringUtils.isEmpty(dc.getAiTypeArray()) == false) {
                         newVO.setAi(dc.getAiTypeArray().split(","));

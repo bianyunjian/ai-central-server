@@ -26,7 +26,7 @@ public class BaseUtils {
         String dataModel = System.getProperty("sun.arch.data.model", System.getProperty("com.ibm.vm.bitmode"));
         logger.debug("dataModel:" + dataModel);
         String code = new File("/lib/arm-linux-gnueabihf").isDirectory() ? "hf" : "el";
-        logger.debug("code:" + code);
+        logger.debug("com.hankutech.ax.message.code:" + code);
     }
 
     public static String getRootPath() {

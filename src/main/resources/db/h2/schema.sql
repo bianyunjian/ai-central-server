@@ -1,7 +1,6 @@
 create table `camera` (
     `camera_id` int(11) unsigned not null auto_increment comment '相机ID',
     `camera_name` varchar(255) not null default '' comment '相机名称，具有唯一性',
-    `ax_camera_number` int(11) unsigned not null comment '相机在爱信系统的编码',
     `rtsp_url` varchar(255) not null default '' comment 'RTSP连接地址',
     `description` VARCHAR(500) NULL COMMENT '备注描述' ,
     primary key (`camera_id`)
@@ -13,7 +12,7 @@ create table `device` (
     `device_id` int(11) unsigned not null auto_increment comment 'IOT设备ID',
     `device_name` varchar(255) not null default '' comment 'IOT设备名称，具有唯一性',
     `status` int(2) unsigned not null default 0 comment 'IOT设备状态：0-正常，1-断线',
-    `device_scenario` varchar(50) not null default '' comment '设备使用的场景, 关联 com.hankutech.ax.centralserver.biz.code.ScenarioFlag',
+    `device_scenario` varchar(50) not null default '' comment '设备使用的场景, 关联 com.hankutech.ax.message.protocal.com.hankutech.ax.message.code.ScenarioFlag',
     `description` VARCHAR(500) NULL COMMENT '备注描述' ,
     primary key (`device_id`)
 ) engine = innodb default charset = utf8mb4;

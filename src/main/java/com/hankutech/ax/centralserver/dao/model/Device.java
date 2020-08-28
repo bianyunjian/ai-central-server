@@ -39,6 +39,24 @@ public class Device {
     @TableField(value = "description")
     private String description;
 
+    /**
+     * 艾信 plc的编号， 用于plc与中心服务器通讯时标识自己
+     */
+    @TableField(value = "ax_plc_id")
+    private String axPlcId;
+
+    /**
+     * app编号， 用于app与中心服务器通讯时标识自己
+     */
+    @TableField(value = "app_id")
+    private String appId;
+
+    /**
+     * 设备楼栋分组编号， 相同楼栋分组编号的设备中， 只能有一个是活动状态
+     */
+    @TableField(value = "device_group_id")
+    private Integer deviceGroupId;
+
     public static final String COL_DEVICE_ID = "device_id";
 
     public static final String COL_DEVICE_NAME = "device_name";
@@ -48,4 +66,10 @@ public class Device {
     public static final String COL_DEVICE_SCENARIO = "device_scenario";
 
     public static final String COL_DESCRIPTION = "description";
+
+    public static final String COL_AX_PLC_ID = "ax_plc_id";
+
+    public static final String COL_APP_ID = "app_id";
+
+    public static final String COL_DEVICE_GROUP_ID = "device_group_id";
 }
