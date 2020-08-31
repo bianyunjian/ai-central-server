@@ -18,6 +18,20 @@ public class DeviceRelationManager {
         return list;
     }
 
+    public static List<Integer> getAppNumberByDeviceId(int deviceId) {
+        //TODO
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        return list;
+    }
+
+    public static List<Integer> getDeviceIdByDeviceGroupId(int deviceGroupId) {
+        //TODO
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        return list;
+    }
+
     public static List<Integer> getDeviceIdByPlcNumber(int plcNumber) {
         //TODO
         List<Integer> list = new ArrayList<>();
