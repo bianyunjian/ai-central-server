@@ -5,8 +5,8 @@ package com.hankutech.ax.message.protocol.app;
  */
 public enum AppMessageType {
     EMPTY(0, "UNKNOWN"),
-    HAND_REQ(10, "握手请求"),
-    HAND_RESP(11, "握手响应"),
+    HAND_SHAKE_REQ(10, "握手请求"),
+    HAND_SHAKE_RESP(11, "握手响应"),
 
     AUTH_REQ(20, "APP身份验证请求"),
     AUTH_RESP(21, "APP身份验证响应"),
@@ -30,9 +30,9 @@ public enum AppMessageType {
         switch (value) {
 
             case 10:
-                return HAND_REQ;
+                return HAND_SHAKE_REQ;
             case 11:
-                return HAND_RESP;
+                return HAND_SHAKE_RESP;
             case 20:
                 return AUTH_REQ;
             case 21:

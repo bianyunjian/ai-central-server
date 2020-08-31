@@ -1,39 +1,38 @@
 package com.hankutech.ax.centralserver.socket;
 
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelId;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChannelGroups {
 
-    private static ConcurrentHashMap<ChannelId, Channel> CHANNEL_MAP = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Channel> CLIENT_CHANNEL_MAP = new ConcurrentHashMap<>();
 
-    public static void add(Channel channel) {
-        remove(channel.id());
-        CHANNEL_MAP.put(channel.id(), channel);
+    public void add(String clientId, Channel channel) {
+        remove(clientId);
+        CLIENT_CHANNEL_MAP.put(clientId, channel);
     }
 
-    public static boolean remove(ChannelId channelId) {
-        if (contains(channelId)) {
-            CHANNEL_MAP.remove(channelId);
+    public boolean remove(String clientId) {
+        if (contains(clientId)) {
+            CLIENT_CHANNEL_MAP.remove(clientId);
         }
         return true;
     }
 
-    public static boolean contains(ChannelId channelId) {
-        return CHANNEL_MAP.contains(channelId);
+    public boolean contains(String clientId) {
+        return CLIENT_CHANNEL_MAP.contains(clientId);
     }
 
-    public static void broadcast(Object msg, ChannelId... channelIds) {
-        if (channelIds == null || channelIds.length == 0) {
-            channelIds = CHANNEL_MAP.keySet().toArray(new ChannelId[0]);
+    public void broadcast(Object msg, String... clientIds) {
+        if (clientIds == null || clientIds.length == 0) {
+            clientIds = CLIENT_CHANNEL_MAP.keySet().toArray(new String[0]);
         }
 
-        for (ChannelId id : channelIds) {
+        for (String id : clientIds) {
             try {
                 if (contains(id) == false) continue;
-                Channel channel = CHANNEL_MAP.get(id);
+                Channel channel = CLIENT_CHANNEL_MAP.get(id);
 
                 if (channel.isWritable()) {
                     channel.write(msg);
@@ -44,10 +43,10 @@ public class ChannelGroups {
         }
     }
 
-    public static void broadcast(Object msg) {
-        for (ChannelId id : CHANNEL_MAP.keySet()) {
+    public void broadcast(Object msg) {
+        for (String id : CLIENT_CHANNEL_MAP.keySet()) {
             try {
-                Channel channel = CHANNEL_MAP.get(id);
+                Channel channel = CLIENT_CHANNEL_MAP.get(id);
                 if (channel.isWritable()) {
                     channel.write(msg);
                 }
@@ -58,12 +57,12 @@ public class ChannelGroups {
     }
 
 
-    public static void clear() {
-        CHANNEL_MAP.clear();
+    public void clear() {
+        CLIENT_CHANNEL_MAP.clear();
     }
 
 
-    public static int size() {
-        return CHANNEL_MAP.size();
+    public int size() {
+        return CLIENT_CHANNEL_MAP.size();
     }
 }
