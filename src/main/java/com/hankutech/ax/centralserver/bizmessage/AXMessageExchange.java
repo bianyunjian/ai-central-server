@@ -77,9 +77,12 @@ public class AXMessageExchange {
     public static void plcRFIDEvent(PlcRequest request) {
         log.debug("plcRFIDEvent");
         int plcNumber = request.getPlcNumber();
-        int deviceId = DeviceRelationManager.getDeviceIdByPlcNumber(plcNumber);
+        List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByPlcNumber(plcNumber);
         //update RFID Data
-        AIDataManager.updateRFIDResult(deviceId, LocalDateTime.now());
+        for (int deviceId : deviceIdList
+        ) {
+            AIDataManager.updateRFIDResult(deviceId, LocalDateTime.now());
+        }
 
     }
 
@@ -113,7 +116,8 @@ public class AXMessageExchange {
     public static void waitForAuth(AppRequest request) {
         log.debug("waitForAuth");
 
-        int deviceId = DeviceRelationManager.getDeviceIdByAppNumber(request.getAppNumber());
+        List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByAppNumber(request.getAppNumber());
+        Integer deviceId = deviceIdList.get(0);
 
         //RFID 验证
         if (request.getPayload() == AppMessageValue.AUTH_REQ_RFID) {
@@ -151,7 +155,9 @@ public class AXMessageExchange {
      */
     public static void waitForGarbageDetect(AppRequest request) {
         log.debug("waitForGarbageDetect");
-        int deviceId = DeviceRelationManager.getDeviceIdByAppNumber(request.getAppNumber());
+        List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByAppNumber(request.getAppNumber());
+        Integer deviceId = deviceIdList.get(0);
+
         AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.GARBAGE);
         //验证成功
         if (aiData != null) {
