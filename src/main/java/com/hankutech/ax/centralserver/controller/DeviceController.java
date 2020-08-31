@@ -168,6 +168,18 @@ public class DeviceController {
         @Schema(description = "设备说明", example = "三楼拐角")
         private String description;
 
+        @NotBlank
+        @Schema(description = "PLC ID", example = "001")
+        private String axPlcId;
+
+        @NotBlank
+        @Schema(description = "安卓APP ID", example = "002")
+        private String appId;
+
+        @NotNull
+        @Schema(description = "设备分组ID", example = "10")
+        private Integer deviceGroupId;
+
         @Override
         protected void validate() throws InvalidParamException {}
 
@@ -181,6 +193,9 @@ public class DeviceController {
             model.setStatus(this.status);
             model.setDeviceScenario(this.scenario);
             model.setDescription(this.description);
+            model.setAxPlcId(this.axPlcId);
+            model.setAppId(this.appId);
+            model.setDeviceGroupId(this.deviceGroupId);
             return model;
         }
     }

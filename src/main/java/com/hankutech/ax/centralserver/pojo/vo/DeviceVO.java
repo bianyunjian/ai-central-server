@@ -31,6 +31,15 @@ public class DeviceVO {
     @Schema(description = "设备说明", example = "三楼拐角处")
     private String description;
 
+    @Schema(description = "PLC ID", example = "001")
+    private String axPlcId;
+
+    @Schema(description = "安卓APP ID", example = "002")
+    private String appId;
+
+    @Schema(description = "设备分组ID", example = "10")
+    private Integer deviceGroupId;
+
     public DeviceVO(Device device) {
         if (null != device) {
             this.id = device.getDeviceId();
@@ -38,6 +47,10 @@ public class DeviceVO {
             this.status = device.getStatus();
             this.deviceScenario = device.getDeviceScenario();
             this.description = device.getDescription();
+            this.axPlcId = device.getAxPlcId();
+            this.appId = device.getAppId();
+            this.deviceGroupId = device.getDeviceGroupId();
         }
     }
+
 }
