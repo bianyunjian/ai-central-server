@@ -29,9 +29,10 @@ public class AppMessageValue {
      */
     public static int GARBAGE_DETECT_REQ = 1;
     /**
-     * APP垃圾检测响应 1=垃圾检测成功
+     * APP垃圾检测响应 1=垃圾检测成功，99=垃圾检测失败
      */
     public static int GARBAGE_DETECT_RESP_SUCCESS = 1;
+    public static int GARBAGE_DETECT_RESP_FAILURE = 99;
     /**
      * APP垃圾检测 1=干垃圾（灰色垃圾袋），2=湿垃圾（黑色垃圾袋），3=可回收垃圾（绿色垃圾袋），4=有害垃圾（红色垃圾袋），99=未知垃圾类型
      */

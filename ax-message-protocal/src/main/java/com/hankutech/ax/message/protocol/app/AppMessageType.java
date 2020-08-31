@@ -5,26 +5,29 @@ package com.hankutech.ax.message.protocol.app;
  */
 public enum AppMessageType {
     EMPTY(0, "UNKNOWN"),
-    HAND_SHAKE_REQ(10, "握手请求"),
-    HAND_SHAKE_RESP(11, "握手响应"),
+    HAND_SHAKE_REQ(10, "握手请求"),//0x0A
+    HAND_SHAKE_RESP(11, "握手响应"),//0x0B
 
-    AUTH_REQ(20, "APP身份验证请求"),
-    AUTH_RESP(21, "APP身份验证响应"),
+    APP_REQUIRE_OPEN_GATE_REQ(20, "验证通过-APP请求开门"), //0x14
+    APP_REQUIRE_OPEN_GATE_RESP(21, "APP门已打开响应"),//0x15
 
-    GARBAGE_DETECT_REQ(30, "APP垃圾检测请求"),
-    GARBAGE_DETECT_RESP(31, "APP垃圾检测请求响应"),
+    GATE_CLOSED_EVENT_REQ(30, "APP门已关闭"),//0x1E
+    GATE_CLOSED_EVENT_RESP(31, "APP门已关闭响应"),//0x1F
 
-    OPEN_GATE_REQ(40, "APP请求开门"),
-    OPEN_GATE_RESP(41, "APP门已打开响应"),
-
-    GATE_CLOSED_EVENT_REQ(50, "APP门已关闭"),
-    GATE_CLOSED_EVENT_RESP(51, "APP门已关闭响应"),
-
-    AUTH_ALL_PASSED_REQ(60, "验证全部通过 (人脸识别通过+垃圾检测通过）"),
+    SYS_STATUS_REQ(50, "系统状态事件"),//0x32
+    SYS_STATUS_RESP(51, "系统状态事件响应"),//0x33
 
 
-    SYS_STATUS_REQ(70, "系统状态事件"),
-    SYS_STATUS_RESP(71, "系统状态事件响应");
+    AUTH_ALL_PASSED_REQ(60, "验证全部通过 (人脸识别通过+垃圾检测通过）"),//0x10
+
+    AUTH_REQ(70, "APP身份验证请求"),//0x46
+
+    AUTH_RESP(71, "APP身份验证响应"),//0x47
+
+    GARBAGE_DETECT_REQ(80, "APP垃圾检测请求"),//0x50
+
+    GARBAGE_DETECT_RESP(81, "APP垃圾检测请求响应");//0x51
+
 
     public static AppMessageType valueOf(int value) {
         switch (value) {
@@ -34,32 +37,33 @@ public enum AppMessageType {
             case 11:
                 return HAND_SHAKE_RESP;
             case 20:
-                return AUTH_REQ;
+                return APP_REQUIRE_OPEN_GATE_REQ;
             case 21:
-                return AUTH_RESP;
+                return APP_REQUIRE_OPEN_GATE_RESP;
 
             case 30:
-                return GARBAGE_DETECT_REQ;
+                return GATE_CLOSED_EVENT_REQ;
             case 31:
-                return GARBAGE_DETECT_RESP;
+                return GATE_CLOSED_EVENT_RESP;
 
-            case 40:
-                return OPEN_GATE_REQ;
-            case 41:
-                return OPEN_GATE_RESP;
 
             case 50:
-                return GATE_CLOSED_EVENT_REQ;
+                return SYS_STATUS_REQ;
             case 51:
-                return GATE_CLOSED_EVENT_RESP;
+                return SYS_STATUS_RESP;
 
             case 60:
                 return AUTH_ALL_PASSED_REQ;
 
             case 70:
-                return SYS_STATUS_REQ;
+                return AUTH_REQ;
             case 71:
-                return SYS_STATUS_RESP;
+                return AUTH_RESP;
+
+            case 80:
+                return GARBAGE_DETECT_REQ;
+            case 81:
+                return GARBAGE_DETECT_RESP;
 
             default:
                 return EMPTY;

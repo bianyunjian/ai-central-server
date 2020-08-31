@@ -101,14 +101,14 @@ public class PlcByteMessageHandler extends ChannelInboundHandlerAdapter {
                 break;
 
             case OPEN_GATE_RESP:
-                AXMessageExchange.notifyPlcMessage(request);
+                AXMessageExchange.plcOpenGateResp(request);
                 break;
             case GATE_CLOSED_EVENT_REQ:
                 response = PlcResponse.defaultEmpty();
                 response.setPlcNumber(plcNumber);
                 response.setMessageType(PlcMessageType.GATE_CLOSED_EVENT_RESP);
                 response.setPayload(PlcMessageValue.GATE_CLOSED_EVENT_RESP_SUCCESS);
-                AXMessageExchange.notifyPlcMessage(request);
+                AXMessageExchange.plcGateClosedEvent(request);
                 break;
 
             case RFID_EVENT_REQ:
@@ -116,7 +116,7 @@ public class PlcByteMessageHandler extends ChannelInboundHandlerAdapter {
                 response.setPlcNumber(plcNumber);
                 response.setMessageType(PlcMessageType.RFID_EVENT_RESP);
                 response.setPayload(PlcMessageValue.RFID_EVENT_RESP_SUCCESS);
-                AXMessageExchange.notifyPlcMessage(request);
+                AXMessageExchange.plcRFIDEvent(request);
                 break;
 
             case SYS_STATUS_REQ:
@@ -124,7 +124,7 @@ public class PlcByteMessageHandler extends ChannelInboundHandlerAdapter {
                 response.setPlcNumber(plcNumber);
                 response.setMessageType(PlcMessageType.SYS_STATUS_RESP);
                 response.setPayload(PlcMessageValue.SYS_STATUS_RESP_SUCCESS);
-                AXMessageExchange.notifyPlcMessage(request);
+                AXMessageExchange.plcSysStatusChangeEvent(request);
                 break;
 
             default:

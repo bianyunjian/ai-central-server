@@ -1,23 +1,24 @@
 package com.hankutech.ax.message.protocol.plc;
+
 /**
  * 字节X4标示消息类型
  */
 public enum PlcMessageType {
     EMPTY(0, "UNKNOWN"),
-    HAND_SHAKE_REQ(10, "握手请求"),
-    HAND_SHAKE_RESP(11, "握手响应"),
+    HAND_SHAKE_REQ(10, "握手请求"),//0x0A
+    HAND_SHAKE_RESP(11, "握手响应"),//0x0B
 
-    OPEN_GATE_REQ(20, "开门请求"),
-    OPEN_GATE_RESP(21, "开门响应"),
+    OPEN_GATE_REQ(20, "开门请求"), //0x14
+    OPEN_GATE_RESP(21, "开门响应"), //0x15
 
-    GATE_CLOSED_EVENT_REQ(30, "门已关闭事件"),
-    GATE_CLOSED_EVENT_RESP(31, "门已关闭事件响应"),
+    GATE_CLOSED_EVENT_REQ(30, "门已关闭事件"),//0x1E
+    GATE_CLOSED_EVENT_RESP(31, "门已关闭事件响应"),//0x1F
 
-    RFID_EVENT_REQ(40, "RFID刷卡事件"),
-    RFID_EVENT_RESP(41, "RFID刷卡事件响应"),
+    RFID_EVENT_REQ(40, "RFID刷卡事件"),//0x28
+    RFID_EVENT_RESP(41, "RFID刷卡事件响应"),//0x29
 
-    SYS_STATUS_REQ(50, "系统状态事件"),
-    SYS_STATUS_RESP(51, "系统状态事件响应");
+    SYS_STATUS_REQ(50, "系统状态事件"),//0x32
+    SYS_STATUS_RESP(51, "系统状态事件响应");//0x33
 
     public static PlcMessageType valueOf(int value) {
         switch (value) {

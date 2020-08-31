@@ -3,7 +3,6 @@ package com.hankutech.ax.centralserver.bizmessage;
 
 import com.hankutech.ax.centralserver.constant.Common;
 import com.hankutech.ax.centralserver.dao.model.Device;
-import com.hankutech.ax.message.code.AIBoxResultType;
 import com.hankutech.ax.message.code.AIResult;
 import com.hankutech.ax.message.code.AITaskType;
 import com.hankutech.ax.message.code.ScenarioFlag;
@@ -16,25 +15,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AIDataManager {
 
     private static ConcurrentHashMap<Integer, AIDataItem> deviceAiDataCacheMap = new ConcurrentHashMap<>();
-
-    /**
-     * get all cached data
-     *
-     * @return
-     */
-    public static ConcurrentHashMap<Integer, AIDataItem> getAll() {
-        return deviceAiDataCacheMap;
-    }
+    private static ConcurrentHashMap<Integer, RFIDDataItem> deviceRFIDDataCacheMap = new ConcurrentHashMap<>();
 
     /**
      * get latest cached data by deviceId and taskType
      *
      * @param deviceId
      * @param taskType
-     * @param cameraId
      * @return
      */
-    public static AIResultWrapper getLatestAIResultByDevice(int deviceId, AITaskType taskType, int cameraId) {
+    public static AIResultWrapper getLatestAIResultByDevice(int deviceId, AITaskType taskType) {
 
         if (deviceAiDataCacheMap.size() == 0 || deviceAiDataCacheMap.containsKey(deviceId) == false) {
             return new AIResultWrapper();
@@ -44,14 +34,34 @@ public class AIDataManager {
         HashMap<AITaskType, AIResultWrapper> aiTaskResultMap = data.getAITaskResultMap();
 
         AIResultWrapper result = aiTaskResultMap.getOrDefault(taskType, new AIResultWrapper());
-        if (result.getCameraId() != cameraId) {
-            return new AIResultWrapper();
-        }
+
         //检查最新事件的时间是否已经超过设定的阈值
         if (checkIfEventObsolete(result.getEventTime())) {
-            result.setAiResult(AIBoxResultType.EMPTY);
+            return null;
         }
         return result;
+    }
+
+
+    /**
+     * 获取最新的RFID刷卡事件
+     *
+     * @param deviceId
+     * @return
+     */
+    public static RFIDDataItem getLatestRFIDResultByDevice(int deviceId) {
+
+        if (deviceRFIDDataCacheMap.size() == 0 || deviceRFIDDataCacheMap.containsKey(deviceId) == false) {
+            return null;
+        }
+
+        RFIDDataItem data = deviceRFIDDataCacheMap.get(deviceId);
+
+        //检查最新事件的时间是否已经超过设定的阈值
+        if (checkIfEventObsolete(data.getEventTime())) {
+            return null;
+        }
+        return data;
     }
 
     /**
@@ -123,5 +133,26 @@ public class AIDataManager {
         }
     }
 
+    /**
+     * update device rfid data
+     *
+     * @param deviceId
+     * @param dateTime
+     */
+    public static void updateRFIDResult(int deviceId, LocalDateTime dateTime) {
+
+
+        if (deviceRFIDDataCacheMap.containsKey(deviceId) == false) {
+            RFIDDataItem newData = new RFIDDataItem();
+            newData.setDeviceId(deviceId);
+            newData.setEventTime(dateTime);
+            deviceRFIDDataCacheMap.put(deviceId, newData);
+            System.out.println("add new RFIDDataItem for device[" + deviceId + "]");
+        } else {
+            RFIDDataItem updateData = deviceRFIDDataCacheMap.get(deviceId);
+            updateData.setEventTime(dateTime);
+            System.out.println("update RFIDDataItem for device[" + deviceId + "]");
+        }
+    }
 
 }

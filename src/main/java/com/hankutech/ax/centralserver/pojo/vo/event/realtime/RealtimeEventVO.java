@@ -10,4 +10,5 @@ public class RealtimeEventVO {
     Integer eventTypeValue;
     LocalDateTime eventTime;
     String description;
+    Integer cameraId;
 }

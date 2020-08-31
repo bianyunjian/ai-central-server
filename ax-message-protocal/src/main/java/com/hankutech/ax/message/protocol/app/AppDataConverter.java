@@ -30,6 +30,9 @@ public class AppDataConverter {
         appRequest.setMessageType(AppMessageType.valueOf(convertedData[3]));
         //X5标示数据
         appRequest.setPayload(convertedData[4]);
+
+        //X6标示额外数据
+        appRequest.setExtData(convertedData[5]);
         return appRequest;
     }
 
@@ -59,6 +62,10 @@ public class AppDataConverter {
         resultArray[3] = resp.getMessageType().value;
         //X5标示数据
         resultArray[4] = resp.getPayload();
+
+
+        //X6标示额外数据
+        resultArray[5] = resp.getExtData();
 
         return resultArray;
     }

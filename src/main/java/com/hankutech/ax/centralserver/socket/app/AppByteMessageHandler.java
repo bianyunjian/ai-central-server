@@ -117,8 +117,8 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
             case GARBAGE_DETECT_REQ:
                 AXMessageExchange.waitForGarbageDetect(request);
                 break;
-            case OPEN_GATE_REQ:
-                AXMessageExchange.waitForOpenGate(request);
+            case APP_REQUIRE_OPEN_GATE_REQ:
+                AXMessageExchange.waitForAppRequireOpenGate(request);
                 break;
 
             default:

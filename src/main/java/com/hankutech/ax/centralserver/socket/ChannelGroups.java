@@ -21,41 +21,16 @@ public class ChannelGroups {
     }
 
     public boolean contains(String clientId) {
-        return CLIENT_CHANNEL_MAP.contains(clientId);
+        return CLIENT_CHANNEL_MAP.containsKey(clientId);
     }
 
-    public void broadcast(Object msg, String... clientIds) {
-        if (clientIds == null || clientIds.length == 0) {
-            clientIds = CLIENT_CHANNEL_MAP.keySet().toArray(new String[0]);
-        }
 
-        for (String id : clientIds) {
-            try {
-                if (contains(id) == false) continue;
-                Channel channel = CLIENT_CHANNEL_MAP.get(id);
-
-                if (channel.isWritable()) {
-                    channel.write(msg);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+    public Channel get(String clientId) {
+        if (contains(clientId)) {
+            return CLIENT_CHANNEL_MAP.get(clientId);
         }
+        return null;
     }
-
-    public void broadcast(Object msg) {
-        for (String id : CLIENT_CHANNEL_MAP.keySet()) {
-            try {
-                Channel channel = CLIENT_CHANNEL_MAP.get(id);
-                if (channel.isWritable()) {
-                    channel.write(msg);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
 
     public void clear() {
         CLIENT_CHANNEL_MAP.clear();

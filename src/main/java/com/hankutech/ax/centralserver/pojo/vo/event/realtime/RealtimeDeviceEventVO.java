@@ -9,10 +9,10 @@ import java.util.List;
 public class RealtimeDeviceEventVO {
     String deviceName;
     Integer deviceId;
-    List<RealtimeCameraVO> cameraList;
+    List<RealtimeEventVO> eventList;
 
     public RealtimeDeviceEventVO() {
-        cameraList = new ArrayList<>();
+        eventList = new ArrayList<>();
     }
 
 }

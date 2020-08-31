@@ -29,6 +29,11 @@ public class AppResponse {
      */
     int payload;
 
+    /**
+     * X6标示额外数据
+     */
+    int extData;
+
     public static AppResponse defaultEmpty() {
         AppResponse instance = new AppResponse();
         instance.setMessageSource(MessageSource.CENTRAL_SERVER);

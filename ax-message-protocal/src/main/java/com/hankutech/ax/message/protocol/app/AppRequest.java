@@ -31,6 +31,11 @@ public class AppRequest {
     int payload;
 
     /**
+     * X6标示额外数据
+     */
+    int extData;
+
+    /**
      * 验证是否有效的数据结构
      *
      * @return

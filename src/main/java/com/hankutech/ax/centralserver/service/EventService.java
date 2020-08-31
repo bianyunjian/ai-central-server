@@ -15,7 +15,7 @@ import java.util.List;
 public interface EventService {
     BaseResponse handleUploadData(DeviceUploadParams request) throws InvalidDataException;
 
-    List<RealtimeEventVO> getRealtimeEvent(int deviceId, int cameraId);
+    List<RealtimeEventVO> getRealtimeEvent(int deviceId);
 
     PagedData<HistoryEventVO> getHistoryEvent(List<Integer> deviceIdList, LocalDateTime startTime, LocalDateTime endTime, PagedParams pagedParams);
 

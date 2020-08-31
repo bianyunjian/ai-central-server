@@ -5,10 +5,8 @@ import com.hankutech.ax.centralserver.pojo.query.HistoryEventParams;
 import com.hankutech.ax.centralserver.pojo.request.QueryRequest;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.response.PagedData;
-import com.hankutech.ax.centralserver.pojo.vo.CameraVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceVO;
 import com.hankutech.ax.centralserver.pojo.vo.event.history.HistoryEventVO;
-import com.hankutech.ax.centralserver.pojo.vo.event.realtime.RealtimeCameraVO;
 import com.hankutech.ax.centralserver.pojo.vo.event.realtime.RealtimeDeviceEventVO;
 import com.hankutech.ax.centralserver.pojo.vo.event.realtime.RealtimeEventVO;
 import com.hankutech.ax.centralserver.service.CameraService;
@@ -61,17 +59,8 @@ public class EventController {
                 newData.setDeviceName(dvo.getName());
                 resp.getData().add(newData);
 
-                List<CameraVO> cameraList = _cameraService.getCameraListByDeviceId(dvo.getId());
-
-                for (CameraVO cvo : cameraList
-                ) {
-                    RealtimeCameraVO newCameraData = new RealtimeCameraVO();
-                    newCameraData.setCameraId(cvo.getId());
-                    newCameraData.setCameraName(cvo.getName());
-                    newData.getCameraList().add(newCameraData);
-                    List<RealtimeEventVO> eventList = _eventService.getRealtimeEvent(dvo.getId(), cvo.getId());
-                    newCameraData.setEventList(eventList);
-                }
+                List<RealtimeEventVO> eventList = _eventService.getRealtimeEvent(dvo.getId());
+                newData.setEventList(eventList);
             }
         }
         return resp;

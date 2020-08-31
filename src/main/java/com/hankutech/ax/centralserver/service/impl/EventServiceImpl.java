@@ -3,8 +3,8 @@ package com.hankutech.ax.centralserver.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hankutech.ax.centralserver.bizmessage.AIResultWrapper;
 import com.hankutech.ax.centralserver.bizmessage.AIDataManager;
+import com.hankutech.ax.centralserver.bizmessage.AIResultWrapper;
 import com.hankutech.ax.centralserver.constant.Common;
 import com.hankutech.ax.centralserver.constant.ErrorCode;
 import com.hankutech.ax.centralserver.dao.CameraDao;
@@ -127,18 +127,18 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<RealtimeEventVO> getRealtimeEvent(int deviceId, int cameraId) {
+    public List<RealtimeEventVO> getRealtimeEvent(int deviceId) {
         List<RealtimeEventVO> result = new ArrayList<>();
-
 
         AITaskType[] taskTypes = new AITaskType[]{
                 AITaskType.BOX, AITaskType.FACE, AITaskType.GARBAGE, AITaskType.PERSON
         };
         for (AITaskType t : taskTypes
         ) {
-            AIResultWrapper aiResult = AIDataManager.getLatestAIResultByDevice(deviceId, t, cameraId);
+            AIResultWrapper aiResult = AIDataManager.getLatestAIResultByDevice(deviceId, t);
             if (aiResult.getAiResult() != AIBoxResultType.EMPTY) {
                 RealtimeEventVO vo4Box = new RealtimeEventVO();
+                vo4Box.setCameraId(aiResult.getCameraId());
                 vo4Box.setEventTime(aiResult.getEventTime());
                 vo4Box.setEventType(t.toString().toLowerCase());
                 vo4Box.setEventTypeValue(aiResult.getAiResult().getValue());

@@ -7,8 +7,6 @@ import java.util.List;
 
 @Data
 public class RealtimeCameraVO {
-    String cameraName;
-    Integer cameraId;
     List<RealtimeEventVO> eventList;
 
     public RealtimeCameraVO() {

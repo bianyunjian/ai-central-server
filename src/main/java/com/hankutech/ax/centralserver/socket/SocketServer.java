@@ -21,9 +21,9 @@ public class SocketServer {
     /**
      * 客户端连接管理
      */
-    private static ChannelGroups ChannelGroups = new ChannelGroups();
+    private ChannelGroups ChannelGroups = new ChannelGroups();
 
-    public static ChannelGroups ChannelGroups() {
+    public ChannelGroups ChannelGroups() {
         return ChannelGroups;
     }
 
@@ -101,9 +101,6 @@ public class SocketServer {
 
     }
 
-    public void sendData(Object msg, String... clientIds) {
-        ChannelGroups.broadcast(msg, clientIds);
-    }
 
     /**
      * 获取{@link SocketServer}指定实例
