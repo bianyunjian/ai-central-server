@@ -2,7 +2,6 @@ package com.hankutech.ax.centralserver.socket;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelId;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -18,6 +17,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class SocketServer {
+
+    /**
+     * 客户端连接管理
+     */
+    private static ChannelGroups ChannelGroups = new ChannelGroups();
+
+    public static ChannelGroups ChannelGroups() {
+        return ChannelGroups;
+    }
 
     /**
      * socket server字典
@@ -93,8 +101,8 @@ public class SocketServer {
 
     }
 
-    public void sendData(Object msg, ChannelId... channelIds) {
-        ChannelGroups.broadcast(msg, channelIds);
+    public void sendData(Object msg, String... clientIds) {
+        ChannelGroups.broadcast(msg, clientIds);
     }
 
     /**
