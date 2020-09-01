@@ -78,7 +78,7 @@ public class LotController {
     @Operation(summary = "边缘设备上传识别结果")
     @PostMapping(path = "/uploadData")
     public BaseResponse uploadData(@RequestBody @Validated DeviceUploadParams request) throws InvalidDataException {
-//        log.info("收到事件：{}", request.toString());
+        log.info("收到事件：{}", request.toString());
         BaseResponse resp = _eventService.handleUploadData(request);
         return resp;
     }

@@ -1,48 +1,32 @@
 package com.hankutech.ax.centralserver.bizmessage;
 
+import com.hankutech.ax.centralserver.service.DeviceCache;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceRelationManager {
     public static List<Integer> getAppNumber(int plcNumber) {
-        //TODO
-        List<Integer> list = new ArrayList<>();
-        list.add(plcNumber);
-        return list;
+        return DeviceCache.getAppNumberByPlcId(plcNumber);
     }
 
     public static List<Integer> getPlcNumber(int appNumber) {
-        //TODO
-        List<Integer> list = new ArrayList<>();
-        list.add(appNumber);
-        return list;
+        return DeviceCache.getPlcNumberByAppId(appNumber);
     }
 
     public static List<Integer> getAppNumberByDeviceId(int deviceId) {
-        //TODO
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        return list;
+        return DeviceCache.getAppNumberByDeviceId(deviceId);
     }
 
     public static List<Integer> getDeviceIdByDeviceGroupId(int deviceGroupId) {
-        //TODO
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        return list;
+        return DeviceCache.getDeviceNumberByDeviceGroupId(deviceGroupId);
     }
 
     public static List<Integer> getDeviceIdByPlcNumber(int plcNumber) {
-        //TODO
-        List<Integer> list = new ArrayList<>();
-        list.add(plcNumber);
-        return list;
+        return DeviceCache.getDeviceNumberByPlcId(plcNumber);
     }
 
     public static List<Integer> getDeviceIdByAppNumber(int appNumber) {
-        //TODO
-        List<Integer> list = new ArrayList<>();
-        list.add(appNumber);
-        return list;
+        return DeviceCache.getDeviceNumberByAppId(appNumber);
     }
 }

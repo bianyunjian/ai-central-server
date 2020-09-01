@@ -2,10 +2,14 @@ package com.hankutech.ax.centralserver;
 
 import com.hankutech.ax.centralserver.constant.Common;
 import com.hankutech.ax.centralserver.constant.SocketConst;
+import com.hankutech.ax.centralserver.dao.DeviceDao;
+import com.hankutech.ax.centralserver.dao.model.Device;
+import com.hankutech.ax.centralserver.service.DeviceCache;
 import com.hankutech.ax.centralserver.socket.NettyServerException;
 import com.hankutech.ax.centralserver.socket.SocketServer;
 import com.hankutech.ax.centralserver.socket.app.AppByteSocketServerInitializer;
 import com.hankutech.ax.centralserver.socket.plc.PlcByteSocketServerInitializer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,13 +20,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
 import java.io.File;
+import java.util.List;
 
 /**
  * 艾信智慧医疗中心服务
  *
  * @author ZhangXi
  */
+@Slf4j
 @SpringBootApplication
 public class CentralServerApplication implements ApplicationRunner, DisposableBean, WebMvcConfigurer {
     @Value("${app.event.image-folder-path}")
@@ -31,6 +38,9 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
     String imageFormat;
     @Value("${app.event.event-obsolete-seconds}")
     int eventObSeconds;
+
+    @Resource
+    private DeviceDao deviceDao;
 
     private static SocketServer socketServer4Plc;
     private static SocketServer socketServer4App;
@@ -69,7 +79,10 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println(Common.SERVICE_NAME + "执行一些启动后自定义的方法......");
-
+        // 更新所有设备数据缓存
+        List<Device> allDevices = deviceDao.selectList(null);
+        DeviceCache.refreshAllCache(allDevices);
+        log.info("更新设备数据缓存，数量：{}", allDevices.size());
     }
 
 

@@ -19,6 +19,15 @@
 
     </properties>
 
+
+    <repositories>
+        <repository>
+            <id>245-nexus</id>
+            <url>http://172.16.114.245:8082/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -134,7 +143,6 @@
             <groupId>com.hankutech.ax</groupId>
             <artifactId>ax-message-protocal</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-
         </dependency>
 
     </dependencies>

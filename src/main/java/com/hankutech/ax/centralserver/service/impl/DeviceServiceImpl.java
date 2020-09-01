@@ -20,6 +20,7 @@ import com.hankutech.ax.centralserver.pojo.vo.AiTypeConfigVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceCameraConfigVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceConfigVO;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceVO;
+import com.hankutech.ax.centralserver.service.DeviceCache;
 import com.hankutech.ax.centralserver.service.DeviceService;
 import com.hankutech.ax.centralserver.tool.AiTypeTool;
 import lombok.extern.slf4j.Slf4j;
@@ -157,6 +158,8 @@ public class DeviceServiceImpl implements DeviceService {
         needNotRepeated(newOne);
         // 插入数据
         deviceDao.insert(newOne);
+        // 更新缓存
+        DeviceCache.refreshCache(newOne, false);
         return new DeviceVO(newOne);
     }
 
@@ -167,6 +170,8 @@ public class DeviceServiceImpl implements DeviceService {
         Device oldOne = needNotRepeated(updateOne).needExistedAndReturn(updateOne.getDeviceId());
         // 更改数据
         deviceDao.updateById(updateOne);
+        // 更新缓存
+        DeviceCache.refreshCache(updateOne, false);
         return new DeviceVO(updateOne);
     }
 
@@ -174,12 +179,14 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public void deleteDevice(Integer id) throws InvalidDataException {
         // 检查设备是否存在
-        needExistedAndReturn(id);
+        Device delOne = needExistedAndReturn(id);
         // 删除设备
         QueryWrapper<DeviceCamera> delRelatedCameraQueryWrapper = new QueryWrapper<>();
         delRelatedCameraQueryWrapper.eq(DeviceCamera.COL_DEVICE_ID, id);
         deviceCameraDao.delete(delRelatedCameraQueryWrapper);
         // fixme 删除其他关联
+        // 更新缓存
+        DeviceCache.refreshCache(delOne, true);
         deviceDao.deleteById(id);
     }
 
