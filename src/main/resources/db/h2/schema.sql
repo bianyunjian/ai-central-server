@@ -17,9 +17,9 @@ create table `device` (
     primary key (`device_id`)
 ) engine = innodb default charset = utf8mb4;
 ALTER TABLE `device`
-ADD COLUMN `ax_plc_id` VARCHAR(255) NOT NULL default '0' COMMENT '艾信 plc的编号， 用于plc与中心服务器通讯时标识自己' AFTER `description`;
+ADD COLUMN `ax_plc_id` int(11) NOT NULL DEFAULT 0  COMMENT '艾信 plc的编号， 用于plc与中心服务器通讯时标识自己' AFTER `description`;
 ALTER TABLE `device`
-ADD COLUMN `app_id` VARCHAR(255) NOT NULL  default '0' COMMENT 'app编号， 用于app与中心服务器通讯时标识自己' AFTER `ax_plc_id`;
+ADD COLUMN `app_id` int(11) NOT NULL  DEFAULT 0  COMMENT 'app编号， 用于app与中心服务器通讯时标识自己' AFTER `ax_plc_id`;
 ALTER TABLE `device`
 ADD COLUMN `device_group_id` INT(11) NOT NULL DEFAULT 0 COMMENT '设备楼栋分组编号， 相同楼栋分组编号的设备中， 只能有一个是活动状态' AFTER `app_id`;
 

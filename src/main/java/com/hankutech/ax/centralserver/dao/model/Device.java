@@ -43,13 +43,13 @@ public class Device {
      * 艾信 plc的编号， 用于plc与中心服务器通讯时标识自己
      */
     @TableField(value = "ax_plc_id")
-    private String axPlcId;
+    private int axPlcId;
 
     /**
      * app编号， 用于app与中心服务器通讯时标识自己
      */
     @TableField(value = "app_id")
-    private String appId;
+    private int appId;
 
     /**
      * 设备楼栋分组编号， 相同楼栋分组编号的设备中， 只能有一个是活动状态

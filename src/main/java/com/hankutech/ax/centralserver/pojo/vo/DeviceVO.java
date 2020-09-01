@@ -31,11 +31,11 @@ public class DeviceVO {
     @Schema(description = "设备说明", example = "三楼拐角处")
     private String description;
 
-    @Schema(description = "PLC ID", example = "001")
-    private String axPlcId;
+    @Schema(description = "PLC ID", example = "1")
+    private int axPlcId;
 
-    @Schema(description = "安卓APP ID", example = "002")
-    private String appId;
+    @Schema(description = "安卓APP ID", example = "2")
+    private int appId;
 
     @Schema(description = "设备分组ID", example = "10")
     private Integer deviceGroupId;
