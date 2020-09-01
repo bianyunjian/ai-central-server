@@ -1,20 +1,27 @@
 package com.hankutech.ax.message.code;
 
 /**
- * 字节X1标示艾信控制器系统状态
+ * 系统状态
  */
 public enum SysRunFlag {
     EMPTY(0, "UNKNOWN"),
-    STOP(5, "停止"),
-    RUN(8, "运行");
+    NORMAL(1, "正常"),
+    BUSY(2, "繁忙中"),
+    MAINTAIN(3, "维护"),
+    ERROR(4, "故障");
+
 
     public static SysRunFlag valueOf(int value) {
         switch (value) {
 
-            case 5:
-                return STOP;
-            case 8:
-                return RUN;
+            case 1:
+                return NORMAL;
+            case 2:
+                return BUSY;
+            case 3:
+                return MAINTAIN;
+            case 4:
+                return ERROR;
 
             default:
                 return EMPTY;

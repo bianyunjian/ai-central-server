@@ -33,14 +33,7 @@ public class AppMessageValue {
      */
     public static int GARBAGE_DETECT_RESP_SUCCESS = 1;
     public static int GARBAGE_DETECT_RESP_FAILURE = 99;
-    /**
-     * APP垃圾检测 1=干垃圾（灰色垃圾袋），2=湿垃圾（黑色垃圾袋），3=可回收垃圾（绿色垃圾袋），4=有害垃圾（红色垃圾袋），99=未知垃圾类型
-     */
-    public static int GARBAGE_DRY_GRAY = 1;
-    public static int GARBAGE_WET_BLACK = 2;
-    public static int GARBAGE_RECYCLE_GREEN = 3;
-    public static int GARBAGE_HAZARDOUS_RED = 4;
-    public static int GARBAGE_OTHERS = 99;
+
 
     /**
      * APP请求开门  1=要求开门

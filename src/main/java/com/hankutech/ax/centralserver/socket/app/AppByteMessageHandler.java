@@ -4,6 +4,7 @@ import com.hankutech.ax.centralserver.bizmessage.AXMessageExchange;
 import com.hankutech.ax.centralserver.constant.SocketConst;
 import com.hankutech.ax.centralserver.socket.ByteConverter;
 import com.hankutech.ax.centralserver.socket.SocketServer;
+import com.hankutech.ax.message.code.AIGarbageResultType;
 import com.hankutech.ax.message.protocol.MessageSource;
 import com.hankutech.ax.message.protocol.app.*;
 import io.netty.buffer.ByteBuf;
@@ -109,6 +110,8 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
                 response.setAppNumber(appNumber);
                 response.setMessageType(AppMessageType.HAND_SHAKE_RESP);
                 response.setPayload(AppMessageValue.HAND_SHAKE_RESP_SUCCESS);
+                response.setExtData(getCurrentGarbageType(appNumber));
+
                 break;
 
             case AUTH_REQ:
@@ -125,5 +128,15 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
         }
 
         return response;
+    }
+
+    /**
+     * 获取当前支持的垃圾类型
+     *
+     * @param appNumber
+     * @return
+     */
+    private int getCurrentGarbageType(int appNumber) {
+        return AIGarbageResultType.WET.getValue();
     }
 }
