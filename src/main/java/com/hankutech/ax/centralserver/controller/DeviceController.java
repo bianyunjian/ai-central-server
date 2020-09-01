@@ -169,11 +169,11 @@ public class DeviceController {
 
         @NotNull
         @Schema(description = "PLC ID", example = "001")
-        private int axPlcId;
+        private Integer axPlcId;
 
         @NotNull
         @Schema(description = "安卓APP ID", example = "002")
-        private int appId;
+        private Integer appId;
 
         @NotNull
         @Schema(description = "设备分组ID", example = "10")
