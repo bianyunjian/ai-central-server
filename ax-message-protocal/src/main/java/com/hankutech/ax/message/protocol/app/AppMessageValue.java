@@ -1,6 +1,7 @@
 package com.hankutech.ax.message.protocol.app;
 
 public class AppMessageValue {
+
     /**
      * 异常
      */
@@ -59,14 +60,14 @@ public class AppMessageValue {
 
 
     /**
-     * 系统状态事件 1=正常， 2= 繁忙中， 3=维护 ，4=故障
+     * 系统状态事件
      */
-    public static int SYS_STATUS_REQ_NORMAL = 1;
-    public static int SYS_STATUS_REQ_BUSY = 1;
-    public static int SYS_STATUS_REQ_MAINTAIN = 1;
-    public static int SYS_STATUS_REQ_ERROR = 1;
-
     public static int SYS_STATUS_RESP_SUCCESS = 1;
 
+
+    /**
+     * APP 流程请求的响应
+     */
+    public static final int APP_PROCESS_RESP_SUCCESS = 1;
 
 }

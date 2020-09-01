@@ -29,4 +29,10 @@ public class DeviceRelationManager {
     public static List<Integer> getDeviceIdByAppNumber(int appNumber) {
         return DeviceCache.getDeviceNumberByAppId(appNumber);
     }
+    public static Integer getDeviceGroupIdByDeviceId(int deviceId) {
+        return DeviceCache.getDeviceGroupIdByDeviceId(deviceId);
+    }
+    public static List<Integer> getAppNumberByDeviceGroupId(int deviceGroupId) {
+        return DeviceCache.getAppNumberByDeviceGroupId(deviceGroupId);
+    }
 }

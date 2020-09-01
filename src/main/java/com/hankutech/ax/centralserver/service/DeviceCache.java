@@ -112,7 +112,6 @@ public class DeviceCache {
     }
 
 
-
     public static List<Integer> getDeviceNumberByPlcId(int plcId) {
         List<Integer> deviceIds = new ArrayList<>();
         if (!DEVICE_MAP.isEmpty()) {
@@ -124,7 +123,6 @@ public class DeviceCache {
         }
         return deviceIds;
     }
-
 
 
     public static List<Integer> getDeviceNumberByAppId(int appId) {
@@ -139,6 +137,27 @@ public class DeviceCache {
         return deviceIds;
     }
 
+    public static Integer getDeviceGroupIdByDeviceId(int deviceId) {
 
+        if (!DEVICE_MAP.isEmpty()) {
+            for (Device device : DEVICE_MAP.values()) {
+                if (device.getDeviceId() == deviceId) {
+                    return device.getDeviceGroupId();
+                }
+            }
+        }
+        return 0;
+    }
 
+    public static List<Integer> getAppNumberByDeviceGroupId(int deviceGroupId) {
+        List<Integer> appIds = new ArrayList<>();
+        if (!DEVICE_MAP.isEmpty()) {
+            for (Device device : DEVICE_MAP.values()) {
+                if (device.getDeviceGroupId() == deviceGroupId) {
+                    appIds.add(device.getAppId());
+                }
+            }
+        }
+        return appIds;
+    }
 }

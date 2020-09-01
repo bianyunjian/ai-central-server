@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class AppResponse {
+public class AppMessage {
 
     /**
      * 字节X1标示标示消息来源
@@ -34,9 +34,9 @@ public class AppResponse {
      */
     int extData;
 
-    public static AppResponse defaultEmpty() {
-        AppResponse instance = new AppResponse();
-        instance.setMessageSource(MessageSource.CENTRAL_SERVER);
+    public static AppMessage defaultEmpty(MessageSource messageSource) {
+        AppMessage instance = new AppMessage();
+        instance.setMessageSource(messageSource);
         instance.setMessageType(AppMessageType.EMPTY);
         return instance;
     }

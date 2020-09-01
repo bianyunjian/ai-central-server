@@ -54,8 +54,8 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
             int[] convertedData = ByteConverter.fromByte(bytes);
             log.info(TAG + "转换后的数据：{}", convertedData);
 
-            AppResponse response = null;
-            AppRequest request = AppDataConverter.parseRequest(convertedData);
+            AppMessage response = null;
+            AppMessage request = AppDataConverter.parse(convertedData);
             if (request.getMessageSource() != MessageSource.APP) {
                 log.error(TAG + "消息头不正确，丢弃该消息", request);
                 return;
@@ -74,7 +74,7 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
                 log.error(TAG + "未能获取到正确的响应数据数据，response={}", response);
                 return;
             }
-            int[] respData = AppDataConverter.convertResponse(response);
+            int[] respData = AppDataConverter.convert(response);
 
             byte[] respByteData = ByteConverter.toByte(respData);
 
@@ -97,8 +97,8 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
     }
 
 
-    private AppResponse handleRequest(ChannelHandlerContext ctx, AppRequest request) {
-        AppResponse response = null;
+    private AppMessage handleRequest(ChannelHandlerContext ctx, AppMessage request) {
+        AppMessage response = null;
         AppMessageType messageType = request.getMessageType();
         int appNumber = request.getAppNumber();
 
@@ -106,7 +106,7 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
             case HAND_SHAKE_REQ:
                 String appNumberStr = String.valueOf(appNumber);
                 SocketServer.getServer(SocketConst.LISTENING_PORT_APP).ChannelGroups().add(appNumberStr, ctx.channel());
-                response = AppResponse.defaultEmpty();
+                response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
                 response.setAppNumber(appNumber);
                 response.setMessageType(AppMessageType.HAND_SHAKE_RESP);
                 response.setPayload(AppMessageValue.HAND_SHAKE_RESP_SUCCESS);
@@ -123,7 +123,10 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
             case APP_REQUIRE_OPEN_GATE_REQ:
                 AXMessageExchange.waitForAppRequireOpenGate(request);
                 break;
-
+            case APP_START_PROCESS_REQ:
+            case APP_FINISH_PROCESS_REQ:
+                response = AXMessageExchange.notifyAppProcessStatusChanged(request);
+                break;
             default:
         }
 

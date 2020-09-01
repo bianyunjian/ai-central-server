@@ -21,13 +21,16 @@ public enum AppMessageType {
     AUTH_ALL_PASSED_REQ(60, "验证全部通过 (人脸识别通过+垃圾检测通过）"),//0x10
 
     AUTH_REQ(70, "APP身份验证请求"),//0x46
-
     AUTH_RESP(71, "APP身份验证响应"),//0x47
 
     GARBAGE_DETECT_REQ(80, "APP垃圾检测请求"),//0x50
+    GARBAGE_DETECT_RESP(81, "APP垃圾检测请求响应"),//0x51
 
-    GARBAGE_DETECT_RESP(81, "APP垃圾检测请求响应");//0x51
+    APP_START_PROCESS_REQ(90, "APP开始投递请求"),//0x5A
+    APP_START_PROCESS_RESP(91, "APP开始投递响应"),//0x5B
 
+    APP_FINISH_PROCESS_REQ(100, "APP完成投递请求"),//0x64
+    APP_FINISH_PROCESS_RESP(101, "APP完成投递响应");//0x65
 
     public static AppMessageType valueOf(int value) {
         switch (value) {
@@ -64,6 +67,17 @@ public enum AppMessageType {
                 return GARBAGE_DETECT_REQ;
             case 81:
                 return GARBAGE_DETECT_RESP;
+
+
+            case 90:
+                return APP_START_PROCESS_REQ;
+            case 91:
+                return APP_START_PROCESS_RESP;
+
+            case 100:
+                return APP_FINISH_PROCESS_REQ;
+            case 101:
+                return APP_FINISH_PROCESS_RESP;
 
             default:
                 return EMPTY;

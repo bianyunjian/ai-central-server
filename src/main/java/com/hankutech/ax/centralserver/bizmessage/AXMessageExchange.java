@@ -6,7 +6,12 @@ import com.hankutech.ax.centralserver.socket.SocketServer;
 import com.hankutech.ax.message.code.AIFaceResultType;
 import com.hankutech.ax.message.code.AIResult;
 import com.hankutech.ax.message.code.AITaskType;
-import com.hankutech.ax.message.protocol.app.*;
+import com.hankutech.ax.message.code.SysRunFlag;
+import com.hankutech.ax.message.protocol.MessageSource;
+import com.hankutech.ax.message.protocol.app.AppDataConverter;
+import com.hankutech.ax.message.protocol.app.AppMessage;
+import com.hankutech.ax.message.protocol.app.AppMessageType;
+import com.hankutech.ax.message.protocol.app.AppMessageValue;
 import com.hankutech.ax.message.protocol.plc.PlcDataConverter;
 import com.hankutech.ax.message.protocol.plc.PlcMessageType;
 import com.hankutech.ax.message.protocol.plc.PlcRequest;
@@ -38,7 +43,7 @@ public class AXMessageExchange {
 
         for (Integer appNumber : appNumberList
         ) {
-            AppResponse appMessage = AppResponse.defaultEmpty();
+            AppMessage appMessage = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
             appMessage.setAppNumber(appNumber);
             appMessage.setMessageType(AppMessageType.APP_REQUIRE_OPEN_GATE_RESP);
             appMessage.setPayload(request.getPayload());
@@ -60,7 +65,7 @@ public class AXMessageExchange {
 
         for (Integer appNumber : appNumberList
         ) {
-            AppResponse appMessage = AppResponse.defaultEmpty();
+            AppMessage appMessage = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
             appMessage.setAppNumber(appNumber);
             appMessage.setMessageType(AppMessageType.SYS_STATUS_REQ);
             appMessage.setPayload(request.getPayload());
@@ -99,7 +104,7 @@ public class AXMessageExchange {
 
         for (Integer appNumber : appNumberList
         ) {
-            AppResponse appMessage = AppResponse.defaultEmpty();
+            AppMessage appMessage = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
             appMessage.setAppNumber(appNumber);
             appMessage.setMessageType(AppMessageType.GATE_CLOSED_EVENT_REQ);
             appMessage.setPayload(request.getPayload());
@@ -113,7 +118,7 @@ public class AXMessageExchange {
      *
      * @param request
      */
-    public static void waitForAuth(AppRequest request) {
+    public static void waitForAuth(AppMessage request) {
         log.debug("waitForAuth");
 
         List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByAppNumber(request.getAppNumber());
@@ -125,7 +130,7 @@ public class AXMessageExchange {
 
             //验证成功
             if (rfidDataItem != null) {
-                AppResponse response = AppResponse.defaultEmpty();
+                AppMessage response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
                 response.setPayload(AppMessageValue.AUTH_RESP_RFID_SUCCESS);
                 response.setMessageType(AppMessageType.AUTH_RESP);
                 response.setAppNumber(request.getAppNumber());
@@ -139,7 +144,7 @@ public class AXMessageExchange {
             AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.FACE);
             //验证成功
             if (aiData != null && aiData.getAiResult().getValue() == AIFaceResultType.FACE_PASS.getValue()) {
-                AppResponse response = AppResponse.defaultEmpty();
+                AppMessage response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
                 response.setPayload(AppMessageValue.AUTH_RESP_FACE_SUCCESS);
                 response.setMessageType(AppMessageType.AUTH_RESP);
                 response.setAppNumber(request.getAppNumber());
@@ -153,7 +158,7 @@ public class AXMessageExchange {
      *
      * @param request
      */
-    public static void waitForGarbageDetect(AppRequest request) {
+    public static void waitForGarbageDetect(AppMessage request) {
         log.debug("waitForGarbageDetect");
         List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByAppNumber(request.getAppNumber());
         Integer deviceId = deviceIdList.get(0);
@@ -161,7 +166,7 @@ public class AXMessageExchange {
         AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.GARBAGE);
         //验证成功
         if (aiData != null) {
-            AppResponse response = AppResponse.defaultEmpty();
+            AppMessage response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
             response.setMessageType(AppMessageType.GARBAGE_DETECT_RESP);
             response.setAppNumber(request.getAppNumber());
             //判断垃圾检测类型是否一致
@@ -184,7 +189,7 @@ public class AXMessageExchange {
      *
      * @param request
      */
-    public static void waitForAppRequireOpenGate(AppRequest request) {
+    public static void waitForAppRequireOpenGate(AppMessage request) {
         log.debug("waitForAppRequireOpenGate");
         int appNumber = request.getAppNumber();
         List<Integer> plcNumberList = DeviceRelationManager.getPlcNumber(appNumber);
@@ -199,14 +204,14 @@ public class AXMessageExchange {
     }
 
 
-    private static void sendMessage2App(int appNumber, AppResponse response) {
+    private static void sendMessage2App(int appNumber, AppMessage response) {
         try {
 
 
             Channel channel = SocketServer.getServer(SocketConst.LISTENING_PORT_APP).ChannelGroups().get(String.valueOf(appNumber));
             if (channel != null && channel.isWritable()) {
 
-                int[] respData = AppDataConverter.convertResponse(response);
+                int[] respData = AppDataConverter.convert(response);
 
                 byte[] respByteData = ByteConverter.toByte(respData);
 
@@ -247,5 +252,42 @@ public class AXMessageExchange {
             ex.printStackTrace();
         }
 
+    }
+
+    public static AppMessage notifyAppProcessStatusChanged(AppMessage request) {
+        int currentAppNumber = request.getAppNumber();
+
+        List<Integer> deviceIds = DeviceRelationManager.getDeviceIdByAppNumber(currentAppNumber);
+        if (deviceIds != null && deviceIds.size() > 0) {
+            int deviceGroupId = DeviceRelationManager.getDeviceGroupIdByDeviceId(deviceIds.get(0));
+            List<Integer> appNumberList = DeviceRelationManager.getAppNumberByDeviceGroupId(deviceGroupId);
+            //当其中某个APP在使用时， 中心算法控制器会向同组的其他APP发送【系统状态事件】消息（数据=繁忙）。
+            //当其中某个APP使用完成后， 中心算法控制器会向同组的其他APP发送【系统状态事件】消息（数据=正常）
+            for (Integer ap : appNumberList
+            ) {
+                if (ap == currentAppNumber) {
+                    continue;
+                }
+                AppMessage sysStatusRequest = new AppMessage();
+                sysStatusRequest.setMessageSource(MessageSource.CENTRAL_SERVER);
+                sysStatusRequest.setAppNumber(ap);
+                sysStatusRequest.setMessageType(AppMessageType.SYS_STATUS_REQ);
+                int payload = 0;
+                if (request.getMessageType() == AppMessageType.APP_START_PROCESS_REQ) {
+                    payload = SysRunFlag.BUSY.getValue();
+                }
+                if (request.getMessageType() == AppMessageType.APP_FINISH_PROCESS_REQ) {
+                    payload = SysRunFlag.NORMAL.getValue();
+                }
+                sysStatusRequest.setPayload(payload);
+                sendMessage2App(ap, sysStatusRequest);
+
+            }
+        }
+        AppMessage response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
+        response.setAppNumber(currentAppNumber);
+        response.setMessageType(AppMessageType.valueOf(request.getMessageType().getValue() + 1));
+        response.setPayload(AppMessageValue.APP_PROCESS_RESP_SUCCESS);
+        return response;
     }
 }
