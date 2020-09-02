@@ -90,6 +90,9 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
     public void init() {
         Common.IMAGE_FORMAT = imageFormat;
         Common.IMAGE_FOLDER_PATH = imageFolderPath;
+        if (Common.IMAGE_FOLDER_PATH.endsWith(File.separator) == false) {
+            Common.IMAGE_FOLDER_PATH += File.separator;
+        }
         Common.EVENT_OBSOLETE_SECONDS = eventObSeconds;
 
         File f = new File(Common.IMAGE_FOLDER_PATH);
