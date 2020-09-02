@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 class SocketServerTest {
 
 
-    @Test
+    //@Test
     void testByteServer() throws Exception {
         SocketServer server = new SocketServer(4000, new PlcByteSocketServerInitializer(10));
         server.start();
