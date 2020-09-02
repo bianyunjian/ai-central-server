@@ -136,7 +136,7 @@ public class EventServiceImpl implements EventService {
         for (AITaskType t : taskTypes
         ) {
             AIResultWrapper aiResult = AIDataManager.getLatestAIResultByDevice(deviceId, t);
-            if (aiResult.getAiResult() != AIBoxResultType.EMPTY) {
+            if (aiResult != null && aiResult.getAiResult() != AIBoxResultType.EMPTY) {
                 RealtimeEventVO vo4Box = new RealtimeEventVO();
                 vo4Box.setCameraId(aiResult.getCameraId());
                 vo4Box.setEventTime(aiResult.getEventTime());
