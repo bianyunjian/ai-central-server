@@ -10,8 +10,8 @@ public enum AIGarbageResultType implements AIResult {
     RECYCLABLE(3, "可回收垃圾"),//（绿色垃圾袋）
     HAZARDOUS(4, "有害垃圾"),//（红色垃圾袋）
 
-    WHITE_QUILT(11, "被服"), // 被服暂时定义为白色垃圾
-    BLUE(12, ""), // fixme 蓝色垃圾之前定义垃圾类型？
+    WHITE_QUILT(5, "被服"), // 被服暂定为白色垃圾
+    BLUE(90, ""), // fixme 之前约定90未蓝色垃圾袋，蓝色垃圾之前定义垃圾类型？
 
     OTHERS(99, "其他异常");//(未知垃圾类型)
 
