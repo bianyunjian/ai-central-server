@@ -4,6 +4,9 @@ import com.hankutech.ax.message.protocol.MessageSource;
 import lombok.Data;
 import lombok.ToString;
 
+/**
+ *
+ */
 @Data
 @ToString
 public class AppMessage {
