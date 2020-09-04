@@ -28,9 +28,7 @@ public class PlcSimulatorTest {
         bytebuf.writeBytes(handshake);
         client.sendData(bytebuf);
 
-        // todo 处理开关门及异常
-
-        TimeUnit.SECONDS.sleep(300);
+        TimeUnit.SECONDS.sleep(3000);
         client.close();
     }
 
@@ -59,12 +57,8 @@ public class PlcSimulatorTest {
             byte[] bytes = new byte[buf.readableBytes()];
             buf.getBytes(0, bytes);
             log.info("接收的原始字节数据：{}", bytes);
-
             super.channelRead(ctx, msg);
         }
     }
-
-
-
 
 }

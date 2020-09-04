@@ -17,21 +17,16 @@ import java.util.concurrent.TimeUnit;
 public class AppSimulatorTest {
 
     @Test
-    public void testStartWebGarbage() throws NettyClientException, InterruptedException {
+    public void testLongRunnerApp() throws NettyClientException, InterruptedException {
         SocketClient client = new SocketClient("127.0.0.1", 5001, new AppByteSocketClientInitializer());
         client.startConnect();
 
         // 发送握手消息
-        byte[] handshake = {3, 1, 0, 10, 1, 0, 0, 0, 0, 0};
+        byte[] handshake = {3, 3, 0, 10, 1, 0, 0, 0, 0, 0};
         sendBytes(client, handshake);
 
-        TimeUnit.SECONDS.sleep(300);
+        TimeUnit.SECONDS.sleep(3000);
         client.close();
-
-        // todo 执行测试流程
-
-
-
     }
 
 
@@ -70,15 +65,6 @@ public class AppSimulatorTest {
 
             super.channelRead(ctx, msg);
         }
-
-
     }
-
-
-
-
-
-
-
 
 }

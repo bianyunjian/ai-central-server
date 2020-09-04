@@ -12,10 +12,7 @@ import com.hankutech.ax.message.protocol.app.AppDataConverter;
 import com.hankutech.ax.message.protocol.app.AppMessage;
 import com.hankutech.ax.message.protocol.app.AppMessageType;
 import com.hankutech.ax.message.protocol.app.AppMessageValue;
-import com.hankutech.ax.message.protocol.plc.PlcDataConverter;
-import com.hankutech.ax.message.protocol.plc.PlcMessageType;
-import com.hankutech.ax.message.protocol.plc.PlcRequest;
-import com.hankutech.ax.message.protocol.plc.PlcResponse;
+import com.hankutech.ax.message.protocol.plc.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -199,6 +196,7 @@ public class AXMessageExchange {
             PlcResponse plcMessage = PlcResponse.defaultEmpty();
             plcMessage.setPlcNumber(plcNumber);
             plcMessage.setMessageType(PlcMessageType.OPEN_GATE_REQ);
+            plcMessage.setPayload(PlcMessageValue.OPEN_GATE_REQ);
             sendMessage2Plc(plcNumber, plcMessage);
         }
     }
