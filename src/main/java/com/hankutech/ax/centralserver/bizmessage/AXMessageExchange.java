@@ -3,10 +3,7 @@ package com.hankutech.ax.centralserver.bizmessage;
 import com.hankutech.ax.centralserver.constant.SocketConst;
 import com.hankutech.ax.centralserver.socket.ByteConverter;
 import com.hankutech.ax.centralserver.socket.SocketServer;
-import com.hankutech.ax.message.code.AIFaceResultType;
-import com.hankutech.ax.message.code.AIResult;
-import com.hankutech.ax.message.code.AITaskType;
-import com.hankutech.ax.message.code.SysRunFlag;
+import com.hankutech.ax.message.code.*;
 import com.hankutech.ax.message.protocol.MessageSource;
 import com.hankutech.ax.message.protocol.app.AppDataConverter;
 import com.hankutech.ax.message.protocol.app.AppMessage;
@@ -287,5 +284,31 @@ public class AXMessageExchange {
         response.setMessageType(AppMessageType.valueOf(request.getMessageType().getValue() + 1));
         response.setPayload(AppMessageValue.APP_PROCESS_RESP_SUCCESS);
         return response;
+    }
+
+    public static AppMessage handshake4app(AppMessage request) {
+        int appNumber = request.getAppNumber();
+        AppMessage response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
+        response.setAppNumber(appNumber);
+        response.setMessageType(AppMessageType.HAND_SHAKE_RESP);
+        response.setPayload(AppMessageValue.HAND_SHAKE_RESP_SUCCESS);
+        response.setExtData(getCurrentGarbageType(appNumber).getValue());
+        return response;
+    }
+
+    /**
+     * 获取当前支持的垃圾类型
+     *
+     * @param appNumber
+     * @return
+     */
+    private static AIGarbageResultType getCurrentGarbageType(int appNumber) {
+        List<Integer> deviceIds = DeviceRelationManager.getDeviceIdByAppNumber(appNumber);
+        Integer deviceId = 0;
+        if (deviceIds != null && deviceIds.size() > 0) {
+            deviceId = deviceIds.get(0);
+        }
+        return DeviceRelationManager.getDeviceGarbageType(deviceId);
+
     }
 }

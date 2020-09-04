@@ -100,18 +100,13 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
     private AppMessage handleRequest(ChannelHandlerContext ctx, AppMessage request) {
         AppMessage response = null;
         AppMessageType messageType = request.getMessageType();
-        int appNumber = request.getAppNumber();
 
         switch (messageType) {
             case HAND_SHAKE_REQ:
+                int appNumber = request.getAppNumber();
                 String appNumberStr = String.valueOf(appNumber);
                 SocketServer.getServer(SocketConst.LISTENING_PORT_APP).ChannelGroups().add(appNumberStr, ctx.channel());
-                response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
-                response.setAppNumber(appNumber);
-                response.setMessageType(AppMessageType.HAND_SHAKE_RESP);
-                response.setPayload(AppMessageValue.HAND_SHAKE_RESP_SUCCESS);
-                response.setExtData(getCurrentGarbageType(appNumber));
-
+                response = AXMessageExchange.handshake4app(request);
                 break;
 
             case AUTH_REQ:
@@ -133,13 +128,5 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
         return response;
     }
 
-    /**
-     * 获取当前支持的垃圾类型
-     *
-     * @param appNumber
-     * @return
-     */
-    private int getCurrentGarbageType(int appNumber) {
-        return AIGarbageResultType.WET.getValue();
-    }
+
 }
