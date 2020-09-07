@@ -1,7 +1,7 @@
 package com.hankutech.ax.centralserver.bizmessage;
 
 import com.alibaba.fastjson.JSON;
-import com.hankutech.ax.message.code.AIBoxResultType;
+import com.hankutech.ax.message.code.AIEmpty;
 import com.hankutech.ax.message.code.AIResult;
 import lombok.Data;
 
@@ -17,7 +17,7 @@ public class AIResultWrapper {
     private HashMap<String, String> extProperty;
 
     public AIResultWrapper() {
-        aiResult = AIBoxResultType.EMPTY;
+        aiResult = AIEmpty.EMPTY;
     }
 
 
