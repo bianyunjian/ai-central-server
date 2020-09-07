@@ -158,7 +158,7 @@ public class AXMessageExchange {
         Integer deviceId = deviceIdList.get(0);
 
         AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.GARBAGE);
-        aiData.setAiResult(AIGarbageResultType.DRY);
+//        aiData.setAiResult(AIGarbageResultType.DRY);
         //验证成功
         if (aiData != null && aiData.getAiResult() != AIEmpty.EMPTY) {
             AppMessage response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
