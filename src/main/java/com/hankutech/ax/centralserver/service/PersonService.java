@@ -18,4 +18,6 @@ public interface PersonService {
     PersonVO addPerson(PersonAddRequest request) throws InvalidObjectException, InvalidDataException;
 
     void deletePerson(Integer id) throws InvalidDataException;
+
+    int getFaceLibraryId();
 }

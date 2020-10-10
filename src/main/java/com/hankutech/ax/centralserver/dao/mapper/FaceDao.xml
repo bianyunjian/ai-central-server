@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hankutech.ax.centralserver.dao.FaceDao">
+  <resultMap id="BaseResultMap" type="com.hankutech.ax.centralserver.dao.model.Face">
+    <!--@mbg.generated-->
+    <!--@Table face-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="face_library_id" jdbcType="INTEGER" property="faceLibraryId" />
+    <result column="person_name" jdbcType="VARCHAR" property="personName" />
+    <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
+    <result column="features" jdbcType="BLOB" property="features" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, face_library_id, person_name, image_url, features
+  </sql>
+</mapper>

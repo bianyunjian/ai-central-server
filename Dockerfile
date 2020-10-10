@@ -16,6 +16,8 @@ ENV TimeZone Asia/Shanghai
 
 COPY target/central-server-0.0.1-SNAPSHOT.jar /app.jar
 
-EXPOSE 9000
+EXPOSE 19001
+EXPOSE 5000
+EXPOSE 5001
 
 ENTRYPOINT ["sh","-c","java ${JAVA_OPTS} -jar /app.jar ${EXT_CONFIG}"]

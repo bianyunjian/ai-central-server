@@ -5,6 +5,7 @@ import com.hankutech.ax.centralserver.constant.SocketConst;
 import com.hankutech.ax.centralserver.dao.DeviceDao;
 import com.hankutech.ax.centralserver.dao.model.Device;
 import com.hankutech.ax.centralserver.service.DeviceCache;
+import com.hankutech.ax.centralserver.service.PersonService;
 import com.hankutech.ax.centralserver.socket.NettyServerException;
 import com.hankutech.ax.centralserver.socket.SocketServer;
 import com.hankutech.ax.centralserver.socket.app.AppByteSocketServerInitializer;
@@ -38,6 +39,15 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
     String imageFormat;
     @Value("${app.event.event-obsolete-seconds}")
     int eventObSeconds;
+
+    @Value("${app.face.syncdata}")
+    boolean faceSyncData;
+
+    @Value("${app.face.faceNotifyServiceUrl}")
+    String faceNotifyServiceUrl;
+
+    @Autowired
+    private PersonService personService;
 
     @Resource
     private DeviceDao deviceDao;
@@ -97,6 +107,13 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
 
         File f = new File(Common.IMAGE_FOLDER_PATH);
         f.mkdirs();
+
+        Common.FACE_SYNC_DATA = faceSyncData;
+
+        int faceLibraryId = personService.getFaceLibraryId();
+        System.out.println("人脸库编号：" + faceLibraryId);
+
+        Common.FACE_NOTIFY_SERVICE_URL=faceNotifyServiceUrl;
     }
 
 
