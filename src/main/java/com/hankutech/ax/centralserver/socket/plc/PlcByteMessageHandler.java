@@ -127,6 +127,10 @@ public class PlcByteMessageHandler extends ChannelInboundHandlerAdapter {
                 AXMessageExchange.plcSysStatusChangeEvent(request);
                 break;
 
+
+            case BOX_DETECT_REQ:
+                AXMessageExchange.waitForBoxDetect(request);
+                break;
             default:
         }
 

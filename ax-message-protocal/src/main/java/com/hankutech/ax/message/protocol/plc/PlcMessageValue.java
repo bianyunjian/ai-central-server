@@ -41,4 +41,12 @@ public class PlcMessageValue {
     public static int SYS_STATUS_RESP_SUCCESS = 1;
 
 
+//    /**
+//     * 周转箱检测: 已关闭，周转箱无异常
+//     */
+//    public static int BOX_DETECT_RESP_CLOSED = 81;
+//    /**
+//     * 周转箱检测: 未关闭，周转箱未盖盖子
+//     */
+//    public static int BOX_DETECT_RESP_NOT_CLOSED = 1;
 }

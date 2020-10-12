@@ -94,7 +94,7 @@ public class EventServiceImpl implements EventService {
                 String description = getEventDescription(eventType, aiResultValue);
                 String imgName = getImageName(deviceId, cameraId, eventType, eventTime
                 );
-                String imgFilePath = SaveEventImage(imgName, imageBase64);
+                String imgFilePath = saveEventImage(imgName, imageBase64);
 //                更新缓存中， 缓存中只保留 当前最新的结果
                 AITaskType aiTaskTypeEnum = AITaskType.valueOf(eventType.toUpperCase());
                 AIResult aiResult = getEventAIResult(eventType, aiResultValue);
@@ -110,13 +110,6 @@ public class EventServiceImpl implements EventService {
                 newEventEntity.setEventImagePath(imgFilePath == null ? "" : imgFilePath);
                 // 加入批量list
                 batchList.add(newEventEntity);
-//
-//                int affectRowCount = _eventDao.insert(newEventEntity);
-//                if (affectRowCount > 0) {
-//                    resp.success("Add new Event Data OK", newEventEntity.getEventId());
-//                } else {
-//                    resp.fail("Add new Event Data failed");
-//                }
             }
         }
         if (!batchList.isEmpty()) {
@@ -192,7 +185,7 @@ public class EventServiceImpl implements EventService {
         return deviceId + "-" + cameraId + "-" + eventType + "-" + time.format(formatter);
     }
 
-    private String SaveEventImage(String imgFileName, String imageBase64) {
+    private String saveEventImage(String imgFileName, String imageBase64) {
         if (StringUtils.isEmpty(imageBase64)) {
             return null;
         }

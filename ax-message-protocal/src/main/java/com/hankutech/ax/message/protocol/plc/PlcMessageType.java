@@ -18,7 +18,10 @@ public enum PlcMessageType {
     RFID_EVENT_RESP(41, "RFID刷卡事件响应"),//0x29
 
     SYS_STATUS_REQ(50, "系统状态事件"),//0x32
-    SYS_STATUS_RESP(51, "系统状态事件响应");//0x33
+    SYS_STATUS_RESP(51, "系统状态事件响应"),//0x33
+
+    BOX_DETECT_REQ(60, "周转箱检测请求"),//0x3C
+    BOX_DETECT_RESP(61, "周转箱检测请求响应");//0x3D
 
     public static PlcMessageType valueOf(int value) {
         switch (value) {
@@ -46,7 +49,10 @@ public enum PlcMessageType {
                 return SYS_STATUS_REQ;
             case 51:
                 return SYS_STATUS_RESP;
-
+            case 60:
+                return BOX_DETECT_REQ;
+            case 61:
+                return BOX_DETECT_RESP;
 
             default:
                 return EMPTY;

@@ -312,4 +312,27 @@ public class AXMessageExchange {
         return DeviceRelationManager.getDeviceGarbageType(deviceId);
 
     }
+
+
+    /**
+     * plc向中心算法控制器询问周转箱检测的状态信息， 中心服务器向PLC回复[周转箱检测响应】消息
+     *
+     * @param request
+     */
+    public static void waitForBoxDetect(PlcRequest request) {
+        log.debug("waitForBoxDetect");
+        List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByPlcNumber(request.getPlcNumber());
+        Integer deviceId = deviceIdList.get(0);
+
+        AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.BOX);
+
+        if (aiData != null && aiData.getAiResult() != AIEmpty.EMPTY) {
+            PlcResponse response = PlcResponse.defaultEmpty();
+            response.setMessageSource(MessageSource.CENTRAL_SERVER);
+            response.setMessageType(PlcMessageType.BOX_DETECT_RESP);
+            response.setPlcNumber(request.getPlcNumber());
+            response.setPayload(aiData.getAiResult().getValue());
+            sendMessage2Plc(request.getPlcNumber(), response);
+        }
+    }
 }
