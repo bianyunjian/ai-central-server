@@ -24,7 +24,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
-import java.io.InvalidObjectException;
 
 /**
  * 人脸库接口
@@ -63,21 +62,41 @@ public class FaceController {
 
     @Operation(summary = "新增人脸")
     @PostMapping(path = "/add")
-    public BaseResponse<PersonVO> add(@RequestBody @Validated PersonAddRequest request) throws InvalidObjectException, InvalidDataException {
+    public BaseResponse<PersonVO> add(@RequestBody @Validated PersonAddRequest request) {
         BaseResponse<PersonVO> resp = new BaseResponse<PersonVO>();
-        PersonVO data = _personService.addPerson(request);
-        resp.success("新增人脸成功", data);
+
+
+        PersonVO data = null;
+        try {
+            data = _personService.addPerson(request);
+            if (data != null) {
+                resp.success("新增人脸成功", data);
+            } else {
+                resp.fail("新增人脸失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.fail("新增人脸失败:" + e.getMessage());
+        }
+
         return resp;
     }
 
 
     @Operation(summary = "删除人脸")
     @PostMapping(path = "/delete")
-    public BaseResponse delete(@RequestBody @Validated IntIdRequest request) throws InvalidDataException {
-        Integer id = request.getId();
-        _personService.deletePerson(id);
+    public BaseResponse delete(@RequestBody @Validated IntIdRequest request) {
         BaseResponse response = new BaseResponse();
-        response.success("删除人脸成功");
+        Integer id = request.getId();
+        try {
+            _personService.deletePerson(id);
+            response.success("删除人脸成功");
+        } catch (InvalidDataException e) {
+            e.printStackTrace();
+            response.fail("删除人脸失败:" + e.getMessage());
+        }
+
+
         return response;
     }
 
@@ -114,7 +133,6 @@ public class FaceController {
             return null;
         }
     }
-
 
 
 }

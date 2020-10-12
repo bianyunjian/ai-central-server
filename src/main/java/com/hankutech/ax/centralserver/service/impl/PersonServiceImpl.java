@@ -21,6 +21,7 @@ import com.hankutech.ax.centralserver.pojo.vo.PersonVO;
 import com.hankutech.ax.centralserver.service.PersonService;
 import com.hankutech.ax.centralserver.support.face.FaceUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -28,7 +29,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -86,7 +86,6 @@ public class PersonServiceImpl implements PersonService {
         return data;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public PersonVO addPerson(PersonAddRequest request) throws InvalidObjectException, InvalidDataException {
         // 检测人员是否名称重复
@@ -102,17 +101,19 @@ public class PersonServiceImpl implements PersonService {
         newPerson.setPhoneNum(request.getPhoneNum());
         newPerson.setImage(request.getImage());
         String faceFtrArrayString = FaceUtil.getFaceFtrArrayString(newPerson.getImage());
+        if (StringUtils.isEmpty(faceFtrArrayString)) {
+            throw new IllegalArgumentException("输入的图片无法提取到有效的人脸信息");
+        }
         newPerson.setFaceFtrArray(faceFtrArrayString);
 
         _personDao.insert(newPerson);
 
-        syncAddFace(getFaceLibraryId(), newPerson.getPersonName(), newPerson.getFaceFtrArray());
+        syncAddFace(getFaceLibraryId(), newPerson.getPersonName(), newPerson.getFaceFtrArray(), true);
 
         return new PersonVO(newPerson);
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deletePerson(Integer personId) throws InvalidDataException {
         // 检测人员是否存在
@@ -125,7 +126,7 @@ public class PersonServiceImpl implements PersonService {
         deleteWrapper.eq(Person.COL_PERSON_ID, personId);
         _personDao.delete(deleteWrapper);
 
-        syncDeleteFace(getFaceLibraryId(), existOne.getPersonName());
+        syncDeleteFace(getFaceLibraryId(), existOne.getPersonName(), true);
     }
 
     public int getFaceLibraryId() {
@@ -148,11 +149,7 @@ public class PersonServiceImpl implements PersonService {
             if (existPersonList != null && existPersonList.size() > 0) {
                 for (Person p :
                         existPersonList) {
-                    Face newFace = new Face();
-                    newFace.setFaceLibraryId(newFaceLibraryId);
-                    newFace.setPersonName(p.getPersonName());
-                    newFace.setFeatures(p.getFaceFtrArray().getBytes(StandardCharsets.UTF_8));
-                    faceMapper.insert(newFace);
+                    syncAddFace(newFaceLibraryId, p.getPersonName(), p.getFaceFtrArray(), false);
                 }
                 notifyFaceAIServiceReload();
             }
@@ -163,7 +160,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
-    private void syncAddFace(int faceLibraryId, String personName, String faceFtrArray) {
+    private void syncAddFace(int faceLibraryId, String personName, String faceFtrArray, boolean notify) {
 
         Face newFace = new Face();
         newFace.setFaceLibraryId(faceLibraryId);
@@ -171,15 +168,19 @@ public class PersonServiceImpl implements PersonService {
         newFace.setImageUrl("");
         newFace.setFeatures(faceFtrArray.getBytes(StandardCharsets.UTF_8));
         faceMapper.insert(newFace);
-        notifyFaceAIServiceReload();
+        if (notify) {
+            notifyFaceAIServiceReload();
+        }
     }
 
-    private void syncDeleteFace(int faceLibraryId, String personName) {
+    private void syncDeleteFace(int faceLibraryId, String personName, boolean notify) {
         QueryWrapper<Face> qw = new QueryWrapper<>();
         qw.eq(Face.COL_FACE_LIBRARY_ID, faceLibraryId);
         qw.eq(Face.COL_PERSON_NAME, personName);
         faceMapper.delete(qw);
-        notifyFaceAIServiceReload();
+        if (notify) {
+            notifyFaceAIServiceReload();
+        }
     }
 
     private void notifyFaceAIServiceReload() {
@@ -190,6 +191,7 @@ public class PersonServiceImpl implements PersonService {
 
         String path = Common.FACE_NOTIFY_SERVICE_URL + "?productId=1&apikey=1&requestFaceLibraryId=" + faceLibraryId;
         HttpGet httpGet = new HttpGet(path);
+        log.info(httpGet.toString());
         try {
             response = httpClient.execute(httpGet);
             /**请求发送成功，并得到响应**/

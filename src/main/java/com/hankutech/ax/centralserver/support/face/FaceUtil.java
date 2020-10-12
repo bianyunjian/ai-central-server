@@ -16,7 +16,17 @@ public class FaceUtil {
 
     static boolean initFaceEngine;
 
+    public static String removeImagePrefix(String imageDataBase64) {
+        if (imageDataBase64.startsWith("data:image")) {
+            return imageDataBase64.split(",")[1];
+        } else {
+            return imageDataBase64;
+        }
+    }
+
     public static String getFaceFtrArrayString(String imageBase64) throws InvalidObjectException {
+
+        imageBase64 = removeImagePrefix(imageBase64);
 
         if (initFaceEngine == false) {
 

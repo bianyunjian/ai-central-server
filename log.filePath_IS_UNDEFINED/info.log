@@ -1,0 +1,8 @@
+2020-10-12 10:24:31:453 [SpringContextShutdownHook][[34mINFO [0;39m] socket服务端：5000 已关闭！ ==> com.hankutech.ax.centralserver.socket.SocketServer
+2020-10-12 10:24:31:461 [SpringContextShutdownHook][[34mINFO [0;39m] socket服务端：5001 已关闭！ ==> com.hankutech.ax.centralserver.socket.SocketServer
+2020-10-12 10:24:31:462 [SpringContextShutdownHook][[34mINFO [0;39m] {dataSource-1} closing ... ==> com.alibaba.druid.pool.DruidDataSource
+2020-10-12 10:24:31:465 [SpringContextShutdownHook][[34mINFO [0;39m] {dataSource-1} closed ==> com.alibaba.druid.pool.DruidDataSource
+2020-10-12 10:55:33:018 [SpringContextShutdownHook][[34mINFO [0;39m] socket服务端：5000 已关闭！ ==> com.hankutech.ax.centralserver.socket.SocketServer
+2020-10-12 10:55:33:027 [SpringContextShutdownHook][[34mINFO [0;39m] socket服务端：5001 已关闭！ ==> com.hankutech.ax.centralserver.socket.SocketServer
+2020-10-12 10:55:33:029 [SpringContextShutdownHook][[34mINFO [0;39m] {dataSource-1} closing ... ==> com.alibaba.druid.pool.DruidDataSource
+2020-10-12 10:55:33:035 [SpringContextShutdownHook][[34mINFO [0;39m] {dataSource-1} closed ==> com.alibaba.druid.pool.DruidDataSource
