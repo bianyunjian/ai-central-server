@@ -15,6 +15,10 @@ public class DeviceRelationManager {
         return DeviceCache.getPlcNumberByAppId(appNumber);
     }
 
+    public static List<Integer> getDeviceIdByDeviceName(String deviceName) {
+        return DeviceCache.getDeviceIdByDeviceName(deviceName);
+    }
+
     public static List<Integer> getAppNumberByDeviceId(int deviceId) {
         return DeviceCache.getAppNumberByDeviceId(deviceId);
     }

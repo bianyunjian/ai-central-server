@@ -10,6 +10,7 @@ import com.hankutech.ax.centralserver.pojo.vo.event.history.HistoryEventVO;
 import com.hankutech.ax.centralserver.pojo.vo.event.realtime.RealtimeEventVO;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 public interface EventService {
@@ -23,4 +24,5 @@ public interface EventService {
     PagedData<HistoryEventVO> queryHistoryEvent(PagedParams pagedParams, HistoryEventParams queryParams);
 
 
+    HashMap<String, String> getCurrentFaceResult(String deviceName);
 }

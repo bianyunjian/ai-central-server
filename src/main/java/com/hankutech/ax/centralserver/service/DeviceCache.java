@@ -60,6 +60,18 @@ public class DeviceCache {
 
     //==========================================================================================
 
+    public static List<Integer> getDeviceIdByDeviceName(String deviceName) {
+        List<Integer> deviceIds = new ArrayList<>();
+        if (!DEVICE_MAP.isEmpty()) {
+            for (Device device : DEVICE_MAP.values()) {
+                if (deviceName.equals(device.getDeviceName())) {
+                    deviceIds.add(device.getDeviceId());
+                }
+            }
+        }
+        return deviceIds;
+    }
+
     public static List<Integer> getAppNumberByPlcId(int plcId) {
         List<Integer> appIds = new ArrayList<>();
         if (!DEVICE_MAP.isEmpty()) {

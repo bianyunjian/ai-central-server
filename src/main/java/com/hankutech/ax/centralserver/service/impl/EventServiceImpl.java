@@ -1,18 +1,24 @@
 package com.hankutech.ax.centralserver.service.impl;
 
+import cn.hutool.core.lang.Assert;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hankutech.ax.centralserver.bizmessage.AIDataManager;
 import com.hankutech.ax.centralserver.bizmessage.AIResultWrapper;
+import com.hankutech.ax.centralserver.bizmessage.DeviceRelationManager;
 import com.hankutech.ax.centralserver.constant.Common;
 import com.hankutech.ax.centralserver.constant.ErrorCode;
 import com.hankutech.ax.centralserver.dao.CameraDao;
 import com.hankutech.ax.centralserver.dao.DeviceDao;
 import com.hankutech.ax.centralserver.dao.EventDao;
+import com.hankutech.ax.centralserver.dao.PersonDao;
 import com.hankutech.ax.centralserver.dao.model.Camera;
 import com.hankutech.ax.centralserver.dao.model.Device;
 import com.hankutech.ax.centralserver.dao.model.Event;
+import com.hankutech.ax.centralserver.dao.model.Person;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.pojo.query.DeviceUploadParams;
 import com.hankutech.ax.centralserver.pojo.query.HistoryEventParams;
@@ -38,6 +44,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -46,7 +53,8 @@ public class EventServiceImpl implements EventService {
     DateTimeFormatter fromFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-
+    @Resource
+    private PersonDao _personDao;
     @Resource
     private EventDao _eventDao;
     @Resource
@@ -178,6 +186,44 @@ public class EventServiceImpl implements EventService {
             data.setList(list);
         }
         return data;
+    }
+
+    @Override
+    public HashMap<String, String> getCurrentFaceResult(String deviceName) {
+        log.debug("getCurrentFaceResult");
+
+        List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByDeviceName(deviceName);
+        if (deviceIdList == null || deviceIdList.size() == 0) {
+            log.error("cannot find deviceId by deviceName:" + deviceName);
+            return null;
+        }
+        Integer deviceId = deviceIdList.get(0);
+
+        //获取人脸验证的结果
+
+        AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.FACE);
+        //人脸验证有效
+        if (aiData != null && aiData.getAiResult().getValue() == AIFaceResultType.FACE_PASS.getValue()) {
+
+            String extProperty = aiData.getExtProperty();
+            if (StringUtils.isEmpty(extProperty) == false) {
+
+                HashMap<String, String> map = JSON.parseObject(extProperty, new TypeReference<HashMap<String, String>>() {
+                });
+                Assert.notNull(map);
+                String eventType = map.get("eventType");
+                String eventTypeValue = map.get("eventTypeValue");
+                if (eventType.toLowerCase().equals(AITaskType.FACE.toString().toLowerCase())) {
+                    int personId = Integer.parseInt(eventTypeValue);
+                    Person findPerson = _personDao.selectById(personId);
+                    Assert.notNull(findPerson);
+                    map.put("personName", findPerson.getPersonName());
+                    return map;
+                }
+
+            }
+        }
+        return null;
     }
 
 
