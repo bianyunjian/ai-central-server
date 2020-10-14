@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.hankutech.ax.message.code.AIEmpty;
 import com.hankutech.ax.message.code.AIResult;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @Data
+@ToString
 public class AIResultWrapper {
 
     private int cameraId;

@@ -6,12 +6,14 @@ import com.hankutech.ax.centralserver.dao.model.Device;
 import com.hankutech.ax.message.code.AIResult;
 import com.hankutech.ax.message.code.AITaskType;
 import com.hankutech.ax.message.code.ScenarioFlag;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class AIDataManager {
 
     private static ConcurrentHashMap<Integer, AIDataItem> deviceAiDataCacheMap = new ConcurrentHashMap<>();
@@ -37,6 +39,7 @@ public class AIDataManager {
 
         //检查最新事件的时间是否已经超过设定的阈值
         if (checkIfEventObsolete(result.getEventTime())) {
+            log.warn("AIDataManager.getLatestAIResultByDevice 最新事件的时间是否已经超过设定的阈值:" + result.toString());
             return null;
         }
         return result;

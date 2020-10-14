@@ -153,10 +153,10 @@ public class AXMessageExchange {
      * @param request
      */
     public static void waitForGarbageDetect(AppMessage request) {
-        log.debug("waitForGarbageDetect");
+        log.info("waitForGarbageDetect");
         List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByAppNumber(request.getAppNumber());
         Integer deviceId = deviceIdList.get(0);
-
+        log.info("waitForGarbageDetect deviceId=" + deviceId);
         AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.GARBAGE);
 //        aiData.setAiResult(AIGarbageResultType.DRY);
         //验证成功
@@ -175,6 +175,8 @@ public class AXMessageExchange {
                 response.setPayload(AppMessageValue.GARBAGE_DETECT_RESP_FAILURE);
             }
             sendMessage2App(request.getAppNumber(), response);
+        } else {
+            log.error("waitForGarbageDetect 未找到有效数据");
         }
     }
 
