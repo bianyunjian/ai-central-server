@@ -3,6 +3,7 @@ package com.hankutech.ax.centralserver.bizmessage;
 
 import com.hankutech.ax.centralserver.constant.Common;
 import com.hankutech.ax.centralserver.dao.model.Device;
+import com.hankutech.ax.message.code.AIEmpty;
 import com.hankutech.ax.message.code.AIResult;
 import com.hankutech.ax.message.code.AITaskType;
 import com.hankutech.ax.message.code.ScenarioFlag;
@@ -38,9 +39,12 @@ public class AIDataManager {
         AIResultWrapper result = aiTaskResultMap.getOrDefault(taskType, new AIResultWrapper());
 
         //检查最新事件的时间是否已经超过设定的阈值
-        if (checkIfEventObsolete(result.getEventTime())) {
-            log.warn("AIDataManager.getLatestAIResultByDevice 最新事件的时间是否已经超过设定的阈值:" + result.toString());
-            return null;
+        if (result.getAiResult() != AIEmpty.EMPTY) {
+            if (checkIfEventObsolete(result.getEventTime())) {
+                log.warn("AIDataManager.getLatestAIResultByDevice 查找到的事件的发生时间已经超过设定的过期时间阈值" + Common.EVENT_OBSOLETE_SECONDS + "(秒):" + result.toString());
+                aiTaskResultMap.remove(taskType);
+                result = null;
+            }
         }
         return result;
     }
@@ -119,7 +123,7 @@ public class AIDataManager {
             map.put(taskType, aiResultWrapper);
             newData.setAITaskResultMap(map);
             deviceAiDataCacheMap.put(deviceId, newData);
-            System.out.println("add new AXDataItem for device[" + device.getDeviceId() + "-" + device.getDeviceName() + "] cameraId[" + cameraId + "]");
+            log.debug("add new AXDataItem for device[" + device.getDeviceId() + "-" + device.getDeviceName() + "] cameraId[" + cameraId + "]");
 
         } else {
 
@@ -132,7 +136,7 @@ public class AIDataManager {
             } else {
                 map.put(taskType, aiResultWrapper);
             }
-            System.out.println("update AXDataItem for device[" + device.getDeviceId() + "-" + device.getDeviceName() + "] cameraId[" + cameraId + "]");
+            log.debug("update AXDataItem for device[" + device.getDeviceId() + "-" + device.getDeviceName() + "] cameraId[" + cameraId + "]");
         }
     }
 
@@ -150,11 +154,11 @@ public class AIDataManager {
             newData.setDeviceId(deviceId);
             newData.setEventTime(dateTime);
             deviceRFIDDataCacheMap.put(deviceId, newData);
-            System.out.println("add new RFIDDataItem for device[" + deviceId + "]");
+            log.debug("add new RFIDDataItem for device[" + deviceId + "]");
         } else {
             RFIDDataItem updateData = deviceRFIDDataCacheMap.get(deviceId);
             updateData.setEventTime(dateTime);
-            System.out.println("update RFIDDataItem for device[" + deviceId + "]");
+            log.debug("update RFIDDataItem for device[" + deviceId + "]");
         }
     }
 

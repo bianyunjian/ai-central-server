@@ -49,10 +49,10 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
 
             byte[] bytes = new byte[buf.readableBytes()];
             buf.getBytes(0, bytes);
-            log.info(TAG + "接收的原始字节数据：{}", bytes);
+            log.debug(TAG + "接收的原始字节数据：{}", bytes);
 
             int[] convertedData = ByteConverter.fromByte(bytes);
-            log.info(TAG + "转换后的数据：{}", convertedData);
+            log.debug(TAG + "转换后的数据：{}", convertedData);
 
             AppMessage response = null;
             AppMessage request = AppDataConverter.parse(convertedData);
@@ -79,7 +79,7 @@ public class AppByteMessageHandler extends ChannelInboundHandlerAdapter {
             byte[] respByteData = ByteConverter.toByte(respData);
 
             log.info(TAG + "转换后的响应数据：{}", response.toString());
-            log.info(TAG + "发送的响应数据：{}", respByteData);
+            log.debug(TAG + "发送的响应数据：{}", respByteData);
             ByteBuf responseByteBuf = Unpooled.buffer(respByteData.length);
             responseByteBuf.writeBytes(respByteData);
             ctx.channel().writeAndFlush(responseByteBuf);
