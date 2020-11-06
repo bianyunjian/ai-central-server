@@ -19,6 +19,7 @@ public class AIDataManager {
 
     private static ConcurrentHashMap<Integer, AIDataItem> deviceAiDataCacheMap = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<Integer, RFIDDataItem> deviceRFIDDataCacheMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Integer, QRCodeDataItem> deviceQRCodeDataCacheMap = new ConcurrentHashMap<>();
 
     /**
      * get latest cached data by deviceId and taskType
@@ -63,6 +64,27 @@ public class AIDataManager {
         }
 
         RFIDDataItem data = deviceRFIDDataCacheMap.get(deviceId);
+
+        //检查最新事件的时间是否已经超过设定的阈值
+        if (checkIfEventObsolete(data.getEventTime())) {
+            return null;
+        }
+        return data;
+    }
+
+    /**
+     * 获取最新的二维码验证事件
+     *
+     * @param deviceId
+     * @return
+     */
+    public static QRCodeDataItem getLatestQRCodeResultByDevice(int deviceId) {
+
+        if (deviceQRCodeDataCacheMap.size() == 0 || deviceQRCodeDataCacheMap.containsKey(deviceId) == false) {
+            return null;
+        }
+
+        QRCodeDataItem data = deviceQRCodeDataCacheMap.get(deviceId);
 
         //检查最新事件的时间是否已经超过设定的阈值
         if (checkIfEventObsolete(data.getEventTime())) {
@@ -162,4 +184,25 @@ public class AIDataManager {
         }
     }
 
+    /**
+     * update device QRCode data
+     *
+     * @param deviceId
+     * @param dateTime
+     */
+    public static void updateQRCodeResult(int deviceId, LocalDateTime dateTime) {
+
+
+        if (deviceQRCodeDataCacheMap.containsKey(deviceId) == false) {
+            QRCodeDataItem newData = new QRCodeDataItem();
+            newData.setDeviceId(deviceId);
+            newData.setEventTime(dateTime);
+            deviceQRCodeDataCacheMap.put(deviceId, newData);
+            log.debug("add new QRCodeDataItem for device[" + deviceId + "]");
+        } else {
+            QRCodeDataItem updateData = deviceQRCodeDataCacheMap.get(deviceId);
+            updateData.setEventTime(dateTime);
+            log.debug("update QRCodeDataItem for device[" + deviceId + "]");
+        }
+    }
 }

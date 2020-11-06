@@ -1,9 +1,11 @@
 package com.hankutech.ax.centralserver.controller;
 
+import com.hankutech.ax.centralserver.bizmessage.AXMessageExchange;
 import com.hankutech.ax.centralserver.exception.InvalidDataException;
 import com.hankutech.ax.centralserver.pojo.query.DeviceParams;
 import com.hankutech.ax.centralserver.pojo.query.DeviceUploadParams;
 import com.hankutech.ax.centralserver.pojo.query.FaceResultQueryParams;
+import com.hankutech.ax.centralserver.pojo.query.QRCodeEventParams;
 import com.hankutech.ax.centralserver.pojo.response.BaseResponse;
 import com.hankutech.ax.centralserver.pojo.vo.DeviceConfigVO;
 import com.hankutech.ax.centralserver.pojo.vo.PersonLibraryVO;
@@ -97,5 +99,13 @@ public class LotController {
             resp.fail("not found valid face");
         }
         return resp;
+    }
+
+    @Operation(summary = "上传二维码验证事件")
+    @PostMapping(path = "/uploadQRCodeEvent")
+    public BaseResponse uploadQRCodeEvent(@RequestBody @Validated QRCodeEventParams request) throws InvalidDataException {
+        log.debug("收到二维码验证事件：{}", request.toString());
+        AXMessageExchange.receiveQRCodeEvent(request.getDeviceIdList());
+        return new BaseResponse();
     }
 }

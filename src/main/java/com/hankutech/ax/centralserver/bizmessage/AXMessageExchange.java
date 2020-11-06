@@ -24,6 +24,21 @@ public class AXMessageExchange {
 
     private static final String TAG = "[AXMessageExchange]";
 
+
+    /**
+     * 中心算法控制器接收到QRCode验证事件后，更新当前的AI数据缓存
+     *
+     * @param deviceIdList
+     */
+    public static void receiveQRCodeEvent(List<Integer> deviceIdList) {
+        log.debug("receiveQRCodeEvent");
+        //update QRCode Data
+        for (int deviceId : deviceIdList
+        ) {
+            AIDataManager.updateQRCodeResult(deviceId, LocalDateTime.now());
+        }
+    }
+
     /**
      * 中心算法控制器会向艾信PLC下达开门指令.
      * 艾信PLC回复后，中心算法控制器向APP发送【APP门已打开】的消息
@@ -140,6 +155,20 @@ public class AXMessageExchange {
             if (aiData != null && aiData.getAiResult().getValue() == AIFaceResultType.FACE_PASS.getValue()) {
                 AppMessage response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
                 response.setPayload(AppMessageValue.AUTH_RESP_FACE_SUCCESS);
+                response.setMessageType(AppMessageType.AUTH_RESP);
+                response.setAppNumber(request.getAppNumber());
+                sendMessage2App(request.getAppNumber(), response);
+            }
+        }
+        //二维码验证
+        if (request.getPayload() == AppMessageValue.AUTH_REQ_QRCODE) {
+
+            QRCodeDataItem qrCodeDataItem = AIDataManager.getLatestQRCodeResultByDevice(deviceId);
+
+            //验证成功
+            if (qrCodeDataItem != null) {
+                AppMessage response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
+                response.setPayload(AppMessageValue.AUTH_RESP_QRCODE_SUCCESS);
                 response.setMessageType(AppMessageType.AUTH_RESP);
                 response.setAppNumber(request.getAppNumber());
                 sendMessage2App(request.getAppNumber(), response);
