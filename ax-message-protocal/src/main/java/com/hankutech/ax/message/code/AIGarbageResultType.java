@@ -11,14 +11,17 @@ public enum AIGarbageResultType implements AIResult {
     HAZARDOUS(4, "有害垃圾"),//（红色垃圾袋）
 
     WHITE_QUILT(5, "被服"), // 被服暂定为白色垃圾
-    BLUE(90, "蓝色垃圾袋"), // fixme 之前约定90未蓝色垃圾袋，蓝色垃圾之前定义垃圾类型？
+
+//    BLUE(90, "蓝色垃圾袋"), // fixme 之前约定90未蓝色垃圾袋，蓝色垃圾之前定义垃圾类型？
 
     OTHERS(99, "其他异常");//(未知垃圾类型)
 
     public static AIGarbageResultType valueOf(int value) {
         switch (value) {
             case 1:
+            case 90:
                 return DRY;
+
             case 2:
                 return WET;
             case 3:
@@ -27,8 +30,8 @@ public enum AIGarbageResultType implements AIResult {
                 return HAZARDOUS;
             case 5:
                 return WHITE_QUILT;
-            case 90:
-                return BLUE;
+//            case 90:
+//                return BLUE;
             case 99:
                 return OTHERS;
             default:

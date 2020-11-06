@@ -44,7 +44,6 @@ public class RuntimeController {
         data.add(new AIGarbageResultTypeConfig(AIGarbageResultType.RECYCLABLE));
         data.add(new AIGarbageResultTypeConfig(AIGarbageResultType.HAZARDOUS));
         data.add(new AIGarbageResultTypeConfig(AIGarbageResultType.WHITE_QUILT));
-        data.add(new AIGarbageResultTypeConfig(AIGarbageResultType.BLUE));
 
         response.success("获取垃圾投递类型列表成功", data);
         return response;
