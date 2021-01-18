@@ -107,13 +107,7 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
 
         File f = new File(Common.IMAGE_FOLDER_PATH);
         f.mkdirs();
-
-        Common.FACE_SYNC_DATA = faceSyncData;
-
-        int faceLibraryId = personService.getFaceLibraryId();
-        System.out.println("人脸库编号：" + faceLibraryId);
-
-        Common.FACE_NOTIFY_SERVICE_URL=faceNotifyServiceUrl;
+ 
     }
 
 

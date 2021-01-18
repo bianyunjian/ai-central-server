@@ -1,5 +1,6 @@
 package com.hankutech.ax.centralserver;
 
+import cn.hutool.core.lang.Assert;
 import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -49,5 +50,55 @@ public class testUnicode {
                 System.out.println(i);
             }
         }
+    }
+
+
+    Integer getLastWordLength(String allString) {
+        if (allString == null || allString.length() == 0 || allString.trim().length() == 0) {
+            return 0;
+        }
+
+        int len = allString.length();
+        int result = 0;
+
+        for (int i = len - 1; i >= 0; i--) {
+            char c = allString.charAt(i);
+            System.out.println("index:" + i + ",char:" + c);
+            if (c != ' ') {
+                result++;
+            } else {
+                if (result != 0) {
+                    System.out.println("break with result="+result);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    @Test
+    void getLastWordLengthTest() {
+        Integer len = getLastWordLength("hello nowcoder");
+        Assert.isTrue(len == 8);
+
+          len = getLastWordLength("hello nowcoder    ");
+        Assert.isTrue(len == 8);
+
+        len = getLastWordLength("  hello     ");
+        Assert.isTrue(len == 5);
+
+        len = getLastWordLength("       ");
+        Assert.isTrue(len == 0);
+
+        len = getLastWordLength("     a  ");
+        Assert.isTrue(len == 1);
+        len = getLastWordLength("a       ");
+        Assert.isTrue(len == 1);
+        len = getLastWordLength("a");
+        Assert.isTrue(len == 1);
+        len = getLastWordLength("");
+        Assert.isTrue(len == 0);
+        len = getLastWordLength(" a");
+        Assert.isTrue(len == 1);
     }
 }

@@ -19,5 +19,4 @@ public interface PersonService {
 
     void deletePerson(Integer id) throws InvalidDataException;
 
-    int getFaceLibraryId();
 }
