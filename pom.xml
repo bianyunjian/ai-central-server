@@ -23,7 +23,7 @@
     <repositories>
         <repository>
             <id>245-nexus</id>
-            <url>http://172.16.114.245:8082/repository/maven-public/</url>
+            <url>http://127.0.0.1:8081/repository/maven-public/</url>
         </repository>
     </repositories>
 

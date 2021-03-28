@@ -15,7 +15,7 @@ create table `device` (
     `device_scenario` varchar(50) not null default '' comment '设备使用的场景, 关联 com.hankutech.ax.message.protocal.com.hankutech.ax.message.code.ScenarioFlag',
     `description` VARCHAR(500) NULL COMMENT '备注描述' ,
     primary key (`device_id`)
-) engine = innodb default charset = utf8mb4;
+) engine = innodb default charaset = utf8mb4;
 ALTER TABLE `device`
 ADD COLUMN `ax_plc_id` int(11) NOT NULL DEFAULT 0  COMMENT '艾信 plc的编号， 用于plc与中心服务器通讯时标识自己' AFTER `description`;
 ALTER TABLE `device`

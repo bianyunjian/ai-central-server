@@ -56,8 +56,8 @@ public class LotController {
 
         List<String> aiCameraFilter = new ArrayList<>();
         if (StringUtils.isEmpty(request.getSupportAI())) {
-            aiCameraFilter.add("person");
-            aiCameraFilter.add("garbage");
+//            aiCameraFilter.add("person");
+//            aiCameraFilter.add("garbage");
         } else {
             aiCameraFilter.addAll(Arrays.stream(request.getSupportAI().trim().split(",")).collect(Collectors.toList()));
         }
