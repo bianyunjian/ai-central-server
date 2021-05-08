@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.hankutech.ax</groupId>
     <artifactId>central-server</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>central-server</name>
     <description>爱信智慧医疗中心服务</description>
 

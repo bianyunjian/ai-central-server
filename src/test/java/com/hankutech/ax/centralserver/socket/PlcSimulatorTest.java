@@ -28,7 +28,7 @@ public class PlcSimulatorTest {
         client.sendData(bytebuf);
         TimeUnit.SECONDS.sleep(3);
 
-        byte[] boxDetect = {2, 1, 0, 60, 1, 1, 10, 0, 0, 0};
+        byte[] boxDetect = {2, 1, 0, 60, 1, 1, 1, 0, 0, 0};
         ByteBuf bytebuf_boxDetect = Unpooled.buffer(10);
         bytebuf_boxDetect.writeBytes(boxDetect);
         client.sendData(bytebuf_boxDetect);

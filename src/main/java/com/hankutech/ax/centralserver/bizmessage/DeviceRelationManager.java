@@ -80,6 +80,15 @@ public class DeviceRelationManager {
 
     public static DeviceCameraDao deviceCameraDao;
 
+    /**
+     * 根据Plc编号和摄像头编号查找到具体的设备编号。
+     * 摄像头编号大于0， 则匹配摄像头编号
+     * 摄像头编号等于0， 则忽略摄像头编号
+     *
+     * @param plcNumber
+     * @param cameraNumber
+     * @return
+     */
     public static List<Integer> getDeviceIdByPlcNumberAndCameraNumber(int plcNumber, int cameraNumber) {
         List<Integer> deviceIdList = DeviceCache.getDeviceNumberByPlcId(plcNumber);
 
@@ -91,6 +100,16 @@ public class DeviceRelationManager {
         QueryWrapper<DeviceCamera> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(DeviceCamera.COL_CAMERA_ID, cameraNumber);
         queryWrapper.in(DeviceCamera.COL_DEVICE_ID, deviceIdList);
+        List<DeviceCamera> deviceCamerasList = deviceCameraDao.selectList(queryWrapper);
+        if (deviceCamerasList != null) {
+            return deviceCamerasList.stream().map(t -> t.getDeviceId()).collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    public static List<Integer> getDeviceIdByCameraNumber(int cameraNumber) {
+        QueryWrapper<DeviceCamera> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(DeviceCamera.COL_CAMERA_ID, cameraNumber);
         List<DeviceCamera> deviceCamerasList = deviceCameraDao.selectList(queryWrapper);
         if (deviceCamerasList != null) {
             return deviceCamerasList.stream().map(t -> t.getDeviceId()).collect(Collectors.toList());

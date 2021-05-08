@@ -16,6 +16,7 @@ import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -356,7 +357,16 @@ public class AXMessageExchange {
         log.debug("waitForBoxDetect");
         int plcNumber = request.getPlcNumber();
         int cameraNumber = request.getCameraNumber();
-        List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByPlcNumberAndCameraNumber(plcNumber, cameraNumber);
+        List<Integer> deviceIdList = new ArrayList<>();
+        Integer deviceId = -1;
+        if (cameraNumber <= 0) {
+            deviceIdList = DeviceRelationManager.getDeviceIdByPlcNumberAndCameraNumber(plcNumber, cameraNumber);
+        } else {
+            deviceIdList = DeviceRelationManager.getDeviceIdByCameraNumber(cameraNumber);
+        }
+        if (deviceIdList != null && deviceIdList.size() != 0) {
+            deviceId = deviceIdList.get(0);
+        }
 
         PlcResponse response = PlcResponse.defaultEmpty();
         response.setMessageSource(MessageSource.CENTRAL_SERVER);
@@ -364,8 +374,7 @@ public class AXMessageExchange {
         response.setCameraNumber(cameraNumber);
         response.setMessageType(PlcMessageType.BOX_DETECT_RESP);
 
-        if (deviceIdList != null && deviceIdList.size() != 0) {
-            Integer deviceId = deviceIdList.get(0);
+        if (deviceId > 0) {
             AIResultWrapper aiData = AIDataManager.getLatestAIResultByDeviceIdAndCameraNumber(deviceId, cameraNumber, AITaskType.BOX);
 
             if (aiData != null && aiData.getAiResult() != AIEmpty.EMPTY) {
