@@ -30,6 +30,13 @@ public class PlcDataConverter {
         axRequest.setMessageType(PlcMessageType.valueOf(convertedData[3]));
         //X5标示数据
         axRequest.setPayload(convertedData[4]);
+
+
+        // 字节X6,字节X7标示摄像头编号 x6 +(x7*255)
+        int c5 = convertedData[5];
+        int c6 = convertedData[6];
+        int cameraNumber = c5 + c6 * 255;
+        axRequest.setCameraNumber(cameraNumber);
         return axRequest;
     }
 
@@ -60,67 +67,17 @@ public class PlcDataConverter {
         //X5标示数据
         resultArray[4] = resp.getPayload();
 
-        return resultArray;
-    }
 
-
-    /**
-     * 解析字节数据为PlcResponse
-     *
-     * @param convertedData
-     * @return
-     */
-    public static PlcResponse parseResponse(int[] convertedData) {
-
-        if (convertedData == null || convertedData.length != 10) {
-            return null;
-        }
-
-        PlcResponse axPlcResponse = new PlcResponse();
-        //  X1标示消息来源
-        axPlcResponse.setMessageSource(MessageSource.valueOf(convertedData[0]));
-
-        //  字节X2,字节X3标示艾信PLC的编号 x2 +(x3*255)
-        int c1 = convertedData[1];
-        int c2 = convertedData[2];
-        int plcNumber = c1 + c2 * 255;
-        axPlcResponse.setPlcNumber(plcNumber);
-
-        //X4标示消息类型
-        axPlcResponse.setMessageType(PlcMessageType.valueOf(convertedData[3]));
-        //X5标示数据
-        axPlcResponse.setPayload(convertedData[4]);
-        return axPlcResponse;
-    }
-
-    /**
-     * 转换AXRequest为字节形式
-     *
-     * @param request
-     * @return
-     */
-    public static int[] convertRequest(PlcRequest request) {
-
-        int[] resultArray = new int[10];
-
-        // X1标示消息来源
-        resultArray[0] = request.getMessageSource().getValue();
-
-        // //  字节X2,字节X3标示艾信PLC的编号 x2 +(x3*255)
-        int plcNumber = request.getPlcNumber();
-        if (plcNumber > 255) {
-            resultArray[1] = plcNumber % 255;
-            resultArray[2] = (int) Math.floor(plcNumber / 255);
+        // 字节X6,字节X7标示摄像头编号 x6 +(x7*255)
+        int cameraNumber = resp.getCameraNumber();
+        if (cameraNumber > 255) {
+            resultArray[5] = cameraNumber % 255;
+            resultArray[6] = (int) Math.floor(cameraNumber / 255);
         } else {
-            resultArray[1] = plcNumber;
+            resultArray[5] = cameraNumber;
         }
-
-        //X4标示消息类型
-        resultArray[3] = request.getMessageType().value;
-        //X5标示数据
-        resultArray[4] = request.getPayload();
-
         return resultArray;
     }
+
 
 }

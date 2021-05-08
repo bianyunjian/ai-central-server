@@ -150,7 +150,8 @@ public class AXMessageExchange {
         //人脸验证
         if (request.getPayload() == AppMessageValue.AUTH_REQ_FACE) {
 
-            AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.FACE);
+            int cameraNumber = 0;
+            AIResultWrapper aiData = AIDataManager.getLatestAIResultByDeviceIdAndCameraNumber(deviceId, cameraNumber, AITaskType.FACE);
             //验证成功
             if (aiData != null && aiData.getAiResult().getValue() == AIFaceResultType.FACE_PASS.getValue()) {
                 AppMessage response = AppMessage.defaultEmpty(MessageSource.CENTRAL_SERVER);
@@ -186,7 +187,8 @@ public class AXMessageExchange {
         List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByAppNumber(request.getAppNumber());
         Integer deviceId = deviceIdList.get(0);
         log.info("waitForGarbageDetect deviceId=" + deviceId);
-        AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.GARBAGE);
+        int cameraNumber = 0;
+        AIResultWrapper aiData = AIDataManager.getLatestAIResultByDeviceIdAndCameraNumber(deviceId, cameraNumber, AITaskType.GARBAGE);
 //        aiData.setAiResult(AIGarbageResultType.DRY);
         //验证成功
         if (aiData != null && aiData.getAiResult() != AIEmpty.EMPTY) {
@@ -352,18 +354,29 @@ public class AXMessageExchange {
      */
     public static void waitForBoxDetect(PlcRequest request) {
         log.debug("waitForBoxDetect");
-        List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByPlcNumber(request.getPlcNumber());
-        Integer deviceId = deviceIdList.get(0);
+        int plcNumber = request.getPlcNumber();
+        int cameraNumber = request.getCameraNumber();
+        List<Integer> deviceIdList = DeviceRelationManager.getDeviceIdByPlcNumberAndCameraNumber(plcNumber, cameraNumber);
 
-        AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.BOX);
+        PlcResponse response = PlcResponse.defaultEmpty();
+        response.setMessageSource(MessageSource.CENTRAL_SERVER);
+        response.setPlcNumber(request.getPlcNumber());
+        response.setCameraNumber(cameraNumber);
+        response.setMessageType(PlcMessageType.BOX_DETECT_RESP);
 
-        if (aiData != null && aiData.getAiResult() != AIEmpty.EMPTY) {
-            PlcResponse response = PlcResponse.defaultEmpty();
-            response.setMessageSource(MessageSource.CENTRAL_SERVER);
-            response.setMessageType(PlcMessageType.BOX_DETECT_RESP);
-            response.setPlcNumber(request.getPlcNumber());
-            response.setPayload(aiData.getAiResult().getValue());
-            sendMessage2Plc(request.getPlcNumber(), response);
+        if (deviceIdList != null && deviceIdList.size() != 0) {
+            Integer deviceId = deviceIdList.get(0);
+            AIResultWrapper aiData = AIDataManager.getLatestAIResultByDeviceIdAndCameraNumber(deviceId, cameraNumber, AITaskType.BOX);
+
+            if (aiData != null && aiData.getAiResult() != AIEmpty.EMPTY) {
+                response.setPayload(aiData.getAiResult().getValue());
+                sendMessage2Plc(request.getPlcNumber(), response);
+                return;
+            }
         }
+
+        //返回空值
+        response.setPayload(AIBoxResultType.EMPTY.getValue());
+        sendMessage2Plc(request.getPlcNumber(), response);
     }
 }

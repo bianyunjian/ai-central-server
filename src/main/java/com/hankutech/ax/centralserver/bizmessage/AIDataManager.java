@@ -21,35 +21,53 @@ public class AIDataManager {
     private static ConcurrentHashMap<Integer, RFIDDataItem> deviceRFIDDataCacheMap = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<Integer, QRCodeDataItem> deviceQRCodeDataCacheMap = new ConcurrentHashMap<>();
 
+
     /**
-     * get latest cached data by deviceId and taskType
+     * 根据设备编号和摄像头编号查找到具体的事件。
+     * 摄像头编号大于0， 则匹配摄像头编号
+     * 摄像头编号等于0， 则忽略摄像头编号
      *
      * @param deviceId
+     * @param cameraNumber
      * @param taskType
      * @return
      */
-    public static AIResultWrapper getLatestAIResultByDevice(int deviceId, AITaskType taskType) {
+    public static AIResultWrapper getLatestAIResultByDeviceIdAndCameraNumber(Integer deviceId, int cameraNumber, AITaskType taskType) {
+        log.info("AIDataManager.getLatestAIResultByDeviceIdAndCameraNumber查找事件,deviceId=" + deviceId + ",cameraNumber=" + cameraNumber + ",AITaskType=" + taskType.getDescription());
 
         if (deviceAiDataCacheMap.size() == 0 || deviceAiDataCacheMap.containsKey(deviceId) == false) {
             return new AIResultWrapper();
         }
 
         AIDataItem data = deviceAiDataCacheMap.get(deviceId);
-        HashMap<AITaskType, AIResultWrapper> aiTaskResultMap = data.getAITaskResultMap();
+        HashMap<AIResultKey, AIResultWrapper> aiTaskResultMap = data.getAITaskResultMap();
 
-        AIResultWrapper result = aiTaskResultMap.getOrDefault(taskType, new AIResultWrapper());
+        AIResultWrapper result = new AIResultWrapper();
+        for (AIResultKey aiResultKey : aiTaskResultMap.keySet()) {
+            if (aiResultKey.getAiTaskType().getValue() == taskType.getValue()) {
+
+                if (cameraNumber <= 0) {
+                    result = aiTaskResultMap.get(aiResultKey);
+                    break;
+                } else {
+                    if (aiResultKey.getCameraNumber() == cameraNumber) {
+                        result = aiTaskResultMap.get(aiResultKey);
+                        break;
+                    }
+                }
+            }
+        }
 
         //检查最新事件的时间是否已经超过设定的阈值
         if (result.getAiResult() != AIEmpty.EMPTY) {
             if (checkIfEventObsolete(result.getEventTime())) {
-                log.warn("AIDataManager.getLatestAIResultByDevice 查找到的事件的发生时间已经超过设定的过期时间阈值" + Common.EVENT_OBSOLETE_SECONDS + "(秒):" + result.toString());
+                log.warn("AIDataManager.getLatestAIResultByDeviceIdAndCameraNumber查找到的事件的发生时间已经超过设定的过期时间阈值" + Common.EVENT_OBSOLETE_SECONDS + "(秒):" + result.toString());
                 aiTaskResultMap.remove(taskType);
                 result = null;
             }
         }
         return result;
     }
-
 
     /**
      * 获取最新的RFID刷卡事件
@@ -102,7 +120,9 @@ public class AIDataManager {
      * @return
      */
     private static boolean checkIfEventObsolete(LocalDateTime eventTime) {
-        if (eventTime == null) return true;
+        if (eventTime == null) {
+            return true;
+        }
         LocalDateTime obTime = LocalDateTime.now().minusSeconds(Common.EVENT_OBSOLETE_SECONDS);
         return eventTime.isBefore(obTime);
     }
@@ -141,8 +161,11 @@ public class AIDataManager {
 
             newData.setScenarioFlag(scenarioFlag);
 
-            HashMap<AITaskType, AIResultWrapper> map = new HashMap<>();
-            map.put(taskType, aiResultWrapper);
+            HashMap<AIResultKey, AIResultWrapper> map = new HashMap<>();
+            AIResultKey aiResultKey = new AIResultKey();
+            aiResultKey.setAiTaskType(taskType);
+            aiResultKey.setCameraNumber(cameraId);
+            map.put(aiResultKey, aiResultWrapper);
             newData.setAITaskResultMap(map);
             deviceAiDataCacheMap.put(deviceId, newData);
             log.debug("add new AXDataItem for device[" + device.getDeviceId() + "-" + device.getDeviceName() + "] cameraId[" + cameraId + "]");
@@ -152,12 +175,22 @@ public class AIDataManager {
             AIDataItem updateData = deviceAiDataCacheMap.get(deviceId);
             updateData.setScenarioFlag(scenarioFlag);
 
-            HashMap<AITaskType, AIResultWrapper> map = updateData.getAITaskResultMap();
-            if (map.containsKey(taskType)) {
-                map.replace(taskType, aiResultWrapper);
-            } else {
-                map.put(taskType, aiResultWrapper);
+            HashMap<AIResultKey, AIResultWrapper> map = updateData.getAITaskResultMap();
+            boolean findExistKey = false;
+            for (AIResultKey aiResultKey : map.keySet()) {
+                if (aiResultKey.getAiTaskType().getValue() == taskType.getValue() && aiResultKey.getCameraNumber() == cameraId) {
+                    map.replace(aiResultKey, aiResultWrapper);
+                    findExistKey = true;
+                    break;
+                }
             }
+            if (findExistKey == false) {
+                AIResultKey aiResultKey = new AIResultKey();
+                aiResultKey.setAiTaskType(taskType);
+                aiResultKey.setCameraNumber(cameraId);
+                map.put(aiResultKey, aiResultWrapper);
+            }
+
             log.debug("update AXDataItem for device[" + device.getDeviceId() + "-" + device.getDeviceName() + "] cameraId[" + cameraId + "]");
         }
     }
@@ -205,4 +238,6 @@ public class AIDataManager {
             log.debug("update QRCodeDataItem for device[" + deviceId + "]");
         }
     }
+
+
 }

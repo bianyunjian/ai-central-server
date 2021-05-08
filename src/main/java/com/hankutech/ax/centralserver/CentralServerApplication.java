@@ -1,7 +1,9 @@
 package com.hankutech.ax.centralserver;
 
+import com.hankutech.ax.centralserver.bizmessage.DeviceRelationManager;
 import com.hankutech.ax.centralserver.constant.Common;
 import com.hankutech.ax.centralserver.constant.SocketConst;
+import com.hankutech.ax.centralserver.dao.DeviceCameraDao;
 import com.hankutech.ax.centralserver.dao.DeviceDao;
 import com.hankutech.ax.centralserver.dao.model.Device;
 import com.hankutech.ax.centralserver.service.DeviceCache;
@@ -52,6 +54,9 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
     @Resource
     private DeviceDao deviceDao;
 
+    @Autowired
+    private DeviceCameraDao deviceCameraDao;
+
     private static SocketServer socketServer4Plc;
     private static SocketServer socketServer4App;
 
@@ -93,6 +98,9 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
         List<Device> allDevices = deviceDao.selectList(null);
         DeviceCache.refreshAllCache(allDevices);
         log.info("更新设备数据缓存，数量：{}", allDevices.size());
+
+        DeviceRelationManager.deviceCameraDao = deviceCameraDao;
+
     }
 
 
@@ -107,7 +115,7 @@ public class CentralServerApplication implements ApplicationRunner, DisposableBe
 
         File f = new File(Common.IMAGE_FOLDER_PATH);
         f.mkdirs();
- 
+
     }
 
 

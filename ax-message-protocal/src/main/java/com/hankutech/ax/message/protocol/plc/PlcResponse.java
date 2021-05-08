@@ -28,6 +28,12 @@ public class PlcResponse {
      */
     int payload;
 
+    /**
+     * 摄像头的编号
+     * 由X6, X7两个字节组合而成
+     */
+    int cameraNumber;
+
     public static PlcResponse defaultEmpty() {
         PlcResponse instance = new PlcResponse();
         instance.setMessageSource(MessageSource.CENTRAL_SERVER);

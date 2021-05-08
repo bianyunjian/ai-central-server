@@ -30,6 +30,12 @@ public class PlcRequest {
     int payload;
 
     /**
+     * 摄像头的编号
+     * 由X6, X7两个字节组合而成
+     */
+    int cameraNumber;
+
+    /**
      * 验证是否有效的数据结构
      *
      * @return

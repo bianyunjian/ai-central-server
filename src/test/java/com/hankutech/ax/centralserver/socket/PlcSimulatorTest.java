@@ -1,6 +1,5 @@
 package com.hankutech.ax.centralserver.socket;
 
-import com.hankutech.ax.centralserver.socket.plc.PlcByteMessageHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -27,6 +26,14 @@ public class PlcSimulatorTest {
         ByteBuf bytebuf = Unpooled.buffer(10);
         bytebuf.writeBytes(handshake);
         client.sendData(bytebuf);
+        TimeUnit.SECONDS.sleep(3);
+
+        byte[] boxDetect = {2, 1, 0, 60, 1, 1, 10, 0, 0, 0};
+        ByteBuf bytebuf_boxDetect = Unpooled.buffer(10);
+        bytebuf_boxDetect.writeBytes(boxDetect);
+        client.sendData(bytebuf_boxDetect);
+        TimeUnit.SECONDS.sleep(3);
+
 
         TimeUnit.SECONDS.sleep(3000);
         client.close();

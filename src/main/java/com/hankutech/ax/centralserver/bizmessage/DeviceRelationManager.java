@@ -1,12 +1,21 @@
 package com.hankutech.ax.centralserver.bizmessage;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.hankutech.ax.centralserver.dao.DeviceCameraDao;
+import com.hankutech.ax.centralserver.dao.model.DeviceCamera;
 import com.hankutech.ax.centralserver.service.DeviceCache;
 import com.hankutech.ax.message.code.AIGarbageResultType;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class DeviceRelationManager {
+
+    public DeviceRelationManager(DeviceCameraDao deviceCameraDao) {
+        this.deviceCameraDao = deviceCameraDao;
+    }
+
     public static List<Integer> getAppNumber(int plcNumber) {
         return DeviceCache.getAppNumberByPlcId(plcNumber);
     }
@@ -66,5 +75,26 @@ public class DeviceRelationManager {
     public static ConcurrentHashMap<Integer, AIGarbageResultType> getDeviceGarbageTypeList() {
 
         return DEVICE_GARBAGE_TYPE_MAP;
+    }
+
+
+    public static DeviceCameraDao deviceCameraDao;
+
+    public static List<Integer> getDeviceIdByPlcNumberAndCameraNumber(int plcNumber, int cameraNumber) {
+        List<Integer> deviceIdList = DeviceCache.getDeviceNumberByPlcId(plcNumber);
+
+        if (cameraNumber <= 0) {
+            return deviceIdList;
+        }
+
+
+        QueryWrapper<DeviceCamera> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(DeviceCamera.COL_CAMERA_ID, cameraNumber);
+        queryWrapper.in(DeviceCamera.COL_DEVICE_ID, deviceIdList);
+        List<DeviceCamera> deviceCamerasList = deviceCameraDao.selectList(queryWrapper);
+        if (deviceCamerasList != null) {
+            return deviceCamerasList.stream().map(t -> t.getDeviceId()).collect(Collectors.toList());
+        }
+        return null;
     }
 }

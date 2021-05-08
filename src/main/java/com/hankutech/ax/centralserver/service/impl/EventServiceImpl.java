@@ -136,7 +136,7 @@ public class EventServiceImpl implements EventService {
         };
         for (AITaskType t : taskTypes
         ) {
-            AIResultWrapper aiResult = AIDataManager.getLatestAIResultByDevice(deviceId, t);
+            AIResultWrapper aiResult = AIDataManager.getLatestAIResultByDeviceIdAndCameraNumber(deviceId,0, t);
             if (aiResult != null && aiResult.getAiResult() != AIBoxResultType.EMPTY) {
                 RealtimeEventVO vo4Box = new RealtimeEventVO();
                 vo4Box.setCameraId(aiResult.getCameraId());
@@ -200,8 +200,8 @@ public class EventServiceImpl implements EventService {
         Integer deviceId = deviceIdList.get(0);
 
         //获取人脸验证的结果
-
-        AIResultWrapper aiData = AIDataManager.getLatestAIResultByDevice(deviceId, AITaskType.FACE);
+        int cameraNumber=0;
+        AIResultWrapper aiData = AIDataManager.getLatestAIResultByDeviceIdAndCameraNumber(deviceId, cameraNumber,AITaskType.FACE);
         //人脸验证有效
         if (aiData != null && aiData.getAiResult().getValue() == AIFaceResultType.FACE_PASS.getValue()) {
 
